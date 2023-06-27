@@ -44,8 +44,10 @@ namespace RebarSampling
         /// </summary>
         public string cornerMsg { get; set; }
 
-
-
+        /// <summary>
+        /// 数据库索引ID
+        /// </summary>
+        public int ID { get; set; }
     }
 
     /// <summary>

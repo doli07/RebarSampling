@@ -637,6 +637,8 @@ namespace RebarSampling
                     dgvCell.Value = _item.ToString().Substring(2, 5);
                     dgvRow.Cells.Add(dgvCell);
 
+
+
                     //钢筋简图
                     dgvImageCell = new DataGridViewImageCell();
                     string sType = _item.ToString().Substring(2, 5);
