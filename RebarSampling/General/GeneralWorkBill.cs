@@ -91,6 +91,7 @@ namespace RebarSampling
         /// </summary>
         public int Diameter { get; set; }
 
+        //hello
 
         public List<SingleRebarData> RebarList { get; set; }
     }
