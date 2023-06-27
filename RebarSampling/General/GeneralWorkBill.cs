@@ -90,10 +90,7 @@ namespace RebarSampling
         /// 直径
         /// </summary>
         public int Diameter { get; set; }
-        /// <summary>
-        /// 钢筋原材长度，9米或12米
-        /// </summary>
-        public int OriginalLength { get; set; }
+
 
         public List<SingleRebarData> RebarList { get; set; }
     }
