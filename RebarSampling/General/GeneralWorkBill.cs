@@ -15,6 +15,7 @@ namespace RebarSampling
         /// 项目名称，对应的excel中的文件名
         /// </summary>
         public string projectName { get; set; }
+
         /// <summary>
         /// 主构件名称，对应的excel中的sheetname
         /// </summary>
@@ -40,7 +41,7 @@ namespace RebarSampling
         /// </summary>
         public int length { get; set; }
         /// <summary>
-        /// 边角结构
+        /// 边角结构,
         /// </summary>
         public string cornerMsg { get; set; }
 
@@ -75,6 +76,10 @@ namespace RebarSampling
         /// </summary>
         public string ProjectName { get; set; }
         /// <summary>
+        /// 分区，A区，B区等等
+        /// </summary>
+        public string Block { get; set; }
+        /// <summary>
         /// 楼栋号
         /// </summary>
         public string Building { get; set; }
@@ -90,8 +95,10 @@ namespace RebarSampling
         /// 直径
         /// </summary>
         public int Diameter { get; set; }
-
-        //hello
+        /// <summary>
+        /// 原材长度，一般9米或12米两种
+        /// </summary>
+        public int OriginalLength { get; set; }
 
         public List<SingleRebarData> RebarList { get; set; }
     }
