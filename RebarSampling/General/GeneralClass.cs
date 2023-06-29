@@ -14,7 +14,10 @@ namespace RebarSampling
         /// </summary>
         public static ExcelReader readEXCEL = new ExcelReader();
 
-
+        /// <summary>
+        /// 操作json序列化与反序列化
+        /// </summary>
+        public static json JsonOpt = new json();
         /// <summary>
         /// 操作sqlite文件读取
         /// </summary>

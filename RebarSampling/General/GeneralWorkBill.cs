@@ -60,12 +60,13 @@ namespace RebarSampling
         {
             this.BillNo = "";
             this.ProjectName = "";
+            this.Block = "";
             this.Building = "";
             this.Floor = "";
             this.Level = "";
             this.Diameter = 0;
-            this.RebarList = new List<SingleRebarData>();
-            
+            this.OriginalLength = 0;
+            this.RebarList = new List<SingleRebarData>();            
         }
         /// <summary>
         /// 工单号
