@@ -1618,7 +1618,7 @@ namespace RebarSampling
                 }
             }
 
-            if (_newlist.Count != 0)
+            if (_newlist.Count != 0&&dataGridView1!=null)
             {
                 FillDGVWithRebarList(_newlist, dataGridView1);
             }

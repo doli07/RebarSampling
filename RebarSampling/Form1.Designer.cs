@@ -43,15 +43,15 @@
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button13 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button13 = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -75,7 +75,7 @@
             this.treeView1.FullRowSelect = true;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(297, 398);
+            this.treeView1.Size = new System.Drawing.Size(297, 404);
             this.treeView1.TabIndex = 5;
             this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -87,9 +87,9 @@
             this.columnHeader2});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 514);
+            this.listView1.Location = new System.Drawing.Point(0, 503);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(297, 161);
+            this.listView1.Size = new System.Drawing.Size(297, 172);
             this.listView1.TabIndex = 12;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -124,7 +124,7 @@
             // button6
             // 
             this.button6.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button6.Location = new System.Drawing.Point(179, 30);
+            this.button6.Location = new System.Drawing.Point(177, 21);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(110, 72);
             this.button6.TabIndex = 14;
@@ -136,7 +136,7 @@
             // 
             this.checkedListBox1.ColumnWidth = 40;
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(8, 52);
+            this.checkedListBox1.Location = new System.Drawing.Point(3, 37);
             this.checkedListBox1.MultiColumn = true;
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(168, 56);
@@ -146,7 +146,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(11, 17);
+            this.checkBox2.Location = new System.Drawing.Point(3, 3);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(86, 28);
             this.checkBox2.TabIndex = 19;
@@ -157,7 +157,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(108, 18);
+            this.checkBox3.Location = new System.Drawing.Point(95, 3);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(68, 28);
             this.checkBox3.TabIndex = 20;
@@ -207,9 +207,36 @@
             this.panel1.Size = new System.Drawing.Size(1646, 87);
             this.panel1.TabIndex = 23;
             // 
+            // button13
+            // 
+            this.button13.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.button13.Image = ((System.Drawing.Image)(resources.GetObject("button13.Image")));
+            this.button13.Location = new System.Drawing.Point(400, 4);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(90, 80);
+            this.button13.TabIndex = 24;
+            this.button13.Text = "关于";
+            this.button13.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.button13.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.button13.UseVisualStyleBackColor = false;
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.Location = new System.Drawing.Point(304, 4);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(90, 80);
+            this.button2.TabIndex = 23;
+            this.button2.Text = "通信设置";
+            this.button2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.groupBox1);
+            this.panel2.Controls.Add(this.panel4);
             this.panel2.Controls.Add(this.treeView1);
             this.panel2.Controls.Add(this.listView1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
@@ -228,43 +255,17 @@
             this.panel3.Size = new System.Drawing.Size(1349, 675);
             this.panel3.TabIndex = 25;
             // 
-            // button2
+            // panel4
             // 
-            this.button2.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.Location = new System.Drawing.Point(304, 4);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(90, 80);
-            this.button2.TabIndex = 23;
-            this.button2.Text = "通信设置";
-            this.button2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.button2.UseVisualStyleBackColor = false;
-            // 
-            // button13
-            // 
-            this.button13.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.button13.Image = ((System.Drawing.Image)(resources.GetObject("button13.Image")));
-            this.button13.Location = new System.Drawing.Point(400, 4);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(90, 80);
-            this.button13.TabIndex = 24;
-            this.button13.Text = "关于";
-            this.button13.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.button13.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.button13.UseVisualStyleBackColor = false;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.checkBox2);
-            this.groupBox1.Controls.Add(this.checkedListBox1);
-            this.groupBox1.Controls.Add(this.button6);
-            this.groupBox1.Controls.Add(this.checkBox3);
-            this.groupBox1.Location = new System.Drawing.Point(6, 395);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(288, 114);
-            this.groupBox1.TabIndex = 21;
-            this.groupBox1.TabStop = false;
+            this.panel4.Controls.Add(this.button6);
+            this.panel4.Controls.Add(this.checkedListBox1);
+            this.panel4.Controls.Add(this.checkBox2);
+            this.panel4.Controls.Add(this.checkBox3);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(0, 404);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(297, 99);
+            this.panel4.TabIndex = 0;
             // 
             // Form1
             // 
@@ -279,7 +280,7 @@
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form1";
-            this.Text = "中建三局先进院钢筋翻样料单分析软件V1.0版";
+            this.Text = "中建钢筋翻样料单分析软件V1.0版";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -287,8 +288,8 @@
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -314,7 +315,7 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button13;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Panel panel4;
     }
 }
 

@@ -229,6 +229,18 @@ namespace RebarSampling
             catch (Exception ex) { MessageBox.Show("InitDB error:" + ex.Message); }
 
         }
+        /// <summary>
+        /// 用于excel数据存入数据库时，存在的构件名称缺省，起到补全构件名的作用
+        /// </summary>
+        public void ExcelToDBaddElement()
+        {
+
+        }
+        /// <summary>
+        /// excel文件存入数据库
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="DBtableName"></param>
         public void ExcelToDB(string filename, string DBtableName)
         {
             string sheetname = null;
@@ -328,146 +340,10 @@ namespace RebarSampling
 
 
         }
-        ///// <summary>
-        ///// 解析excel文件，存入数据库文件
-        ///// </summary>
-        //public void ExcelToDB(string filename, string DBtableName)
-        //{
-        //    try
-        //    {
-        //        string cell_value = null;
-        //        string sheetname = null;
-        //        string tablename = DBtableName;
-
-        //        List<string> sqls = new List<string>();
-
-        //        double tt_d;
-        //        int tt_i;
-
-        //        RebarData rebarData;
-
-        //        for (int stnum = 0; stnum < GeneralClass.readEXCEL.wb?.NumberOfSheets - 1; stnum++)//注意E筋软件导出的excel文件最后一个sheet为统计表，格式不一致
-        //        {
-        //            ISheet sheet = GeneralClass.readEXCEL.wb?.GetSheetAt(stnum);
-        //            sheetname = sheet.SheetName;
-
-        //            #region 解析sheet名称，确定分区、楼、层及构件类型
-
-        //            #endregion
-
-        //            ////检查是否有“序号”这一列
-        //            //bool _haveSeri = false;
-        //            //IRow row_check = sheet.GetRow(2);
-        //            //NPOI.SS.UserModel.ICell cell_check = row_check.GetCell(1);
-        //            //if (GeneralClass.readEXCEL.getCellStringValueAllCase(cell_check) == "序号")
-        //            //{
-        //            //    _haveSeri = true;
-        //            //}
-
-        //            //从第三行开始读取，前三行为标题
-        //            for (int i = sheet.FirstRowNum + 3; i <= sheet.LastRowNum; i++)
-        //            {
-        //                IRow row = sheet.GetRow(i);
-        //                if (row == null) continue;
-
-        //                rebarData = new RebarData();//构建新的钢筋对象
-
-        //                rebarData.ProjectName = filename;//将filename赋予钢筋的项目名称
-        //                rebarData.MainAssemblyName = sheetname;//将sheetname赋予钢筋的主构件名称
-
-        //                // 读取单元格数据
-        //                for (int j = row.FirstCellNum; j < row.LastCellNum; j++)
-        //                {
-        //                    NPOI.SS.UserModel.ICell cell = row.GetCell(j);
-        //                    if (cell == null) continue;
-
-        //                    cell_value = GeneralClass.readEXCEL.getCellStringValueAllCase(cell);//根据cell数据的不同类型分别解析
-
-        //                    switch (j)
-        //                    {
-        //                        case 0:
-        //                            rebarData.ElementName = cell_value;//暂定第一个为子构件名称
-        //                            break;
-        //                        case 1:
-        //                            rebarData.TypeNum = cell_value;//编号
-        //                            break;
-        //                        case 2:
-        //                            if (cell_value != "" && cell_value.Length >= 2)//将级别直径（如C14）拆分开
-        //                            {
-        //                                rebarData.Level = cell_value.Substring(0, 1);                        //级别
-        //                                rebarData.Diameter = Convert.ToInt32(cell_value.Substring(1, cell_value.Length - 1));    //直径
-        //                            }
-        //                            else
-        //                            {
-        //                                rebarData.Level = "";
-        //                                rebarData.Diameter = 0;
-        //                            }
-        //                            break;
-        //                        case 3:
-        //                            rebarData.RebarPic = cell_value;//钢筋简图,暂为空
-        //                            break;
-        //                        case 4:
-        //                            rebarData.PicMessage = cell_value;//图形信息
-        //                            break;
-        //                        case 5:
-        //                            rebarData.CornerMessage = cell_value;//边角结构信息
-        //                            break;
-        //                        case 6:
-        //                            if (cell_value != "")
-        //                            {
-        //                                //缩尺符号~前面如果是'\n',则需要先去掉'\n'
-        //                                if (cell_value.IndexOf('~') > -1 && cell_value[cell_value.IndexOf('~') - 1] == '\n')
-        //                                {
-        //                                    cell_value = cell_value.Remove(cell_value.IndexOf('~') - 1, 1);//去掉~前面的那个'\n'                    
-        //                                }
-        //                                string[] sss = cell_value.Split('\n');  //下料长度可能会出现多段的情况，此时需按照'\n'进行拆分字符串
-        //                                rebarData.Length = cell_value;
-        //                                rebarData.IsMulti = (sss.Length > 1) ? true : false;
-        //                            }
-        //                            break;
-        //                        case 7:
-        //                            rebarData.PieceNumUnitNum = cell_value;//根数*件数
-        //                            break;
-        //                        case 8:
-        //                            int.TryParse(cell_value, out tt_i);
-        //                            rebarData.TotalPieceNum = tt_i;
-        //                            //rebarData.TotalPieceNum = System.Convert.ToInt16(cell_value);//总根数
-        //                            break;
-        //                        case 9:
-        //                            double.TryParse(cell_value, out tt_d);
-        //                            rebarData.TotalWeight = tt_d;
-        //                            //rebarData.TotalWeight = System.Convert.ToDouble(cell_value);//总重量，kg
-        //                            break;
-        //                        case 10:
-        //                            rebarData.Description = cell_value;//备注说明
-        //                            break;
-        //                        case 11:
-        //                            int.TryParse(cell_value, out tt_i);
-        //                            rebarData.SerialNum = tt_i;
-        //                            //rebarData.SerialNum = System.Convert.ToInt16(cell_value);//标注序号
-        //                            break;
-        //                    }
-
-        //                }
 
 
-        //                //存入数据库
-        //                if (rebarData.TypeNum != "" && rebarData.Length != "")//以是否有钢筋类型编号作为此行是否为有效数据的判定条件
-        //                {
-        //                    ModifyRebarData(ref rebarData);
 
-        //                    //InsertRowData(tablename, rebarData);
-        //                    sqls.Add(InsertRowData(tablename, rebarData));
-        //                }
-        //            }
-        //        }
 
-        //        ExecuteNonQuery(sqls);//批量存入
-
-        //    }
-        //    catch (Exception ex) { MessageBox.Show("ExcelToDB error:" + ex.Message); }
-
-        //}
         /// <summary>
         /// 详细处理
         /// </summary>

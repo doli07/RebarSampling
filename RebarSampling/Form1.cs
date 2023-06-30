@@ -38,9 +38,27 @@ namespace RebarSampling
             GeneralClass.interactivityData.ifRebarSelected += IfRebarSelected;
             GeneralClass.interactivityData.ifRebarChecked += IfRebarChecked;
         }
+
+        private Form2 form2;
+        private Form3 form3;
+        private Form4 form4;
+
         private void Form1_Load(object sender, EventArgs e)
         {
+            form2 = new Form2();
+            form2.TopLevel = false;
+            form2.FormBorderStyle = FormBorderStyle.None;
+            form2.Dock = DockStyle.Fill;
 
+            form3 = new Form3();
+            form3.TopLevel = false;
+            form3.FormBorderStyle = FormBorderStyle.None;
+            form3.Dock = DockStyle.Fill;
+
+            form4 = new Form4();
+            form4.TopLevel = false;
+            form4.FormBorderStyle = FormBorderStyle.None;
+            form4.Dock = DockStyle.Fill;
 
             InitChecklist1();
             InitTreeView1();
@@ -80,11 +98,10 @@ namespace RebarSampling
 
 
                 treeView1.Nodes.Clear();
-                //InitDGV_BX();
-                //InitDGV_Xian();
-                //InitDGV_BangOri();
-                //InitDGV_BangNoOri();
-                GeneralClass.interactivityData?.initStatisticsDGV();//清空统计界面的dgv
+                if(GeneralClass.interactivityData?.initStatisticsDGV!=null)
+                {
+                    GeneralClass.interactivityData?.initStatisticsDGV();//清空统计界面的dgv
+                }
 
                 //GeneralClass.SQLiteOpt.InitDB(GeneralClass.AllRebarTableName);//先创建并清空db数据库表单
                 GeneralClass.SQLiteOpt.InitDB(GeneralClass.AllRebarBKTableName);//先创建并清空db数据库表单
@@ -208,51 +225,6 @@ namespace RebarSampling
             treeView1.CheckBoxes = true;//节点的勾选框
 
         }
-        private void button2_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //DataGridViewRow _temprow = new DataGridViewRow();
-                //dataGridView2.Rows.Clear();
-                //dataGridView3.Rows.Clear();
-
-                //foreach (DataGridViewRow row in dataGridView1.Rows)
-                //{
-                //    _temprow = (DataGridViewRow)row.Clone();
-
-                //    //先判断cell内容是否为null，再判断直径区间，( >=14 && <=40 )即为棒材钢筋,其他为线材
-                //    if (row.Cells[3].Value != null && row.Cells[3].Value.ToString() != "")//cell[3]为直径
-                //    {
-                //        int diameter = Convert.ToInt32(row.Cells[3].Value.ToString());//直径
-                //        if (diameter >= 14 && diameter <= 40)  //棒材
-                //        {
-                //            for (int i = 0; i < row.Cells.Count; i++)
-                //            {
-                //                _temprow.Cells[i].Value = row.Cells[i].Value;
-                //            }
-                //            dataGridView2.Rows.Add(_temprow);
-                //        }
-                //        else//线材
-                //        {
-                //            for (int i = 0; i < row.Cells.Count; i++)
-                //            {
-                //                _temprow.Cells[i].Value = row.Cells[i].Value;
-                //            }
-                //            dataGridView3.Rows.Add(_temprow);
-                //        }
-                //    }
-
-                //}
-
-
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
-
-
-
-        }
-
-
 
 
         ///// <summary>
@@ -652,57 +624,38 @@ namespace RebarSampling
 
         private void button12_Click(object sender, EventArgs e)
         {
+            button11.BackColor = SystemColors.GradientInactiveCaption;
+            button2.BackColor = SystemColors.GradientInactiveCaption;
+            button12.BackColor = Color.Blue;
 
-            List<SingleRebarData> _rebarlist = new List<SingleRebarData>();
+            form3.Show();
+            this.panel3.Controls.Clear();
+            this.panel3.Controls.Add(form3);
 
-            SingleRebarData _singleRebar = new SingleRebarData();
-            _singleRebar.projectName = "光谷国际社区";
-            _singleRebar.assemblyName = "梁";
-            _singleRebar.elementName = "KL57";
-            _singleRebar.picNo = "30202";
-            _singleRebar.level = "C";
-            _singleRebar.diameter = 22;
-            _singleRebar.length = 6000;
-            _singleRebar.cornerMsg = "350,90;5300,90;350,0";
-            _singleRebar.ID = 1;
-            _rebarlist.Add(_singleRebar);
 
-            _singleRebar = new SingleRebarData();
-            _singleRebar.projectName = "光谷国际社区";
-            _singleRebar.assemblyName = "梁";
-            _singleRebar.elementName = "KZ1";
-            _singleRebar.picNo = "10000";
-            _singleRebar.level = "C";
-            _singleRebar.diameter = 22;
-            _singleRebar.length = 2500;
-            _singleRebar.cornerMsg = "0,套;2500,0";
-            _singleRebar.ID = 2;
-            _rebarlist.Add(_singleRebar);
-
-            GeneralWorkBill _workbill = new GeneralWorkBill();
-            _workbill.BillNo = "GJSQ_A_06D_01F_202306280001";
-            _workbill.ProjectName = "光谷国际社区";
-            _workbill.Block = "A";
-            _workbill.Building = "06D";
-            _workbill.Floor = "01F";
-            _workbill.Level = "C";
-            _workbill.Diameter = 22;
-            _workbill.OriginalLength = 9;
-            _workbill.RebarList = _rebarlist;
-
-            string sss = GeneralClass.JsonOpt.Serializer(_workbill);
-
-            //textBox3.Text = sss;
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2();
-            form2.TopLevel = false;
-            form2.FormBorderStyle = FormBorderStyle.None;
-            form2.Parent = this.panel3;
-            form2.Dock = DockStyle.Fill;
+            button2.BackColor = SystemColors.GradientInactiveCaption;
+            button12.BackColor = SystemColors.GradientInactiveCaption;
+            button11.BackColor = Color.Blue;
+
             form2.Show();
+            this.panel3.Controls.Clear();
+            this.panel3.Controls.Add(form2);
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            button11.BackColor = SystemColors.GradientInactiveCaption;
+            button12.BackColor = SystemColors.GradientInactiveCaption;
+            button2.BackColor = Color.Blue;
+
+            form4.Show();
+            this.panel3.Controls.Clear();
+            this.panel3.Controls.Add(form4);
 
         }
     }
