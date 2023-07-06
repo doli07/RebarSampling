@@ -22,6 +22,10 @@ namespace RebarSampling
     /// 委托类型，用于操作统计界面显示assembly的料单内容
     /// </summary>
     public delegate void DelegateShowAssembly();
+    /// <summary>
+    /// 委托类型，用于操作套料界面显示element构件内容
+    /// </summary>
+    public delegate void DelegateShowElement();
 
     /// <summary>
     /// 委托类型，从主界面查询该钢筋数据是否被选中
@@ -37,6 +41,8 @@ namespace RebarSampling
     /// <returns></returns>
     public delegate bool DelegateIfRebarSelected(RebarData _data);
 
+    public delegate void DelegateWebServerMsg(string msg);
+    public delegate void DelegateWebClientMsg(string msg);
 
     /// <summary>
     /// 内部数据交互类，主要用于不同线程间、不同窗口间传递数据的委托
@@ -50,8 +56,14 @@ namespace RebarSampling
 
         public DelegateShowAssembly showAssembly { get; set; }
 
+        public DelegateShowElement showElement { get; set; }
+
         public DelegateIfRebarChecked ifRebarChecked { get; set; }
 
         public DelegateIfRebarSelected ifRebarSelected { get; set; }
+
+        public DelegateWebServerMsg servermsg { get; set; }
+
+        public DelegateWebClientMsg clientmsg { get; set; }
     }
 }

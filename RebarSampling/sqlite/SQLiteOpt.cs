@@ -229,13 +229,7 @@ namespace RebarSampling
             catch (Exception ex) { MessageBox.Show("InitDB error:" + ex.Message); }
 
         }
-        /// <summary>
-        /// 用于excel数据存入数据库时，存在的构件名称缺省，起到补全构件名的作用
-        /// </summary>
-        public void ExcelToDBaddElement()
-        {
 
-        }
         /// <summary>
         /// excel文件存入数据库
         /// </summary>
@@ -681,7 +675,11 @@ namespace RebarSampling
 
         }
 
-
+        /// <summary>
+        /// 从钢筋总表中汇总出所有的钢筋图形
+        /// </summary>
+        /// <param name="_rebardatalist"></param>
+        /// <returns></returns>
         public List<EnumRebarPicType> GetExistedRebarTypeList(List<RebarData> _rebardatalist)
         {
             try
@@ -727,6 +725,61 @@ namespace RebarSampling
             catch (Exception ex) { MessageBox.Show("GetMultiData error:" + ex.Message); return null; }
 
         }
+        /// <summary>
+        /// 根据钢筋总表名称、项目名称、主构件名称，得到所有的构件包
+        /// </summary>
+        /// <param name="_tableName">钢筋总表名称，allsheet</param>
+        /// <param name="_projectName">项目名称，为excel文件名</param>
+        /// <param name="_assemblyName">主构件名称，为excel中的sheet名</param>
+        /// <returns>返回构件包list</returns>
+        public List<ElementData> GetAllElementList(string _tableName, string _projectName, string _assemblyName)
+        {
+            List<ElementData> _elementList = new List<ElementData>();
+            ElementData _element = null;
+
+            List<RebarData> _rebarlist = GetAllRebarList(_tableName);
+
+            foreach (RebarData item in _rebarlist)
+            {
+                if (item.ProjectName != _projectName || item.MainAssemblyName != _assemblyName)//筛选项目名和主构件名匹配的
+                {
+                    continue;
+                }
+                int _index = _rebarlist.IndexOf(item);
+
+                if (_index == 0 && item.ElementName != "")
+                {
+                    _element = new ElementData();
+                    _element.elementName = item.ElementName;
+                    _element.rebarlist.Add(item);
+                }
+                if (_index != 0 && item.ElementName != "" && item.ElementName != _rebarlist[_index - 1].ElementName)//构件名不为空，且跟上一个元素的构件名不一样，则新建构件
+                {
+                    if (_element != null)
+                    {
+                        _elementList.Add(_element);
+                    }
+                    _element = new ElementData();
+                    _element.elementName = item.ElementName;
+                    _element.rebarlist.Add(item);
+                }
+                else
+                {
+                    _element.rebarlist.Add(item);//子构件名称为空的，默认为跟前一个不为空的是同一个构件的
+                }
+
+            }
+
+
+
+
+            return _elementList;
+        }
+        /// <summary>
+        /// 从数据库中取出所有的钢筋数据
+        /// </summary>
+        /// <param name="_tableName"></param>
+        /// <returns>返回所有的钢筋list</returns>
         public List<RebarData> GetAllRebarList(string _tableName)
         {
             List<RebarData> allRebarList = new List<RebarData>();   //钢筋总表的list

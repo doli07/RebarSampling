@@ -15,6 +15,14 @@ namespace RebarSampling
         public Form3()
         {
             InitializeComponent();
+
+            InitDataGridView1();
+        }
+
+
+        private void InitDataGridView1()
+        {
+            Form2.InitDGV(dataGridView1);
         }
 
 

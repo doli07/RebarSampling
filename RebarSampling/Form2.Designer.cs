@@ -53,11 +53,11 @@
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.dataGridView11 = new System.Windows.Forms.DataGridView();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.dataGridView14 = new System.Windows.Forms.DataGridView();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.dataGridView13 = new System.Windows.Forms.DataGridView();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.button10 = new System.Windows.Forms.Button();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.dataGridView23 = new System.Windows.Forms.DataGridView();
@@ -68,10 +68,10 @@
             this.button8 = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.dataGridView24 = new System.Windows.Forms.DataGridView();
-            this.groupBox15 = new System.Windows.Forms.GroupBox();
-            this.dataGridView18 = new System.Windows.Forms.DataGridView();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.dataGridView17 = new System.Windows.Forms.DataGridView();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.dataGridView18 = new System.Windows.Forms.DataGridView();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
             this.dataGridView16 = new System.Windows.Forms.DataGridView();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
@@ -124,11 +124,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             this.tabPage8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView11)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.groupBox11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView14)).BeginInit();
             this.groupBox10.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView13)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView23)).BeginInit();
             this.groupBox9.SuspendLayout();
@@ -137,10 +137,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView9)).BeginInit();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView24)).BeginInit();
-            this.groupBox15.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView18)).BeginInit();
             this.groupBox14.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView17)).BeginInit();
+            this.groupBox15.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView18)).BeginInit();
             this.groupBox13.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView16)).BeginInit();
             this.groupBox12.SuspendLayout();
@@ -165,8 +165,8 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage8);
             this.tabControl1.Controls.Add(this.tabPage6);
@@ -287,7 +287,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage1.Size = new System.Drawing.Size(1218, 637);
+            this.tabPage1.Size = new System.Drawing.Size(1218, 628);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "分页料单";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -410,6 +410,26 @@
             this.dataGridView11.Size = new System.Drawing.Size(525, 228);
             this.dataGridView11.TabIndex = 4;
             // 
+            // chart1
+            // 
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Enabled = false;
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
+            this.chart1.Location = new System.Drawing.Point(748, 399);
+            this.chart1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chart1.Name = "chart1";
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
+            this.chart1.Size = new System.Drawing.Size(207, 220);
+            this.chart1.TabIndex = 4;
+            this.chart1.Text = "chart1";
+            this.chart1.Visible = false;
+            // 
             // groupBox11
             // 
             this.groupBox11.Controls.Add(this.dataGridView14);
@@ -459,26 +479,6 @@
             this.dataGridView13.RowTemplate.Height = 27;
             this.dataGridView13.Size = new System.Drawing.Size(576, 253);
             this.dataGridView13.TabIndex = 0;
-            // 
-            // chart1
-            // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Enabled = false;
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
-            this.chart1.Location = new System.Drawing.Point(748, 399);
-            this.chart1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
-            this.chart1.Size = new System.Drawing.Size(207, 220);
-            this.chart1.TabIndex = 4;
-            this.chart1.Text = "chart1";
-            this.chart1.Visible = false;
             // 
             // button10
             // 
@@ -611,31 +611,6 @@
             this.dataGridView24.Size = new System.Drawing.Size(543, 279);
             this.dataGridView24.TabIndex = 10;
             // 
-            // groupBox15
-            // 
-            this.groupBox15.Controls.Add(this.dataGridView18);
-            this.groupBox15.Location = new System.Drawing.Point(341, 358);
-            this.groupBox15.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox15.Size = new System.Drawing.Size(322, 265);
-            this.groupBox15.TabIndex = 9;
-            this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "原材套丝弯曲";
-            // 
-            // dataGridView18
-            // 
-            this.dataGridView18.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGridView18.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dataGridView18.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView18.Location = new System.Drawing.Point(8, 34);
-            this.dataGridView18.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.dataGridView18.Name = "dataGridView18";
-            this.dataGridView18.RowHeadersWidth = 51;
-            this.dataGridView18.RowTemplate.Height = 27;
-            this.dataGridView18.Size = new System.Drawing.Size(307, 221);
-            this.dataGridView18.TabIndex = 7;
-            // 
             // groupBox14
             // 
             this.groupBox14.Controls.Add(this.dataGridView17);
@@ -660,6 +635,31 @@
             this.dataGridView17.RowTemplate.Height = 27;
             this.dataGridView17.Size = new System.Drawing.Size(312, 221);
             this.dataGridView17.TabIndex = 4;
+            // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.dataGridView18);
+            this.groupBox15.Location = new System.Drawing.Point(341, 358);
+            this.groupBox15.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox15.Size = new System.Drawing.Size(322, 265);
+            this.groupBox15.TabIndex = 9;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "原材套丝弯曲";
+            // 
+            // dataGridView18
+            // 
+            this.dataGridView18.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView18.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView18.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView18.Location = new System.Drawing.Point(8, 34);
+            this.dataGridView18.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.dataGridView18.Name = "dataGridView18";
+            this.dataGridView18.RowHeadersWidth = 51;
+            this.dataGridView18.RowTemplate.Height = 27;
+            this.dataGridView18.Size = new System.Drawing.Size(307, 221);
+            this.dataGridView18.TabIndex = 7;
             // 
             // groupBox13
             // 
@@ -1207,7 +1207,7 @@
             this.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form2";
-            this.Text = "Form2";
+            this.Text = "统计";
             this.tabControl1.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView7)).EndInit();
@@ -1222,11 +1222,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
             this.tabPage8.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView11)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.groupBox11.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView14)).EndInit();
             this.groupBox10.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView13)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.tabPage6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView23)).EndInit();
             this.groupBox9.ResumeLayout(false);
@@ -1235,10 +1235,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView9)).EndInit();
             this.tabPage5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView24)).EndInit();
-            this.groupBox15.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView18)).EndInit();
             this.groupBox14.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView17)).EndInit();
+            this.groupBox15.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView18)).EndInit();
             this.groupBox13.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView16)).EndInit();
             this.groupBox12.ResumeLayout(false);

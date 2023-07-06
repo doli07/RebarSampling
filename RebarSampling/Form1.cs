@@ -129,12 +129,23 @@ namespace RebarSampling
                         //列举所有的sheet名称
                         TreeNode tn = new TreeNode();
                         TreeNode tn1 = new TreeNode();
+                        TreeNode tn2 = new TreeNode();
                         tn.Text = filename; //获取excel文件名作为根节点名称
                         for (int stnum = 0; stnum < GeneralClass.readEXCEL.wb?.NumberOfSheets - 1; stnum++)//因为料单一般最后一页是汇总表，格式不一致，不解析
                         {
                             ISheet sheet = GeneralClass.readEXCEL.wb?.GetSheetAt(stnum);
                             tn1 = new TreeNode();
                             tn1.Text = sheet.SheetName;
+
+                            List<ElementData> _list = GeneralClass.SQLiteOpt.GetAllElementList(tableName, filename, sheet.SheetName);
+                            foreach(var item in _list)
+                            {
+                                tn2 = new TreeNode();
+                                tn2.Text = item.elementName;
+                                tn1.Nodes.Add(tn2);
+                            }
+
+
                             tn.Nodes.Add(tn1);
                         }
                         //tn.Checked = true;//设置节点为选中
@@ -503,7 +514,7 @@ namespace RebarSampling
                     {
                         if (_childnode.Text == _assemblyname)
                         {
-                            return (_childnode.IsSelected) ? true : false;
+                            return _childnode.IsSelected;
                         }
                     }
                 }

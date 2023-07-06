@@ -47,8 +47,11 @@ namespace RebarSampling
             InitDGV_BangOri();
             InitDGV_BangNoOri();
         }
-
-        private void InitDGV(DataGridView _dgv)
+        /// <summary>
+        /// 其他界面也可以使用此方法
+        /// </summary>
+        /// <param name="_dgv"></param>
+        public static void InitDGV(DataGridView _dgv)
         {
             //"构件名称","编号","级别直径","钢筋简图","图形信息","边角结构","下料长度(mm)","根数/件数","总根数","重量(kg)","备注"
             DataGridViewColumn column;
@@ -1627,8 +1630,12 @@ namespace RebarSampling
 
         }
 
-
-        private void FillDGVWithRebarList(List<RebarData> _list, DataGridView _dgv)
+        /// <summary>
+        /// 其他界面也可以使用此方法
+        /// </summary>
+        /// <param name="_list"></param>
+        /// <param name="_dgv"></param>
+        private  void FillDGVWithRebarList(List<RebarData> _list, DataGridView _dgv)
         {
             _dgv.Rows.Clear();//清空
             DataGridViewRow dgvRow;

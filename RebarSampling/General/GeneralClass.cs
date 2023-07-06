@@ -28,6 +28,8 @@ namespace RebarSampling
         /// </summary>
         public static List<RebarData> AllRebarList = new List<RebarData>();
 
+        public static WebServer webServer = new WebServer();
+        public static WebClient webClient=new WebClient();
         /// <summary>
         /// detail分析用的三维数组，尺寸*工艺*分析项
         /// </summary>
