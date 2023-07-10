@@ -44,6 +44,9 @@ namespace RebarSampling
     public delegate void DelegateWebServerMsg(string msg);
     public delegate void DelegateWebClientMsg(string msg);
 
+    public delegate void DelegateMqttPublishMsg(string msg);
+    public delegate void DelegateMqttSubscribMsg(string msg);
+
     /// <summary>
     /// 内部数据交互类，主要用于不同线程间、不同窗口间传递数据的委托
     /// </summary>
@@ -65,5 +68,8 @@ namespace RebarSampling
         public DelegateWebServerMsg servermsg { get; set; }
 
         public DelegateWebClientMsg clientmsg { get; set; }
+
+        public DelegateMqttPublishMsg mqttpublishmsg { get; set; }
+        public DelegateMqttSubscribMsg mqttsubscribmsg { get; set; }
     }
 }

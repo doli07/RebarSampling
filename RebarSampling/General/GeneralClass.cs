@@ -30,6 +30,9 @@ namespace RebarSampling
 
         public static WebServer webServer = new WebServer();
         public static WebClient webClient=new WebClient();
+
+        public static MqttServerOpt mqttServer = new MqttServerOpt();
+        public static MqttClientOpt mqttClient = new MqttClientOpt();
         /// <summary>
         /// detail分析用的三维数组，尺寸*工艺*分析项
         /// </summary>

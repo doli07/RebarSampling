@@ -65,7 +65,8 @@ namespace RebarSampling
             if(ws!=null)
             {
                 ws.Close();
-                ws.Dispose();    
+                ws.Dispose();   
+                ws= null;
             }
         }
 

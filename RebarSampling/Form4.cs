@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,8 +19,34 @@ namespace RebarSampling
 
             GeneralClass.interactivityData.servermsg += ShowServerMsg;
             GeneralClass.interactivityData.clientmsg += ShowClientMsg;
-        }
 
+            GeneralClass.interactivityData.mqttpublishmsg += ShowPublisherMsg;
+            GeneralClass.interactivityData.mqttsubscribmsg += ShowSubscriberMsg;
+        }
+        private void ShowPublisherMsg(string msg)
+        {
+            if (this != null)
+            {
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    textBox13.Clear();
+                    textBox13.Text = DateTime.Now.ToString() + ":" + msg;
+                }
+                    ));
+            }
+        }
+        private void ShowSubscriberMsg(string msg)
+        {
+            if (this != null)
+            {
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    textBox15.Clear();
+                    textBox15.Text = DateTime.Now.ToString() + ":" + msg;
+                }
+                    ));
+            }
+        }
         private void ShowServerMsg(string msg)
         {
             if (this != null)
@@ -27,7 +54,7 @@ namespace RebarSampling
                 this.Invoke(new MethodInvoker(delegate
                 {
                     textBox4.Clear();
-                    textBox4.Text = msg;
+                    textBox4.Text = DateTime.Now.ToString() + ":" + msg;
                 }
                     ));
             }
@@ -40,7 +67,7 @@ namespace RebarSampling
                 this.Invoke(new MethodInvoker(delegate
                 {
                     textBox7.Clear();
-                    textBox7.Text = msg;
+                    textBox7.Text = DateTime.Now.ToString() + ":" + msg;
                 }
                 ));
             }
@@ -110,11 +137,13 @@ namespace RebarSampling
         private void button4_Click(object sender, EventArgs e)
         {
             GeneralClass.webClient.Connect(textBox5.Text);
+            button4.Enabled = false;
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
             GeneralClass.webClient.Disconnect();
+            button4.Enabled = true;
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -125,6 +154,73 @@ namespace RebarSampling
         private void button7_Click(object sender, EventArgs e)
         {
             GeneralClass.webClient.SendMsg(textBox8.Text);
+        }
+
+        private async void buttonServerStart_Click(object sender, EventArgs e)
+        {
+            buttonServerStart.BackColor = Color.LightGreen;
+            buttonServerStart.Enabled = false;
+            await GeneralClass.mqttServer.StartMqttServer(textBox9.Text);
+            GeneralClass.interactivityData?.printlog(1, "mqttserver start");
+        }
+
+        private async void buttonServerStop_Click(object sender, EventArgs e)
+        {
+            buttonServerStart.BackColor = Color.Transparent;
+            buttonServerStart.Enabled=true;
+            await GeneralClass.mqttServer.StopMqttServer();
+            GeneralClass.interactivityData?.printlog(1, "mqttserver stop");
+
+        }
+
+        private async void buttonPublisherStart_Click(object sender, EventArgs e)
+        {
+            buttonPublisherStart.BackColor = Color.LightGreen;
+            buttonPublisherStart.Enabled=false;
+            await GeneralClass.mqttClient.PublisherStart(textBox10.Text, textBox9.Text);
+            GeneralClass.interactivityData?.printlog(1, $"mqttclient publisher start,server:{textBox10.Text}|port:{textBox9.Text}");
+
+        }
+
+        private async void buttonPublisherStop_Click(object sender, EventArgs e)
+        {
+            buttonPublisherStart.BackColor = Color.Transparent;
+            buttonPublisherStart.Enabled=true;
+            await GeneralClass.mqttClient.PublisherStop();
+            GeneralClass.interactivityData?.printlog(1, "mqttclient publisher stop");
+
+        }
+
+        private async void buttonPublish_Click(object sender, EventArgs e)
+        {
+            await GeneralClass.mqttClient.Publish(textBox11.Text, textBox12.Text);
+            GeneralClass.interactivityData?.printlog(1, $"mqttclient publish,topic:{textBox11.Text}|payload:{textBox12.Text}");
+
+        }
+
+        private async void buttonSubscriberStart_Click(object sender, EventArgs e)
+        {
+            buttonSubscriberStart.BackColor = Color.LightGreen;
+            buttonSubscriberStart.Enabled=false;
+            await GeneralClass.mqttClient.SubscriberStart(textBox10.Text, textBox9.Text);
+            GeneralClass.interactivityData?.printlog(1, $"mqttclient subscriber start,server:{textBox10.Text}|port:{textBox9.Text}");
+
+        }
+
+        private async void buttonSubscrib_Click(object sender, EventArgs e)
+        {
+            await GeneralClass.mqttClient.Subscrib(textBox14.Text);
+            GeneralClass.interactivityData?.printlog(1, $"mqttclient subscrib,topic:{textBox14.Text}");
+
+        }
+
+        private async void buttonSubscriberStop_Click(object sender, EventArgs e)
+        {
+            buttonSubscriberStart.BackColor = Color.Transparent;
+            buttonSubscriberStart.Enabled = true;
+            await GeneralClass.mqttClient.SubscriberStop();
+            GeneralClass.interactivityData?.printlog(1, "mqttclient subscriber stop");
+
         }
     }
 }

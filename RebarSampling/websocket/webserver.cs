@@ -12,6 +12,9 @@ namespace RebarSampling
     {
         private WebSocketServer ws = null;
 
+        /// <summary>
+        /// session列表
+        /// </summary>
         private List<WebSocketSession> sessionList = new List<WebSocketSession>();
         /// <summary>
         /// 启动websocketserver，根据ip和port
@@ -54,6 +57,7 @@ namespace RebarSampling
                 sessionList.Clear();
                 ws.Stop();
                 ws.Dispose();
+                ws= null;
             }
         }
 
@@ -68,9 +72,9 @@ namespace RebarSampling
 
         private void Ws_SessionClosed(WebSocketSession session, SuperSocket.SocketBase.CloseReason value)
         {
-            string msg = GetSessionName(session) + "关闭连接，原因是：" + value.ToString();
+            string msg = GetSessionName(session) + "关闭连接：" + value.ToString();
             GeneralClass.interactivityData?.printlog(1, msg);
-
+            sessionList.Remove(session);
             SendToAll(session, msg);
             //throw new NotImplementedException();
         }
