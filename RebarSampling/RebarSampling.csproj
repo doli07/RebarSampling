@@ -290,6 +290,7 @@
     <Compile Include="excel\IExcelReader.cs" />
     <Compile Include="excel\IExcelWriter.cs" />
     <Compile Include="General\InteractivityData.cs" />
+    <Compile Include="http\http.cs" />
     <Compile Include="json\json.cs" />
     <Compile Include="log\logfile.cs" />
     <Compile Include="excel\NpoiExcelReader.cs" />

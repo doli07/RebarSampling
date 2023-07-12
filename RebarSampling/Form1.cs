@@ -137,13 +137,13 @@ namespace RebarSampling
                             tn1 = new TreeNode();
                             tn1.Text = sheet.SheetName;
 
-                            List<ElementData> _list = GeneralClass.SQLiteOpt.GetAllElementList(tableName, filename, sheet.SheetName);
-                            foreach(var item in _list)
-                            {
-                                tn2 = new TreeNode();
-                                tn2.Text = item.elementName;
-                                tn1.Nodes.Add(tn2);
-                            }
+                            //List<ElementData> _list = GeneralClass.SQLiteOpt.GetAllElementList(tableName, filename, sheet.SheetName);
+                            //foreach(var item in _list)
+                            //{
+                            //    tn2 = new TreeNode();
+                            //    tn2.Text = item.elementName;
+                            //    tn1.Nodes.Add(tn2);
+                            //}
 
 
                             tn.Nodes.Add(tn1);

@@ -23,14 +23,28 @@ namespace RebarSampling
             GeneralClass.interactivityData.mqttpublishmsg += ShowPublisherMsg;
             GeneralClass.interactivityData.mqttsubscribmsg += ShowSubscriberMsg;
         }
+
+        ~Form4()
+        {
+            this.dispose();
+        }
+        private async void dispose()
+        {
+            GeneralClass.webServer.Stop();
+            GeneralClass.webClient.Disconnect();
+
+            await GeneralClass.mqttServer.StopMqttServer();
+            await GeneralClass.mqttClient.PublisherStop();
+            await GeneralClass.mqttClient.SubscriberStop();
+        }
         private void ShowPublisherMsg(string msg)
         {
             if (this != null)
             {
                 this.Invoke(new MethodInvoker(delegate
                 {
-                    textBox13.Clear();
-                    textBox13.Text = DateTime.Now.ToString() + ":" + msg;
+                    //textBox13.Clear();
+                    textBox13.Text += DateTime.Now.ToString() + ":" + msg+"\r\n";
                 }
                     ));
             }
@@ -41,8 +55,8 @@ namespace RebarSampling
             {
                 this.Invoke(new MethodInvoker(delegate
                 {
-                    textBox15.Clear();
-                    textBox15.Text = DateTime.Now.ToString() + ":" + msg;
+                    //textBox15.Clear();
+                    textBox15.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
                 }
                     ));
             }
@@ -53,8 +67,8 @@ namespace RebarSampling
             {
                 this.Invoke(new MethodInvoker(delegate
                 {
-                    textBox4.Clear();
-                    textBox4.Text = DateTime.Now.ToString() + ":" + msg;
+                    //textBox4.Clear();
+                    textBox4.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
                 }
                     ));
             }
@@ -66,8 +80,8 @@ namespace RebarSampling
             {
                 this.Invoke(new MethodInvoker(delegate
                 {
-                    textBox7.Clear();
-                    textBox7.Text = DateTime.Now.ToString() + ":" + msg;
+                    //textBox7.Clear();
+                    textBox7.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
                 }
                 ));
             }
@@ -125,25 +139,34 @@ namespace RebarSampling
 
         private void button2_Click(object sender, EventArgs e)
         {
+            button2.BackColor = Color.LightGreen;
+            button2.Enabled = false;
 
             GeneralClass.webServer.Start(textBox2.Text, textBox3.Text);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            button2.BackColor = Color.Transparent;
+            button2.Enabled = true;
+
             GeneralClass.webServer.Stop();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            GeneralClass.webClient.Connect(textBox5.Text);
+            button4.BackColor = Color.LightGreen;
             button4.Enabled = false;
+
+            GeneralClass.webClient.Connect(textBox5.Text);
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            GeneralClass.webClient.Disconnect();
+            button4.BackColor = Color.Transparent;
             button4.Enabled = true;
+
+            GeneralClass.webClient.Disconnect();
         }
 
         private void button6_Click(object sender, EventArgs e)

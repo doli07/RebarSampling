@@ -746,13 +746,15 @@ namespace RebarSampling
                     continue;
                 }
                 int _index = _rebarlist.IndexOf(item);
-
-                if (_index == 0 && item.ElementName != "")
+                
+                //首行先创建构件
+                if (_index == 0)
                 {
                     _element = new ElementData();
-                    _element.elementName = item.ElementName;
+                    _element.elementName = (item.ElementName != "") ? item.ElementName : "default";//极少数情况，会出现首行没有构件名，用缺省名代替                                 
                     _element.rebarlist.Add(item);
                 }
+
                 if (_index != 0 && item.ElementName != "" && item.ElementName != _rebarlist[_index - 1].ElementName)//构件名不为空，且跟上一个元素的构件名不一样，则新建构件
                 {
                     if (_element != null)
