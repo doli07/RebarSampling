@@ -13,7 +13,11 @@ namespace RebarSampling
         /// 操作读写excel文件
         /// </summary>
         public static ExcelReader readEXCEL = new ExcelReader();
-
+        /// <summary>
+        /// 操作解析E筋格式文件
+        /// 通过E筋公司提供的ETable.dll实现
+        /// </summary>
+        public static EjinReader readEjin = new EjinReader();
         /// <summary>
         /// 操作json序列化与反序列化
         /// </summary>

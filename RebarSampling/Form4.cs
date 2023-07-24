@@ -44,7 +44,9 @@ namespace RebarSampling
                 this.Invoke(new MethodInvoker(delegate
                 {
                     //textBox13.Clear();
-                    textBox13.Text += DateTime.Now.ToString() + ":" + msg+"\r\n";
+                    //textBox13.Text += DateTime.Now.ToString() + ":" + msg+"\r\n";
+                    textBox13.Text=textBox13.Text.Insert(0,DateTime.Now.ToString() + ":" + msg + "\r\n");
+
                 }
                     ));
             }
@@ -56,7 +58,9 @@ namespace RebarSampling
                 this.Invoke(new MethodInvoker(delegate
                 {
                     //textBox15.Clear();
-                    textBox15.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
+                    //textBox15.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
+                    textBox15.Text=textBox15.Text.Insert(0, DateTime.Now.ToString() + ":" + msg + "\r\n");
+
                 }
                     ));
             }
@@ -68,7 +72,9 @@ namespace RebarSampling
                 this.Invoke(new MethodInvoker(delegate
                 {
                     //textBox4.Clear();
-                    textBox4.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
+                    //textBox4.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
+                    textBox4.Text=textBox4.Text.Insert(0, DateTime.Now.ToString() + ":" + msg + "\r\n");
+
                 }
                     ));
             }
@@ -81,7 +87,9 @@ namespace RebarSampling
                 this.Invoke(new MethodInvoker(delegate
                 {
                     //textBox7.Clear();
-                    textBox7.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
+                    //textBox7.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
+                    textBox7.Text=textBox7.Text.Insert(0, DateTime.Now.ToString() + ":" + msg + "\r\n");
+
                 }
                 ));
             }

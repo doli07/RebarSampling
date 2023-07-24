@@ -46,8 +46,9 @@
             this.button13 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.button3 = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -58,7 +59,7 @@
             // 
             this.button1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(16, 4);
+            this.button1.Location = new System.Drawing.Point(109, 4);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(90, 80);
@@ -169,7 +170,7 @@
             // 
             this.button11.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button11.Image = ((System.Drawing.Image)(resources.GetObject("button11.Image")));
-            this.button11.Location = new System.Drawing.Point(112, 4);
+            this.button11.Location = new System.Drawing.Point(205, 4);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(90, 80);
             this.button11.TabIndex = 21;
@@ -183,7 +184,7 @@
             // 
             this.button12.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
-            this.button12.Location = new System.Drawing.Point(207, 4);
+            this.button12.Location = new System.Drawing.Point(300, 4);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(90, 80);
             this.button12.TabIndex = 22;
@@ -195,6 +196,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.button13);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
@@ -211,7 +213,7 @@
             // 
             this.button13.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button13.Image = ((System.Drawing.Image)(resources.GetObject("button13.Image")));
-            this.button13.Location = new System.Drawing.Point(400, 4);
+            this.button13.Location = new System.Drawing.Point(493, 4);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(90, 80);
             this.button13.TabIndex = 24;
@@ -224,7 +226,7 @@
             // 
             this.button2.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.Location = new System.Drawing.Point(304, 4);
+            this.button2.Location = new System.Drawing.Point(397, 4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(90, 80);
             this.button2.TabIndex = 23;
@@ -246,15 +248,6 @@
             this.panel2.Size = new System.Drawing.Size(297, 675);
             this.panel2.TabIndex = 24;
             // 
-            // panel3
-            // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.panel3.Location = new System.Drawing.Point(297, 87);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1349, 675);
-            this.panel3.TabIndex = 25;
-            // 
             // panel4
             // 
             this.panel4.Controls.Add(this.button6);
@@ -266,6 +259,29 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(297, 99);
             this.panel4.TabIndex = 0;
+            // 
+            // panel3
+            // 
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.panel3.Location = new System.Drawing.Point(297, 87);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(1349, 675);
+            this.panel3.TabIndex = 25;
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
+            this.button3.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.button3.Location = new System.Drawing.Point(13, 4);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(90, 80);
+            this.button3.TabIndex = 25;
+            this.button3.Text = "导入料单";
+            this.button3.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // Form1
             // 
@@ -316,6 +332,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Button button3;
     }
 }
 

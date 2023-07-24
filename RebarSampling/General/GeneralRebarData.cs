@@ -27,7 +27,16 @@ namespace RebarSampling
 
     }
 
+    public class GroupbyLengthDatalist
+    { 
+        public string _length { get; set; }
 
+        public double _totalnum { get; set; }
+
+        public double _totalweight { get; set; }
+
+        public List<RebarData> _datalist { get; set; }
+    }
 
     /// <summary>
     /// 钢筋数据结构

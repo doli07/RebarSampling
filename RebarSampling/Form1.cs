@@ -24,6 +24,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml.Linq;
 using System.Collections;
 
+
 namespace RebarSampling
 {
     public partial class Form1 : Form
@@ -89,7 +90,7 @@ namespace RebarSampling
                 //打开excel文件
                 OpenFileDialog openFileDialog = new OpenFileDialog();//打开文件夹对话框
                 openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                openFileDialog.Filter = "excel文件|*.xls;*.xlsx|所有文件|*.*";
+                openFileDialog.Filter = "excel文件(*.xls)|*.xls|excel文件(*.xlsx)|*.xlsx|所有文件(*.*)|*.*";
                 openFileDialog.Title = "打开料单";
                 openFileDialog.FilterIndex = 0;
                 openFileDialog.Multiselect = true;
@@ -98,7 +99,7 @@ namespace RebarSampling
 
 
                 treeView1.Nodes.Clear();
-                if(GeneralClass.interactivityData?.initStatisticsDGV!=null)
+                if (GeneralClass.interactivityData?.initStatisticsDGV != null)
                 {
                     GeneralClass.interactivityData?.initStatisticsDGV();//清空统计界面的dgv
                 }
@@ -138,7 +139,7 @@ namespace RebarSampling
                             tn1.Text = sheet.SheetName;
 
                             //List<ElementData> _list = GeneralClass.SQLiteOpt.GetAllElementList(tableName, filename, sheet.SheetName);
-                            //foreach(var item in _list)
+                            //foreach (var item in _list)
                             //{
                             //    tn2 = new TreeNode();
                             //    tn2.Text = item.elementName;
@@ -170,12 +171,14 @@ namespace RebarSampling
 
 
         /// <summary>
-        /// Log添加,保存信息的类别 1:操作记录 
-        /// mes：日志内容
+        /// Log添加,保存信息的类别 
+        /// 1：操作记录 
+        /// 2：料单记录
+        /// 
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="type">记录类型</param>
         ///                                   
-        /// <param name="MES"></param>   
+        /// <param name="MES">记录信息内容</param>   
         public void LogAdd(int type, string message)
         {
 
@@ -366,10 +369,11 @@ namespace RebarSampling
             {
                 if (e.Node.Parent != null)
                 {
-                    //GetSheetToDGV(e.Node.Index);
-                    //GetSheetToDGV();
-                    //tabControl1.SelectedIndex = 1;
-                    GeneralClass.interactivityData?.showAssembly();
+                    if (this.panel3.Controls.Contains(form2))//如果当前显示的是form2（统计界面），则执行显示主构件信息
+                    {
+                        GeneralClass.interactivityData?.showAssembly();
+                    }
+
                 }
             }
         }
@@ -637,7 +641,7 @@ namespace RebarSampling
         {
             button11.BackColor = SystemColors.GradientInactiveCaption;
             button2.BackColor = SystemColors.GradientInactiveCaption;
-            button12.BackColor = Color.Blue;
+            button12.BackColor = Color.Wheat;
 
             form3.Show();
             this.panel3.Controls.Clear();
@@ -650,23 +654,93 @@ namespace RebarSampling
         {
             button2.BackColor = SystemColors.GradientInactiveCaption;
             button12.BackColor = SystemColors.GradientInactiveCaption;
-            button11.BackColor = Color.Blue;
+            button11.BackColor = Color.Wheat;
 
             form2.Show();
             this.panel3.Controls.Clear();
             this.panel3.Controls.Add(form2);
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             button11.BackColor = SystemColors.GradientInactiveCaption;
             button12.BackColor = SystemColors.GradientInactiveCaption;
-            button2.BackColor = Color.Blue;
+            button2.BackColor = Color.Wheat;
 
             form4.Show();
             this.panel3.Controls.Clear();
             this.panel3.Controls.Add(form4);
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //string filepath = "";
+
+                //打开excel文件
+                OpenFileDialog openFileDialog = new OpenFileDialog();//打开文件夹对话框
+                openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                openFileDialog.Filter = "E筋文件(*.ejb)|*.ejb|所有文件(*.*)|*.*";
+                openFileDialog.Title = "打开料单";
+                openFileDialog.FilterIndex = 0;
+                openFileDialog.Multiselect = true;
+                openFileDialog.CheckFileExists = true;
+                openFileDialog.CheckPathExists = true;
+
+
+                treeView1.Nodes.Clear();
+                if (GeneralClass.interactivityData?.initStatisticsDGV != null)
+                {
+                    GeneralClass.interactivityData?.initStatisticsDGV();//清空统计界面的dgv
+                }
+
+                //GeneralClass.SQLiteOpt.InitDB(GeneralClass.AllRebarTableName);//先创建并清空db数据库表单
+                GeneralClass.SQLiteOpt.InitDB(GeneralClass.AllRebarBKTableName);//先创建并清空db数据库表单
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (string filepath in openFileDialog.FileNames)
+                    {
+                        string filename = System.IO.Path.GetFileNameWithoutExtension(filepath); //获取excel文件名作为根节点名称,不带后缀名
+
+                        this.toolStripStatusLabel1.Text = filepath;//显示文件名称
+
+                        string tableName = GeneralClass.AllRebarBKTableName;
+
+                        GeneralClass.interactivityData?.printlog(1, "开始导入E筋料单至数据库文件，请等待。。。");
+                        //GeneralClass.SQLiteOpt.ExcelToDB(filepath, tableName);//excel文件数据存入数据库
+
+                        string jsonstr = GeneralClass.readEjin.GetJsonStr(filepath);
+
+
+
+                        GeneralClass.interactivityData?.printlog(1, "E筋料单[" + filename + "]导入数据库文件成功！");
+
+                        //列举所有的sheet名称
+                        TreeNode tn = new TreeNode();
+                        TreeNode tn1 = new TreeNode();
+                        TreeNode tn2 = new TreeNode();
+                        tn.Text = filename; //获取excel文件名作为根节点名称
+                        for (int stnum = 0; stnum < GeneralClass.readEXCEL.wb?.NumberOfSheets - 1; stnum++)//因为料单一般最后一页是汇总表，格式不一致，不解析
+                        {
+                            ISheet sheet = GeneralClass.readEXCEL.wb?.GetSheetAt(stnum);
+                            tn1 = new TreeNode();
+                            tn1.Text = sheet.SheetName;
+
+                            tn.Nodes.Add(tn1);
+                        }
+                        //tn.Checked = true;//设置节点为选中
+                        treeView1.Nodes.Add(tn);
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
         }
     }

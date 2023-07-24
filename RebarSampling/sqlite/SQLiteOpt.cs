@@ -20,6 +20,7 @@ using NPOI.XWPF.UserModel;
 
 namespace RebarSampling
 {
+
     /// <summary>
     /// SQLiteOpt类，用于对sqlite数据库文件的复杂操作
     /// </summary>
@@ -382,35 +383,45 @@ namespace RebarSampling
 
                 GeneralDetailData _detaildata = new GeneralDetailData();
 
-                List<RebarData> _newdatalist = new List<RebarData>();
-                //先把rebardata列表里面筛出原材和多段的
-                foreach (RebarData _dd in _rebarDataList)
-                {
-                    if (!_dd.IsMulti && !_dd.IsOriginal)
-                    {
-                        _newdatalist.Add(_dd);
-                    }
-                }
+                //List<RebarData> _newdatalist = new List<RebarData>();
+                ////先把rebardata列表里面筛出原材和多段的
+                //foreach (RebarData _dd in _rebarDataList)
+                //{
+                //    if (!_dd.IsMulti && !_dd.IsOriginal)
+                //    {
+                //        _newdatalist.Add(_dd);
+                //    }
+                //}
 
-                List<EnumRebarPicType> _typelist = GetExistedRebarTypeList(_newdatalist);//得到列表中包含的钢筋图形编号列表
-                //GeneralClass.ExistRebarPicTypeList = _typelist;//导出
+                List<EnumRebarPicType> _typelist = GetExistedRebarTypeList(_rebarDataList/*_newdatalist*/);//得到列表中包含的钢筋图形编号列表
 
                 foreach (EnumRebarPicType _type in _typelist)
                 {
                     _detaildata = new GeneralDetailData();
-                    foreach (RebarData _ddd in _newdatalist)
+                    foreach (RebarData _ddd in _rebarDataList /*_newdatalist*/)
                     {
-                        if (_ddd.TypeNum == _type.ToString().Substring(2, 5) &&
+                        //把TotalPieceNum==0的多段排除出去
+                        if (_ddd.TypeNum == _type.ToString().Substring(2, 5) &&(_ddd.TotalPieceNum!=0)&&
                            (_iffilter ? (_ddd.IfCut == _ifcut && _ddd.IfBend == _ifbend && _ddd.IfTao == _iftao) : true))
                         {
                             _detaildata.TotalPieceNum += _ddd.TotalPieceNum;
                             _detaildata.TotalWeight += _ddd.TotalWeight;
-                            _detaildata.TotalLength += Convert.ToInt32(_ddd.Length);
+
+                            #region 处理长度数值例外的情况,临时做法，如果长度数值有换行符号，则给0
+                            //_detaildata.TotalLength += Convert.ToInt32(_ddd.Length);
+                            int _llll = 0;
+                            if(int.TryParse(_ddd.Length,out _llll))
+                            {
+                                _detaildata.TotalLength += _llll;
+                            }
+                            #endregion
 
                             //解析套丝数据，
                             //示例：0,套;2250,-90;300,0&D
                             //      0,32套; 4000,丝
-                            string[] sss = _ddd.CornerMessage.Split(';');
+                            //string[] sss = _ddd.CornerMessage.Split(';');
+                            string[] sss = _ddd.CornerMessage.Split(new char[] { ';'},StringSplitOptions.RemoveEmptyEntries);
+
                             foreach (string ss in sss)
                             {
                                 string[] s = ss.Split(',');
@@ -517,6 +528,7 @@ namespace RebarSampling
                         }
                     }
 
+                    _list = new List<KeyValuePair<EnumRebarPicType, GeneralDetailData>>();
                     if (_bangList.Count != 0)
                     {
                         _list = Detail_other(_bangList, _iffilter, _ifcut, _ifbend, _iftao);
@@ -675,6 +687,45 @@ namespace RebarSampling
 
         }
 
+        public List<GroupbyLengthDatalist> GetAllListByLength(List<RebarData> _rebardatalist)
+        {
+            List<GroupbyLengthDatalist> returnlist = new List<GroupbyLengthDatalist>();
+
+            returnlist = _rebardatalist.GroupBy(x=>x.Length).Select(
+                y=>new GroupbyLengthDatalist { 
+                    _length = y.Key,
+                    _totalnum = y.Sum(item=>item.TotalPieceNum),
+                    _totalweight = y.Sum(item =>item.TotalWeight),
+                    _datalist = y.ToList()
+                }).ToList();
+
+
+
+            ////******* 对集合按Name属于进行分组GroupBy查询 ********  
+            ////结果中包括的字段：  
+            ////1、分组的关键字：Name = g.Key  
+            ////2、每个分组的数量：count = g.Count()  
+            ////3、每个分组的年龄总和：ageC = g.Sum(item => item.Age)  
+            ////4、每个分组的收入总和：moneyC = g.Sum(item => item.Money)  
+
+            ////写法1：Lambda 表达式写法（推荐）  
+            //var ls = persons1.GroupBy(a => a.Name).Select(g => (new { 
+            //    name = g.Key, 
+            //    count = g.Count(),
+            //    ageC = g.Sum(item => item.Age), 
+            //    moneyC = g.Sum(item => item.Money) 
+            //}));
+            ////写法2：类SQL语言写法 最终编译器会把它转化为lamda表达式  
+            //var ls2 = from ps in persons1
+            //          group ps by ps.Name
+            //             into g
+            //          select new { name = g.Key, count = g.Count(), ageC = g.Sum(item => item.Age), moneyC = g.Sum(item => item.Money) };
+
+
+
+            return returnlist;
+
+        }
         /// <summary>
         /// 从钢筋总表中汇总出所有的钢筋图形
         /// </summary>
@@ -739,23 +790,32 @@ namespace RebarSampling
 
             List<RebarData> _rebarlist = GetAllRebarList(_tableName);
 
+            int _index = 0;
+
             foreach (RebarData item in _rebarlist)
             {
                 if (item.ProjectName != _projectName || item.MainAssemblyName != _assemblyName)//筛选项目名和主构件名匹配的
                 {
+                    _index = 0;
                     continue;
                 }
-                int _index = _rebarlist.IndexOf(item);
+                else
+                {
+                    _index++;
+                }
+
+                //int _index = _rebarlist.IndexOf(item);
                 
                 //首行先创建构件
-                if (_index == 0)
+                if (_index == 1)
                 {
                     _element = new ElementData();
                     _element.elementName = (item.ElementName != "") ? item.ElementName : "default";//极少数情况，会出现首行没有构件名，用缺省名代替                                 
                     _element.rebarlist.Add(item);
                 }
 
-                if (_index != 0 && item.ElementName != "" && item.ElementName != _rebarlist[_index - 1].ElementName)//构件名不为空，且跟上一个元素的构件名不一样，则新建构件
+                int curIndex= _rebarlist.IndexOf(item);
+                if (_index != 1 && item.ElementName != "" && item.ElementName != _rebarlist[curIndex - 1].ElementName)//构件名不为空，且跟上一个元素的构件名不一样，则新建构件
                 {
                     if (_element != null)
                     {
@@ -870,7 +930,9 @@ namespace RebarSampling
                 List<GeneralMultiData> datalist = new List<GeneralMultiData>();
                 GeneralMultiData _data = null;
 
-                string[] ssss = _cornerMsg.Split(';');
+                //string[] ssss = _cornerMsg.Split(';');
+                string[] ssss = _cornerMsg.Split(new char[] { ';'},StringSplitOptions.RemoveEmptyEntries);//去掉split后为空的值
+
                 foreach (string sss in ssss)
                 {
                     _data = new GeneralMultiData();
@@ -1129,8 +1191,11 @@ namespace RebarSampling
                         _data.TotalPieceNum += _dd.TotalPieceNum;
                         _data.TotalLength += Convert.ToInt32(_dd.Length) * _dd.TotalPieceNum;    //总长度需要乘以数量
                         _data.TotalWeight += _dd.TotalWeight;   //数据源中的重量已经做了汇总
-                                                                //示例：0,套;12000,丝
-                        string[] ttt = _dd.CornerMessage.Split(';');//
+                        
+                        //示例：0,套;12000,丝
+                        //string[] ttt = _dd.CornerMessage.Split(';');
+                        string[] ttt = _dd.CornerMessage.Split(new char[] {';'},StringSplitOptions.RemoveEmptyEntries);//去掉空的
+
                         foreach (string tt in ttt)
                         {
                             string[] t = tt.Split(',');
