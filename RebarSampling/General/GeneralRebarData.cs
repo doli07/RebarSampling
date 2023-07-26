@@ -26,12 +26,39 @@ namespace RebarSampling
         public string Floor { get; set; }
 
     }
+    /// <summary>
+    /// 按照钢筋直径进行检索的数据list，自动统计数量、重量
+    /// </summary>
+    public class GroupbyDiameterDatalist
+    { 
+        public int _diameter { get; set; }
+        public int _totalnum { get; set; }
+        public double _totalweight { get; set; }
+        public List<RebarData> _datalist { get; set; }
+
+    }
+    /// <summary>
+    /// 按照工艺是否套丝是否弯曲进行分类的数据list，自动统计数量、重量
+    /// </summary>
+
+    public class GroupbyTaoBendDatalist
+    { 
+        public bool _iftao { get; set; }
+        public bool _ifbend { get; set; }
+        public int _totalnum { get; set; }
+        public double _totalweight { get; set; }
+
+        public List<RebarData> _datalist { get; set; }
+    }
+    /// <summary>
+    /// 按照钢筋长度进行检索的数据list，自动统计数量、重量
+    /// </summary>
 
     public class GroupbyLengthDatalist
     { 
         public string _length { get; set; }
 
-        public double _totalnum { get; set; }
+        public int _totalnum { get; set; }
 
         public double _totalweight { get; set; }
 

@@ -61,7 +61,7 @@ namespace RebarSampling
             form4.FormBorderStyle = FormBorderStyle.None;
             form4.Dock = DockStyle.Fill;
 
-            InitChecklist1();
+            InitCheckbox();
             InitTreeView1();
 
 
@@ -98,7 +98,10 @@ namespace RebarSampling
                 openFileDialog.CheckPathExists = true;
 
 
-                treeView1.Nodes.Clear();
+                //treeView1.Nodes.Clear();
+                InitCheckbox();
+                InitTreeView1();
+
                 if (GeneralClass.interactivityData?.initStatisticsDGV != null)
                 {
                     GeneralClass.interactivityData?.initStatisticsDGV();//清空统计界面的dgv
@@ -224,8 +227,14 @@ namespace RebarSampling
             //GetSheetToDGV(comboBox1.SelectedIndex);
         }
 
-        private void InitChecklist1()
+        private void InitCheckbox()
         {
+            checkBox2.Checked = false;
+            checkBox2.Text = "全不选";
+            checkBox3.Checked = false;
+            checkBox3.Text = "折叠";
+
+            checkedListBox1.Items.Clear();
             for (int i = 0; i < (int)EnumRebarAssemblyType.maxAssemblyNum; i++)
             {
                 checkedListBox1.Items.Add(GeneralClass.sRebarAssemblyTypeName[i]);

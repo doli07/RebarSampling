@@ -595,6 +595,32 @@ namespace RebarSampling
 
         maxItemNum
     }
+
+    /// <summary>
+    /// 工艺类型
+    /// </summary>
+    public enum EnumWorkType
+    {
+        /// <summary>
+        /// 不弯，不套
+        /// </summary>
+        NO_BEND_NO_TAO,
+        /// <summary>
+        /// 不弯，套丝
+        /// </summary>
+        NO_BEND_YES_TAO,
+        /// <summary>
+        /// 弯曲，不套
+        /// </summary>
+        YES_BEND_NO_TAO,
+        /// <summary>
+        /// 弯曲，套丝
+        /// </summary>
+        YES_BEND_YES_TAO,
+
+        maxWorkType
+
+    }
     /// <summary>
     /// 详细统计界面的列名枚举,加工工艺
     /// </summary>

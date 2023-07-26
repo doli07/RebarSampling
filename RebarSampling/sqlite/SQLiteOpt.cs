@@ -331,6 +331,8 @@ namespace RebarSampling
                 }
 
             }
+
+
             ExecuteNonQuery(sqls);//批量存入
 
 
@@ -401,7 +403,7 @@ namespace RebarSampling
                     foreach (RebarData _ddd in _rebarDataList /*_newdatalist*/)
                     {
                         //把TotalPieceNum==0的多段排除出去
-                        if (_ddd.TypeNum == _type.ToString().Substring(2, 5) &&(_ddd.TotalPieceNum!=0)&&
+                        if (_ddd.TypeNum == _type.ToString().Substring(2, 5) && (_ddd.TotalPieceNum != 0) &&
                            (_iffilter ? (_ddd.IfCut == _ifcut && _ddd.IfBend == _ifbend && _ddd.IfTao == _iftao) : true))
                         {
                             _detaildata.TotalPieceNum += _ddd.TotalPieceNum;
@@ -410,7 +412,7 @@ namespace RebarSampling
                             #region 处理长度数值例外的情况,临时做法，如果长度数值有换行符号，则给0
                             //_detaildata.TotalLength += Convert.ToInt32(_ddd.Length);
                             int _llll = 0;
-                            if(int.TryParse(_ddd.Length,out _llll))
+                            if (int.TryParse(_ddd.Length, out _llll))
                             {
                                 _detaildata.TotalLength += _llll;
                             }
@@ -420,7 +422,7 @@ namespace RebarSampling
                             //示例：0,套;2250,-90;300,0&D
                             //      0,32套; 4000,丝
                             //string[] sss = _ddd.CornerMessage.Split(';');
-                            string[] sss = _ddd.CornerMessage.Split(new char[] { ';'},StringSplitOptions.RemoveEmptyEntries);
+                            string[] sss = _ddd.CornerMessage.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
                             foreach (string ss in sss)
                             {
@@ -686,16 +688,47 @@ namespace RebarSampling
             return data;
 
         }
+        public List<GroupbyDiameterDatalist> QueryAllListByDiameter(List<RebarData> _rebardatalist)
+        {
+            List<GroupbyDiameterDatalist> returnlist = new List<GroupbyDiameterDatalist>();
+            returnlist = _rebardatalist.GroupBy(x => x.Diameter).Select(
+                y => new GroupbyDiameterDatalist
+                {
+                    _diameter = y.Key,
+                    _totalnum = y.Sum(item => item.TotalPieceNum),
+                    _totalweight = y.Sum(item => item.TotalWeight),
+                    _datalist = y.ToList()
+                }).ToList();
 
-        public List<GroupbyLengthDatalist> GetAllListByLength(List<RebarData> _rebardatalist)
+            return returnlist;
+        }
+        public List<GroupbyTaoBendDatalist> QueryAllListByTaoBend(List<RebarData> _rebardatalist)
+        {
+            List<GroupbyTaoBendDatalist> returnlist = new List<GroupbyTaoBendDatalist>();
+
+            returnlist = _rebardatalist.GroupBy(x => new { x.IfTao, x.IfBend }).Select(
+                y => new GroupbyTaoBendDatalist
+                {
+                    _iftao = y.Key.IfTao,
+                    _ifbend = y.Key.IfBend,
+                    _totalnum = y.Sum(item => item.TotalPieceNum),
+                    _totalweight = y.Sum(item => item.TotalWeight),
+                    _datalist = y.ToList()
+                }).ToList();
+
+            return returnlist;
+        }
+
+        public List<GroupbyLengthDatalist> QueryAllListByLength(List<RebarData> _rebardatalist)
         {
             List<GroupbyLengthDatalist> returnlist = new List<GroupbyLengthDatalist>();
 
-            returnlist = _rebardatalist.GroupBy(x=>x.Length).Select(
-                y=>new GroupbyLengthDatalist { 
+            returnlist = _rebardatalist.GroupBy(x => x.Length).Select(
+                y => new GroupbyLengthDatalist
+                {
                     _length = y.Key,
-                    _totalnum = y.Sum(item=>item.TotalPieceNum),
-                    _totalweight = y.Sum(item =>item.TotalWeight),
+                    _totalnum = y.Sum(item => item.TotalPieceNum),
+                    _totalweight = y.Sum(item => item.TotalWeight),
                     _datalist = y.ToList()
                 }).ToList();
 
@@ -805,7 +838,7 @@ namespace RebarSampling
                 }
 
                 //int _index = _rebarlist.IndexOf(item);
-                
+
                 //首行先创建构件
                 if (_index == 1)
                 {
@@ -814,7 +847,7 @@ namespace RebarSampling
                     _element.rebarlist.Add(item);
                 }
 
-                int curIndex= _rebarlist.IndexOf(item);
+                int curIndex = _rebarlist.IndexOf(item);
                 if (_index != 1 && item.ElementName != "" && item.ElementName != _rebarlist[curIndex - 1].ElementName)//构件名不为空，且跟上一个元素的构件名不一样，则新建构件
                 {
                     if (_element != null)
@@ -931,7 +964,7 @@ namespace RebarSampling
                 GeneralMultiData _data = null;
 
                 //string[] ssss = _cornerMsg.Split(';');
-                string[] ssss = _cornerMsg.Split(new char[] { ';'},StringSplitOptions.RemoveEmptyEntries);//去掉split后为空的值
+                string[] ssss = _cornerMsg.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);//去掉split后为空的值
 
                 foreach (string sss in ssss)
                 {
@@ -1191,10 +1224,10 @@ namespace RebarSampling
                         _data.TotalPieceNum += _dd.TotalPieceNum;
                         _data.TotalLength += Convert.ToInt32(_dd.Length) * _dd.TotalPieceNum;    //总长度需要乘以数量
                         _data.TotalWeight += _dd.TotalWeight;   //数据源中的重量已经做了汇总
-                        
+
                         //示例：0,套;12000,丝
                         //string[] ttt = _dd.CornerMessage.Split(';');
-                        string[] ttt = _dd.CornerMessage.Split(new char[] {';'},StringSplitOptions.RemoveEmptyEntries);//去掉空的
+                        string[] ttt = _dd.CornerMessage.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);//去掉空的
 
                         foreach (string tt in ttt)
                         {

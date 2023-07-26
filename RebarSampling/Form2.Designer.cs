@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea11 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend11 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series11 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -59,7 +59,6 @@
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.dataGridView9 = new System.Windows.Forms.DataGridView();
             this.button8 = new System.Windows.Forms.Button();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.dataGridView24 = new System.Windows.Forms.DataGridView();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.dataGridView17 = new System.Windows.Forms.DataGridView();
@@ -70,30 +69,15 @@
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.dataGridView15 = new System.Windows.Forms.DataGridView();
             this.button7 = new System.Windows.Forms.Button();
-            this.dataGridView8 = new System.Windows.Forms.DataGridView();
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage9 = new System.Windows.Forms.TabPage();
             this.dataGridView25 = new System.Windows.Forms.DataGridView();
             this.tabPage10 = new System.Windows.Forms.TabPage();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.tabPage11 = new System.Windows.Forms.TabPage();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.button12 = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBox18 = new System.Windows.Forms.CheckBox();
-            this.checkBox15 = new System.Windows.Forms.CheckBox();
-            this.checkBox14 = new System.Windows.Forms.CheckBox();
-            this.checkBox13 = new System.Windows.Forms.CheckBox();
-            this.checkBox12 = new System.Windows.Forms.CheckBox();
-            this.checkBox11 = new System.Windows.Forms.CheckBox();
-            this.checkBox10 = new System.Windows.Forms.CheckBox();
-            this.checkBox9 = new System.Windows.Forms.CheckBox();
-            this.checkBox8 = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBox17 = new System.Windows.Forms.CheckBox();
-            this.checkBox16 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.dataGridView22 = new System.Windows.Forms.DataGridView();
@@ -108,7 +92,22 @@
             this.dataGridView19 = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox18 = new System.Windows.Forms.CheckBox();
+            this.checkBox15 = new System.Windows.Forms.CheckBox();
+            this.checkBox14 = new System.Windows.Forms.CheckBox();
+            this.checkBox13 = new System.Windows.Forms.CheckBox();
+            this.checkBox12 = new System.Windows.Forms.CheckBox();
+            this.checkBox11 = new System.Windows.Forms.CheckBox();
+            this.checkBox10 = new System.Windows.Forms.CheckBox();
+            this.checkBox9 = new System.Windows.Forms.CheckBox();
+            this.checkBox8 = new System.Windows.Forms.CheckBox();
             this.dataGridView10 = new System.Windows.Forms.DataGridView();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox17 = new System.Windows.Forms.CheckBox();
+            this.checkBox16 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -137,9 +136,28 @@
             this.dataGridView6 = new System.Windows.Forms.DataGridView();
             this.button4 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.tabPage11 = new System.Windows.Forms.TabPage();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.checkBox19 = new System.Windows.Forms.CheckBox();
+            this.checkBox20 = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.checkBox21 = new System.Windows.Forms.CheckBox();
+            this.checkBox22 = new System.Windows.Forms.CheckBox();
+            this.groupBox18 = new System.Windows.Forms.GroupBox();
+            this.checkBox23 = new System.Windows.Forms.CheckBox();
+            this.checkBox24 = new System.Windows.Forms.CheckBox();
+            this.checkBox25 = new System.Windows.Forms.CheckBox();
+            this.checkBox26 = new System.Windows.Forms.CheckBox();
+            this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.checkBox27 = new System.Windows.Forms.CheckBox();
+            this.checkBox28 = new System.Windows.Forms.CheckBox();
+            this.checkBox29 = new System.Windows.Forms.CheckBox();
+            this.checkBox30 = new System.Windows.Forms.CheckBox();
+            this.checkBox31 = new System.Windows.Forms.CheckBox();
+            this.checkBox32 = new System.Windows.Forms.CheckBox();
+            this.checkBox33 = new System.Windows.Forms.CheckBox();
+            this.checkBox34 = new System.Windows.Forms.CheckBox();
+            this.checkBox35 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -158,7 +176,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView12)).BeginInit();
             this.groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView9)).BeginInit();
-            this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView24)).BeginInit();
             this.groupBox14.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView17)).BeginInit();
@@ -168,16 +185,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView16)).BeginInit();
             this.groupBox12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView15)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).BeginInit();
             this.tabPage7.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView25)).BeginInit();
             this.tabPage10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            this.tabPage11.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView22)).BeginInit();
@@ -187,7 +202,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView20)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView19)).BeginInit();
+            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView10)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
@@ -198,7 +215,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
-            this.tabPage11.SuspendLayout();
+            this.groupBox16.SuspendLayout();
+            this.groupBox17.SuspendLayout();
+            this.groupBox18.SuspendLayout();
+            this.groupBox19.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -207,7 +227,6 @@
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage8);
             this.tabControl1.Controls.Add(this.tabPage6);
-            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
@@ -524,47 +543,32 @@
             this.button8.UseVisualStyleBackColor = false;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.dataGridView24);
-            this.tabPage5.Controls.Add(this.groupBox14);
-            this.tabPage5.Controls.Add(this.groupBox15);
-            this.tabPage5.Controls.Add(this.groupBox13);
-            this.tabPage5.Controls.Add(this.groupBox12);
-            this.tabPage5.Controls.Add(this.button7);
-            this.tabPage5.Controls.Add(this.dataGridView8);
-            this.tabPage5.Location = new System.Drawing.Point(4, 33);
-            this.tabPage5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(1218, 628);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "棒材原材统计";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
             // dataGridView24
             // 
             this.dataGridView24.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView24.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView24.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView24.Location = new System.Drawing.Point(671, 231);
+            this.dataGridView24.Location = new System.Drawing.Point(1324, 548);
             this.dataGridView24.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dataGridView24.Name = "dataGridView24";
             this.dataGridView24.RowHeadersWidth = 51;
             this.dataGridView24.RowTemplate.Height = 27;
-            this.dataGridView24.Size = new System.Drawing.Size(543, 279);
+            this.dataGridView24.Size = new System.Drawing.Size(66, 27);
             this.dataGridView24.TabIndex = 10;
+            this.dataGridView24.Visible = false;
             // 
             // groupBox14
             // 
             this.groupBox14.Controls.Add(this.dataGridView17);
-            this.groupBox14.Location = new System.Drawing.Point(5, 358);
+            this.groupBox14.Location = new System.Drawing.Point(1316, 361);
             this.groupBox14.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox14.Name = "groupBox14";
             this.groupBox14.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox14.Size = new System.Drawing.Size(328, 265);
+            this.groupBox14.Size = new System.Drawing.Size(122, 79);
             this.groupBox14.TabIndex = 8;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "原材仅弯曲";
+            this.groupBox14.Visible = false;
             // 
             // dataGridView17
             // 
@@ -576,20 +580,21 @@
             this.dataGridView17.Name = "dataGridView17";
             this.dataGridView17.RowHeadersWidth = 51;
             this.dataGridView17.RowTemplate.Height = 27;
-            this.dataGridView17.Size = new System.Drawing.Size(312, 221);
+            this.dataGridView17.Size = new System.Drawing.Size(106, 35);
             this.dataGridView17.TabIndex = 4;
             // 
             // groupBox15
             // 
             this.groupBox15.Controls.Add(this.dataGridView18);
-            this.groupBox15.Location = new System.Drawing.Point(341, 358);
+            this.groupBox15.Location = new System.Drawing.Point(1316, 463);
             this.groupBox15.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox15.Name = "groupBox15";
             this.groupBox15.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox15.Size = new System.Drawing.Size(322, 265);
+            this.groupBox15.Size = new System.Drawing.Size(122, 63);
             this.groupBox15.TabIndex = 9;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "原材套丝弯曲";
+            this.groupBox15.Visible = false;
             // 
             // dataGridView18
             // 
@@ -601,20 +606,21 @@
             this.dataGridView18.Name = "dataGridView18";
             this.dataGridView18.RowHeadersWidth = 51;
             this.dataGridView18.RowTemplate.Height = 27;
-            this.dataGridView18.Size = new System.Drawing.Size(307, 221);
+            this.dataGridView18.Size = new System.Drawing.Size(97, 19);
             this.dataGridView18.TabIndex = 7;
             // 
             // groupBox13
             // 
             this.groupBox13.Controls.Add(this.dataGridView16);
-            this.groupBox13.Location = new System.Drawing.Point(341, 89);
+            this.groupBox13.Location = new System.Drawing.Point(1316, 266);
             this.groupBox13.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox13.Name = "groupBox13";
             this.groupBox13.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox13.Size = new System.Drawing.Size(322, 265);
+            this.groupBox13.Size = new System.Drawing.Size(130, 73);
             this.groupBox13.TabIndex = 6;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "原材仅套丝";
+            this.groupBox13.Visible = false;
             // 
             // dataGridView16
             // 
@@ -626,20 +632,21 @@
             this.dataGridView16.Name = "dataGridView16";
             this.dataGridView16.RowHeadersWidth = 51;
             this.dataGridView16.RowTemplate.Height = 27;
-            this.dataGridView16.Size = new System.Drawing.Size(307, 223);
+            this.dataGridView16.Size = new System.Drawing.Size(114, 30);
             this.dataGridView16.TabIndex = 3;
             // 
             // groupBox12
             // 
             this.groupBox12.Controls.Add(this.dataGridView15);
-            this.groupBox12.Location = new System.Drawing.Point(5, 89);
+            this.groupBox12.Location = new System.Drawing.Point(1316, 158);
             this.groupBox12.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox12.Name = "groupBox12";
             this.groupBox12.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox12.Size = new System.Drawing.Size(328, 265);
+            this.groupBox12.Size = new System.Drawing.Size(130, 98);
             this.groupBox12.TabIndex = 5;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "原材不处理";
+            this.groupBox12.Visible = false;
             // 
             // dataGridView15
             // 
@@ -651,50 +658,41 @@
             this.dataGridView15.Name = "dataGridView15";
             this.dataGridView15.RowHeadersWidth = 51;
             this.dataGridView15.RowTemplate.Height = 27;
-            this.dataGridView15.Size = new System.Drawing.Size(312, 223);
+            this.dataGridView15.Size = new System.Drawing.Size(114, 62);
             this.dataGridView15.TabIndex = 2;
             // 
             // button7
             // 
             this.button7.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button7.Location = new System.Drawing.Point(36, 17);
+            this.button7.Location = new System.Drawing.Point(1334, 97);
             this.button7.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(1151, 62);
+            this.button7.Size = new System.Drawing.Size(112, 38);
             this.button7.TabIndex = 1;
             this.button7.Text = "开始汇总";
             this.button7.UseVisualStyleBackColor = false;
+            this.button7.Visible = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // dataGridView8
-            // 
-            this.dataGridView8.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGridView8.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dataGridView8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView8.Location = new System.Drawing.Point(1629, 149);
-            this.dataGridView8.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.dataGridView8.Name = "dataGridView8";
-            this.dataGridView8.RowHeadersWidth = 51;
-            this.dataGridView8.RowTemplate.Height = 27;
-            this.dataGridView8.Size = new System.Drawing.Size(87, 114);
-            this.dataGridView8.TabIndex = 0;
-            this.dataGridView8.Visible = false;
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.label1);
+            this.tabPage7.Controls.Add(this.groupBox17);
+            this.tabPage7.Controls.Add(this.groupBox16);
             this.tabPage7.Controls.Add(this.tabControl2);
-            this.tabPage7.Controls.Add(this.button12);
+            this.tabPage7.Controls.Add(this.groupBox18);
+            this.tabPage7.Controls.Add(this.groupBox1);
             this.tabPage7.Controls.Add(this.panel1);
             this.tabPage7.Controls.Add(this.button9);
+            this.tabPage7.Controls.Add(this.groupBox19);
             this.tabPage7.Controls.Add(this.groupBox2);
             this.tabPage7.Controls.Add(this.dataGridView10);
-            this.tabPage7.Controls.Add(this.groupBox1);
             this.tabPage7.Location = new System.Drawing.Point(4, 33);
             this.tabPage7.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Size = new System.Drawing.Size(1218, 628);
             this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "棒材非原材统计";
+            this.tabPage7.Text = "棒材统计";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
             // tabControl2
@@ -702,10 +700,10 @@
             this.tabControl2.Controls.Add(this.tabPage9);
             this.tabControl2.Controls.Add(this.tabPage10);
             this.tabControl2.Controls.Add(this.tabPage11);
-            this.tabControl2.Location = new System.Drawing.Point(559, 89);
+            this.tabControl2.Location = new System.Drawing.Point(669, 14);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(656, 536);
+            this.tabControl2.Size = new System.Drawing.Size(546, 611);
             this.tabControl2.TabIndex = 12;
             // 
             // tabPage9
@@ -714,7 +712,7 @@
             this.tabPage9.Location = new System.Drawing.Point(4, 33);
             this.tabPage9.Name = "tabPage9";
             this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage9.Size = new System.Drawing.Size(648, 499);
+            this.tabPage9.Size = new System.Drawing.Size(538, 574);
             this.tabPage9.TabIndex = 0;
             this.tabPage9.Text = "汇总";
             this.tabPage9.UseVisualStyleBackColor = true;
@@ -724,207 +722,24 @@
             this.dataGridView25.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView25.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView25.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView25.Location = new System.Drawing.Point(25, 15);
+            this.dataGridView25.Location = new System.Drawing.Point(13, 14);
             this.dataGridView25.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dataGridView25.Name = "dataGridView25";
             this.dataGridView25.RowHeadersWidth = 51;
             this.dataGridView25.RowTemplate.Height = 27;
-            this.dataGridView25.Size = new System.Drawing.Size(723, 310);
+            this.dataGridView25.Size = new System.Drawing.Size(628, 551);
             this.dataGridView25.TabIndex = 10;
             // 
             // tabPage10
             // 
-            this.tabPage10.Controls.Add(this.label1);
             this.tabPage10.Controls.Add(this.dataGridView2);
             this.tabPage10.Location = new System.Drawing.Point(4, 33);
             this.tabPage10.Name = "tabPage10";
             this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage10.Size = new System.Drawing.Size(648, 499);
+            this.tabPage10.Size = new System.Drawing.Size(538, 574);
             this.tabPage10.TabIndex = 1;
             this.tabPage10.Text = "批量锯切";
             this.tabPage10.UseVisualStyleBackColor = true;
-            // 
-            // dataGridView3
-            // 
-            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView3.Location = new System.Drawing.Point(16, 17);
-            this.dataGridView3.Name = "dataGridView3";
-            this.dataGridView3.RowHeadersWidth = 51;
-            this.dataGridView3.RowTemplate.Height = 27;
-            this.dataGridView3.Size = new System.Drawing.Size(618, 426);
-            this.dataGridView3.TabIndex = 7;
-            // 
-            // button12
-            // 
-            this.button12.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button12.Location = new System.Drawing.Point(425, 518);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(128, 47);
-            this.button12.TabIndex = 6;
-            this.button12.Text = "筛选";
-            this.button12.UseVisualStyleBackColor = false;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.checkBox18);
-            this.groupBox2.Controls.Add(this.checkBox15);
-            this.groupBox2.Controls.Add(this.checkBox14);
-            this.groupBox2.Controls.Add(this.checkBox13);
-            this.groupBox2.Controls.Add(this.checkBox12);
-            this.groupBox2.Controls.Add(this.checkBox11);
-            this.groupBox2.Controls.Add(this.checkBox10);
-            this.groupBox2.Controls.Add(this.checkBox9);
-            this.groupBox2.Controls.Add(this.checkBox8);
-            this.groupBox2.Location = new System.Drawing.Point(424, 228);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(129, 284);
-            this.groupBox2.TabIndex = 5;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "2";
-            // 
-            // checkBox18
-            // 
-            this.checkBox18.AutoSize = true;
-            this.checkBox18.Location = new System.Drawing.Point(34, 248);
-            this.checkBox18.Name = "checkBox18";
-            this.checkBox18.Size = new System.Drawing.Size(69, 28);
-            this.checkBox18.TabIndex = 12;
-            this.checkBox18.Text = "Φ36";
-            this.checkBox18.UseVisualStyleBackColor = true;
-            // 
-            // checkBox15
-            // 
-            this.checkBox15.AutoSize = true;
-            this.checkBox15.Location = new System.Drawing.Point(34, 220);
-            this.checkBox15.Name = "checkBox15";
-            this.checkBox15.Size = new System.Drawing.Size(69, 28);
-            this.checkBox15.TabIndex = 11;
-            this.checkBox15.Text = "Φ32";
-            this.checkBox15.UseVisualStyleBackColor = true;
-            // 
-            // checkBox14
-            // 
-            this.checkBox14.AutoSize = true;
-            this.checkBox14.Location = new System.Drawing.Point(34, 192);
-            this.checkBox14.Name = "checkBox14";
-            this.checkBox14.Size = new System.Drawing.Size(69, 28);
-            this.checkBox14.TabIndex = 10;
-            this.checkBox14.Text = "Φ28";
-            this.checkBox14.UseVisualStyleBackColor = true;
-            // 
-            // checkBox13
-            // 
-            this.checkBox13.AutoSize = true;
-            this.checkBox13.Location = new System.Drawing.Point(34, 164);
-            this.checkBox13.Name = "checkBox13";
-            this.checkBox13.Size = new System.Drawing.Size(69, 28);
-            this.checkBox13.TabIndex = 9;
-            this.checkBox13.Text = "Φ25";
-            this.checkBox13.UseVisualStyleBackColor = true;
-            // 
-            // checkBox12
-            // 
-            this.checkBox12.AutoSize = true;
-            this.checkBox12.Location = new System.Drawing.Point(34, 136);
-            this.checkBox12.Name = "checkBox12";
-            this.checkBox12.Size = new System.Drawing.Size(69, 28);
-            this.checkBox12.TabIndex = 8;
-            this.checkBox12.Text = "Φ22";
-            this.checkBox12.UseVisualStyleBackColor = true;
-            // 
-            // checkBox11
-            // 
-            this.checkBox11.AutoSize = true;
-            this.checkBox11.Location = new System.Drawing.Point(34, 108);
-            this.checkBox11.Name = "checkBox11";
-            this.checkBox11.Size = new System.Drawing.Size(69, 28);
-            this.checkBox11.TabIndex = 7;
-            this.checkBox11.Text = "Φ20";
-            this.checkBox11.UseVisualStyleBackColor = true;
-            // 
-            // checkBox10
-            // 
-            this.checkBox10.AutoSize = true;
-            this.checkBox10.Location = new System.Drawing.Point(34, 80);
-            this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(69, 28);
-            this.checkBox10.TabIndex = 6;
-            this.checkBox10.Text = "Φ18";
-            this.checkBox10.UseVisualStyleBackColor = true;
-            // 
-            // checkBox9
-            // 
-            this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(34, 52);
-            this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(69, 28);
-            this.checkBox9.TabIndex = 5;
-            this.checkBox9.Text = "Φ16";
-            this.checkBox9.UseVisualStyleBackColor = true;
-            // 
-            // checkBox8
-            // 
-            this.checkBox8.AutoSize = true;
-            this.checkBox8.Location = new System.Drawing.Point(34, 24);
-            this.checkBox8.Name = "checkBox8";
-            this.checkBox8.Size = new System.Drawing.Size(69, 28);
-            this.checkBox8.TabIndex = 4;
-            this.checkBox8.Text = "Φ14";
-            this.checkBox8.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.checkBox17);
-            this.groupBox1.Controls.Add(this.checkBox16);
-            this.groupBox1.Controls.Add(this.checkBox2);
-            this.groupBox1.Controls.Add(this.checkBox3);
-            this.groupBox1.Location = new System.Drawing.Point(424, 89);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(129, 133);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "1";
-            // 
-            // checkBox17
-            // 
-            this.checkBox17.AutoSize = true;
-            this.checkBox17.Location = new System.Drawing.Point(35, 106);
-            this.checkBox17.Name = "checkBox17";
-            this.checkBox17.Size = new System.Drawing.Size(68, 28);
-            this.checkBox17.TabIndex = 4;
-            this.checkBox17.Text = "不弯";
-            this.checkBox17.UseVisualStyleBackColor = true;
-            // 
-            // checkBox16
-            // 
-            this.checkBox16.AutoSize = true;
-            this.checkBox16.Location = new System.Drawing.Point(35, 77);
-            this.checkBox16.Name = "checkBox16";
-            this.checkBox16.Size = new System.Drawing.Size(50, 28);
-            this.checkBox16.TabIndex = 3;
-            this.checkBox16.Text = "弯";
-            this.checkBox16.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(35, 19);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(50, 28);
-            this.checkBox2.TabIndex = 1;
-            this.checkBox2.Text = "套";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(35, 48);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(68, 28);
-            this.checkBox3.TabIndex = 2;
-            this.checkBox3.Text = "不套";
-            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // dataGridView2
             // 
@@ -933,8 +748,42 @@
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersWidth = 51;
             this.dataGridView2.RowTemplate.Height = 27;
-            this.dataGridView2.Size = new System.Drawing.Size(626, 412);
+            this.dataGridView2.Size = new System.Drawing.Size(626, 521);
             this.dataGridView2.TabIndex = 0;
+            // 
+            // tabPage11
+            // 
+            this.tabPage11.Controls.Add(this.dataGridView3);
+            this.tabPage11.Location = new System.Drawing.Point(4, 33);
+            this.tabPage11.Name = "tabPage11";
+            this.tabPage11.Size = new System.Drawing.Size(538, 574);
+            this.tabPage11.TabIndex = 2;
+            this.tabPage11.Text = "长度区间";
+            this.tabPage11.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView3
+            // 
+            this.dataGridView3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView3.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView3.Location = new System.Drawing.Point(16, 17);
+            this.dataGridView3.Name = "dataGridView3";
+            this.dataGridView3.RowHeadersWidth = 51;
+            this.dataGridView3.RowTemplate.Height = 27;
+            this.dataGridView3.Size = new System.Drawing.Size(618, 519);
+            this.dataGridView3.TabIndex = 7;
+            // 
+            // button12
+            // 
+            this.button12.BackColor = System.Drawing.Color.DarkSalmon;
+            this.button12.Location = new System.Drawing.Point(1318, 36);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(128, 47);
+            this.button12.TabIndex = 6;
+            this.button12.Text = "筛选";
+            this.button12.UseVisualStyleBackColor = false;
+            this.button12.Visible = false;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // panel1
             // 
@@ -946,7 +795,7 @@
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.button1);
-            this.panel1.Location = new System.Drawing.Point(22, 14);
+            this.panel1.Location = new System.Drawing.Point(268, 14);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(395, 668);
             this.panel1.TabIndex = 11;
@@ -981,7 +830,7 @@
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(395, 32);
             this.button11.TabIndex = 6;
-            this.button11.Text = "锯切+弯曲+套丝";
+            this.button11.Text = "弯曲+套丝";
             this.button11.UseVisualStyleBackColor = true;
             this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
@@ -1015,7 +864,7 @@
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(395, 32);
             this.button6.TabIndex = 4;
-            this.button6.Text = "锯切+弯曲+不套丝";
+            this.button6.Text = "弯曲+不套丝";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
@@ -1049,7 +898,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(395, 32);
             this.button2.TabIndex = 2;
-            this.button2.Text = "锯切+不弯曲+套丝";
+            this.button2.Text = "不弯曲+套丝";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -1083,21 +932,129 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(395, 34);
             this.button1.TabIndex = 0;
-            this.button1.Text = "锯切+不弯曲+不套丝";
+            this.button1.Text = "不弯曲+不套丝";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button9
             // 
             this.button9.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button9.Location = new System.Drawing.Point(424, 14);
+            this.button9.Location = new System.Drawing.Point(4, 5);
             this.button9.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(761, 67);
+            this.button9.Size = new System.Drawing.Size(256, 48);
             this.button9.TabIndex = 1;
-            this.button9.Text = "开始汇总";
+            this.button9.Text = "开始筛选";
             this.button9.UseVisualStyleBackColor = false;
             this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.checkBox18);
+            this.groupBox2.Controls.Add(this.checkBox15);
+            this.groupBox2.Controls.Add(this.checkBox14);
+            this.groupBox2.Controls.Add(this.checkBox13);
+            this.groupBox2.Controls.Add(this.checkBox12);
+            this.groupBox2.Controls.Add(this.checkBox11);
+            this.groupBox2.Controls.Add(this.checkBox10);
+            this.groupBox2.Controls.Add(this.checkBox9);
+            this.groupBox2.Controls.Add(this.checkBox8);
+            this.groupBox2.Location = new System.Drawing.Point(4, 335);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(108, 284);
+            this.groupBox2.TabIndex = 5;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "3";
+            // 
+            // checkBox18
+            // 
+            this.checkBox18.AutoSize = true;
+            this.checkBox18.Location = new System.Drawing.Point(16, 254);
+            this.checkBox18.Name = "checkBox18";
+            this.checkBox18.Size = new System.Drawing.Size(69, 28);
+            this.checkBox18.TabIndex = 12;
+            this.checkBox18.Text = "Φ36";
+            this.checkBox18.UseVisualStyleBackColor = true;
+            // 
+            // checkBox15
+            // 
+            this.checkBox15.AutoSize = true;
+            this.checkBox15.Location = new System.Drawing.Point(16, 226);
+            this.checkBox15.Name = "checkBox15";
+            this.checkBox15.Size = new System.Drawing.Size(69, 28);
+            this.checkBox15.TabIndex = 11;
+            this.checkBox15.Text = "Φ32";
+            this.checkBox15.UseVisualStyleBackColor = true;
+            // 
+            // checkBox14
+            // 
+            this.checkBox14.AutoSize = true;
+            this.checkBox14.Location = new System.Drawing.Point(16, 198);
+            this.checkBox14.Name = "checkBox14";
+            this.checkBox14.Size = new System.Drawing.Size(69, 28);
+            this.checkBox14.TabIndex = 10;
+            this.checkBox14.Text = "Φ28";
+            this.checkBox14.UseVisualStyleBackColor = true;
+            // 
+            // checkBox13
+            // 
+            this.checkBox13.AutoSize = true;
+            this.checkBox13.Location = new System.Drawing.Point(16, 170);
+            this.checkBox13.Name = "checkBox13";
+            this.checkBox13.Size = new System.Drawing.Size(69, 28);
+            this.checkBox13.TabIndex = 9;
+            this.checkBox13.Text = "Φ25";
+            this.checkBox13.UseVisualStyleBackColor = true;
+            // 
+            // checkBox12
+            // 
+            this.checkBox12.AutoSize = true;
+            this.checkBox12.Location = new System.Drawing.Point(16, 142);
+            this.checkBox12.Name = "checkBox12";
+            this.checkBox12.Size = new System.Drawing.Size(69, 28);
+            this.checkBox12.TabIndex = 8;
+            this.checkBox12.Text = "Φ22";
+            this.checkBox12.UseVisualStyleBackColor = true;
+            // 
+            // checkBox11
+            // 
+            this.checkBox11.AutoSize = true;
+            this.checkBox11.Location = new System.Drawing.Point(16, 114);
+            this.checkBox11.Name = "checkBox11";
+            this.checkBox11.Size = new System.Drawing.Size(69, 28);
+            this.checkBox11.TabIndex = 7;
+            this.checkBox11.Text = "Φ20";
+            this.checkBox11.UseVisualStyleBackColor = true;
+            // 
+            // checkBox10
+            // 
+            this.checkBox10.AutoSize = true;
+            this.checkBox10.Location = new System.Drawing.Point(16, 86);
+            this.checkBox10.Name = "checkBox10";
+            this.checkBox10.Size = new System.Drawing.Size(69, 28);
+            this.checkBox10.TabIndex = 6;
+            this.checkBox10.Text = "Φ18";
+            this.checkBox10.UseVisualStyleBackColor = true;
+            // 
+            // checkBox9
+            // 
+            this.checkBox9.AutoSize = true;
+            this.checkBox9.Location = new System.Drawing.Point(16, 58);
+            this.checkBox9.Name = "checkBox9";
+            this.checkBox9.Size = new System.Drawing.Size(69, 28);
+            this.checkBox9.TabIndex = 5;
+            this.checkBox9.Text = "Φ16";
+            this.checkBox9.UseVisualStyleBackColor = true;
+            // 
+            // checkBox8
+            // 
+            this.checkBox8.AutoSize = true;
+            this.checkBox8.Location = new System.Drawing.Point(16, 30);
+            this.checkBox8.Name = "checkBox8";
+            this.checkBox8.Size = new System.Drawing.Size(69, 28);
+            this.checkBox8.TabIndex = 4;
+            this.checkBox8.Text = "Φ14";
+            this.checkBox8.UseVisualStyleBackColor = true;
             // 
             // dataGridView10
             // 
@@ -1112,6 +1069,59 @@
             this.dataGridView10.Size = new System.Drawing.Size(78, 91);
             this.dataGridView10.TabIndex = 0;
             this.dataGridView10.Visible = false;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkBox17);
+            this.groupBox1.Controls.Add(this.checkBox16);
+            this.groupBox1.Controls.Add(this.checkBox2);
+            this.groupBox1.Controls.Add(this.checkBox3);
+            this.groupBox1.Location = new System.Drawing.Point(4, 196);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(108, 133);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "2";
+            // 
+            // checkBox17
+            // 
+            this.checkBox17.AutoSize = true;
+            this.checkBox17.Location = new System.Drawing.Point(16, 106);
+            this.checkBox17.Name = "checkBox17";
+            this.checkBox17.Size = new System.Drawing.Size(68, 28);
+            this.checkBox17.TabIndex = 4;
+            this.checkBox17.Text = "不弯";
+            this.checkBox17.UseVisualStyleBackColor = true;
+            // 
+            // checkBox16
+            // 
+            this.checkBox16.AutoSize = true;
+            this.checkBox16.Location = new System.Drawing.Point(16, 77);
+            this.checkBox16.Name = "checkBox16";
+            this.checkBox16.Size = new System.Drawing.Size(50, 28);
+            this.checkBox16.TabIndex = 3;
+            this.checkBox16.Text = "弯";
+            this.checkBox16.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(16, 19);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(50, 28);
+            this.checkBox2.TabIndex = 1;
+            this.checkBox2.Text = "套";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(16, 48);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(68, 28);
+            this.checkBox3.TabIndex = 2;
+            this.checkBox3.Text = "不套";
+            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
@@ -1254,19 +1264,19 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea11.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea11);
+            legend11.Enabled = false;
+            legend11.Name = "Legend1";
+            this.chart1.Legends.Add(legend11);
             this.chart1.Location = new System.Drawing.Point(226, 382);
             this.chart1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series11.ChartArea = "ChartArea1";
+            series11.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series11.Legend = "Legend1";
+            series11.Name = "Series1";
+            this.chart1.Series.Add(series11);
             this.chart1.Size = new System.Drawing.Size(452, 241);
             this.chart1.TabIndex = 4;
             this.chart1.Text = "chart1";
@@ -1526,41 +1536,252 @@
             this.imageList1.Images.SetKeyName(45, "10200.png");
             this.imageList1.Images.SetKeyName(46, "20202.png");
             // 
-            // tabPage11
+            // groupBox16
             // 
-            this.tabPage11.Controls.Add(this.label2);
-            this.tabPage11.Controls.Add(this.dataGridView3);
-            this.tabPage11.Location = new System.Drawing.Point(4, 33);
-            this.tabPage11.Name = "tabPage11";
-            this.tabPage11.Size = new System.Drawing.Size(648, 499);
-            this.tabPage11.TabIndex = 2;
-            this.tabPage11.Text = "长度区间";
-            this.tabPage11.UseVisualStyleBackColor = true;
+            this.groupBox16.Controls.Add(this.checkBox20);
+            this.groupBox16.Controls.Add(this.checkBox19);
+            this.groupBox16.Location = new System.Drawing.Point(4, 96);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(108, 100);
+            this.groupBox16.TabIndex = 13;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "1";
+            // 
+            // checkBox19
+            // 
+            this.checkBox19.AutoSize = true;
+            this.checkBox19.Location = new System.Drawing.Point(16, 25);
+            this.checkBox19.Name = "checkBox19";
+            this.checkBox19.Size = new System.Drawing.Size(68, 28);
+            this.checkBox19.TabIndex = 0;
+            this.checkBox19.Text = "原材";
+            this.checkBox19.UseVisualStyleBackColor = true;
+            // 
+            // checkBox20
+            // 
+            this.checkBox20.AutoSize = true;
+            this.checkBox20.Location = new System.Drawing.Point(16, 62);
+            this.checkBox20.Name = "checkBox20";
+            this.checkBox20.Size = new System.Drawing.Size(86, 28);
+            this.checkBox20.TabIndex = 1;
+            this.checkBox20.Text = "非原材";
+            this.checkBox20.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(48, 445);
+            this.label1.BackColor = System.Drawing.Color.MistyRose;
+            this.label1.Location = new System.Drawing.Point(51, 68);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 24);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "label1";
+            this.label1.Size = new System.Drawing.Size(162, 24);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "统计分子/统计分母";
             // 
-            // label2
+            // groupBox17
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(30, 461);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 24);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "label2";
+            this.groupBox17.Controls.Add(this.checkBox21);
+            this.groupBox17.Controls.Add(this.checkBox22);
+            this.groupBox17.Location = new System.Drawing.Point(118, 96);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(108, 100);
+            this.groupBox17.TabIndex = 13;
+            this.groupBox17.TabStop = false;
+            this.groupBox17.Text = "1";
+            // 
+            // checkBox21
+            // 
+            this.checkBox21.AutoSize = true;
+            this.checkBox21.Location = new System.Drawing.Point(16, 62);
+            this.checkBox21.Name = "checkBox21";
+            this.checkBox21.Size = new System.Drawing.Size(86, 28);
+            this.checkBox21.TabIndex = 1;
+            this.checkBox21.Text = "非原材";
+            this.checkBox21.UseVisualStyleBackColor = true;
+            // 
+            // checkBox22
+            // 
+            this.checkBox22.AutoSize = true;
+            this.checkBox22.Location = new System.Drawing.Point(16, 25);
+            this.checkBox22.Name = "checkBox22";
+            this.checkBox22.Size = new System.Drawing.Size(68, 28);
+            this.checkBox22.TabIndex = 0;
+            this.checkBox22.Text = "原材";
+            this.checkBox22.UseVisualStyleBackColor = true;
+            // 
+            // groupBox18
+            // 
+            this.groupBox18.Controls.Add(this.checkBox23);
+            this.groupBox18.Controls.Add(this.checkBox24);
+            this.groupBox18.Controls.Add(this.checkBox25);
+            this.groupBox18.Controls.Add(this.checkBox26);
+            this.groupBox18.Location = new System.Drawing.Point(118, 196);
+            this.groupBox18.Name = "groupBox18";
+            this.groupBox18.Size = new System.Drawing.Size(108, 133);
+            this.groupBox18.TabIndex = 3;
+            this.groupBox18.TabStop = false;
+            this.groupBox18.Text = "2";
+            // 
+            // checkBox23
+            // 
+            this.checkBox23.AutoSize = true;
+            this.checkBox23.Location = new System.Drawing.Point(16, 106);
+            this.checkBox23.Name = "checkBox23";
+            this.checkBox23.Size = new System.Drawing.Size(68, 28);
+            this.checkBox23.TabIndex = 4;
+            this.checkBox23.Text = "不弯";
+            this.checkBox23.UseVisualStyleBackColor = true;
+            // 
+            // checkBox24
+            // 
+            this.checkBox24.AutoSize = true;
+            this.checkBox24.Location = new System.Drawing.Point(16, 77);
+            this.checkBox24.Name = "checkBox24";
+            this.checkBox24.Size = new System.Drawing.Size(50, 28);
+            this.checkBox24.TabIndex = 3;
+            this.checkBox24.Text = "弯";
+            this.checkBox24.UseVisualStyleBackColor = true;
+            // 
+            // checkBox25
+            // 
+            this.checkBox25.AutoSize = true;
+            this.checkBox25.Location = new System.Drawing.Point(16, 19);
+            this.checkBox25.Name = "checkBox25";
+            this.checkBox25.Size = new System.Drawing.Size(50, 28);
+            this.checkBox25.TabIndex = 1;
+            this.checkBox25.Text = "套";
+            this.checkBox25.UseVisualStyleBackColor = true;
+            // 
+            // checkBox26
+            // 
+            this.checkBox26.AutoSize = true;
+            this.checkBox26.Location = new System.Drawing.Point(16, 48);
+            this.checkBox26.Name = "checkBox26";
+            this.checkBox26.Size = new System.Drawing.Size(68, 28);
+            this.checkBox26.TabIndex = 2;
+            this.checkBox26.Text = "不套";
+            this.checkBox26.UseVisualStyleBackColor = true;
+            // 
+            // groupBox19
+            // 
+            this.groupBox19.Controls.Add(this.checkBox27);
+            this.groupBox19.Controls.Add(this.checkBox28);
+            this.groupBox19.Controls.Add(this.checkBox29);
+            this.groupBox19.Controls.Add(this.checkBox30);
+            this.groupBox19.Controls.Add(this.checkBox31);
+            this.groupBox19.Controls.Add(this.checkBox32);
+            this.groupBox19.Controls.Add(this.checkBox33);
+            this.groupBox19.Controls.Add(this.checkBox34);
+            this.groupBox19.Controls.Add(this.checkBox35);
+            this.groupBox19.Location = new System.Drawing.Point(118, 337);
+            this.groupBox19.Name = "groupBox19";
+            this.groupBox19.Size = new System.Drawing.Size(108, 284);
+            this.groupBox19.TabIndex = 5;
+            this.groupBox19.TabStop = false;
+            this.groupBox19.Text = "3";
+            // 
+            // checkBox27
+            // 
+            this.checkBox27.AutoSize = true;
+            this.checkBox27.Location = new System.Drawing.Point(16, 254);
+            this.checkBox27.Name = "checkBox27";
+            this.checkBox27.Size = new System.Drawing.Size(69, 28);
+            this.checkBox27.TabIndex = 12;
+            this.checkBox27.Text = "Φ36";
+            this.checkBox27.UseVisualStyleBackColor = true;
+            // 
+            // checkBox28
+            // 
+            this.checkBox28.AutoSize = true;
+            this.checkBox28.Location = new System.Drawing.Point(16, 226);
+            this.checkBox28.Name = "checkBox28";
+            this.checkBox28.Size = new System.Drawing.Size(69, 28);
+            this.checkBox28.TabIndex = 11;
+            this.checkBox28.Text = "Φ32";
+            this.checkBox28.UseVisualStyleBackColor = true;
+            // 
+            // checkBox29
+            // 
+            this.checkBox29.AutoSize = true;
+            this.checkBox29.Location = new System.Drawing.Point(16, 198);
+            this.checkBox29.Name = "checkBox29";
+            this.checkBox29.Size = new System.Drawing.Size(69, 28);
+            this.checkBox29.TabIndex = 10;
+            this.checkBox29.Text = "Φ28";
+            this.checkBox29.UseVisualStyleBackColor = true;
+            // 
+            // checkBox30
+            // 
+            this.checkBox30.AutoSize = true;
+            this.checkBox30.Location = new System.Drawing.Point(16, 170);
+            this.checkBox30.Name = "checkBox30";
+            this.checkBox30.Size = new System.Drawing.Size(69, 28);
+            this.checkBox30.TabIndex = 9;
+            this.checkBox30.Text = "Φ25";
+            this.checkBox30.UseVisualStyleBackColor = true;
+            // 
+            // checkBox31
+            // 
+            this.checkBox31.AutoSize = true;
+            this.checkBox31.Location = new System.Drawing.Point(16, 142);
+            this.checkBox31.Name = "checkBox31";
+            this.checkBox31.Size = new System.Drawing.Size(69, 28);
+            this.checkBox31.TabIndex = 8;
+            this.checkBox31.Text = "Φ22";
+            this.checkBox31.UseVisualStyleBackColor = true;
+            // 
+            // checkBox32
+            // 
+            this.checkBox32.AutoSize = true;
+            this.checkBox32.Location = new System.Drawing.Point(16, 114);
+            this.checkBox32.Name = "checkBox32";
+            this.checkBox32.Size = new System.Drawing.Size(69, 28);
+            this.checkBox32.TabIndex = 7;
+            this.checkBox32.Text = "Φ20";
+            this.checkBox32.UseVisualStyleBackColor = true;
+            // 
+            // checkBox33
+            // 
+            this.checkBox33.AutoSize = true;
+            this.checkBox33.Location = new System.Drawing.Point(16, 86);
+            this.checkBox33.Name = "checkBox33";
+            this.checkBox33.Size = new System.Drawing.Size(69, 28);
+            this.checkBox33.TabIndex = 6;
+            this.checkBox33.Text = "Φ18";
+            this.checkBox33.UseVisualStyleBackColor = true;
+            // 
+            // checkBox34
+            // 
+            this.checkBox34.AutoSize = true;
+            this.checkBox34.Location = new System.Drawing.Point(16, 58);
+            this.checkBox34.Name = "checkBox34";
+            this.checkBox34.Size = new System.Drawing.Size(69, 28);
+            this.checkBox34.TabIndex = 5;
+            this.checkBox34.Text = "Φ16";
+            this.checkBox34.UseVisualStyleBackColor = true;
+            // 
+            // checkBox35
+            // 
+            this.checkBox35.AutoSize = true;
+            this.checkBox35.Location = new System.Drawing.Point(16, 30);
+            this.checkBox35.Name = "checkBox35";
+            this.checkBox35.Size = new System.Drawing.Size(69, 28);
+            this.checkBox35.TabIndex = 4;
+            this.checkBox35.Text = "Φ14";
+            this.checkBox35.UseVisualStyleBackColor = true;
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1576, 788);
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.button12);
+            this.Controls.Add(this.dataGridView24);
             this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.groupBox15);
+            this.Controls.Add(this.groupBox14);
+            this.Controls.Add(this.groupBox12);
+            this.Controls.Add(this.groupBox13);
             this.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form2";
@@ -1584,7 +1805,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView12)).EndInit();
             this.groupBox8.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView9)).EndInit();
-            this.tabPage5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView24)).EndInit();
             this.groupBox14.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView17)).EndInit();
@@ -1594,19 +1814,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView16)).EndInit();
             this.groupBox12.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView15)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).EndInit();
             this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
             this.tabControl2.ResumeLayout(false);
             this.tabPage9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView25)).EndInit();
             this.tabPage10.ResumeLayout(false);
-            this.tabPage10.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            this.tabPage11.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView22)).EndInit();
@@ -1616,7 +1832,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView20)).EndInit();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView19)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView10)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
@@ -1630,8 +1850,14 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).EndInit();
-            this.tabPage11.ResumeLayout(false);
-            this.tabPage11.PerformLayout();
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
+            this.groupBox17.ResumeLayout(false);
+            this.groupBox17.PerformLayout();
+            this.groupBox18.ResumeLayout(false);
+            this.groupBox18.PerformLayout();
+            this.groupBox19.ResumeLayout(false);
+            this.groupBox19.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1671,7 +1897,6 @@
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.DataGridView dataGridView9;
         private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.DataGridView dataGridView24;
         private System.Windows.Forms.GroupBox groupBox15;
         private System.Windows.Forms.DataGridView dataGridView18;
@@ -1682,7 +1907,6 @@
         private System.Windows.Forms.GroupBox groupBox12;
         private System.Windows.Forms.DataGridView dataGridView15;
         private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.DataGridView dataGridView8;
         private System.Windows.Forms.TabPage tabPage7;
         private System.Windows.Forms.DataGridView dataGridView25;
         private System.Windows.Forms.DataGridView dataGridView22;
@@ -1742,8 +1966,28 @@
         private System.Windows.Forms.CheckBox checkBox16;
         private System.Windows.Forms.CheckBox checkBox18;
         private System.Windows.Forms.DataGridView dataGridView3;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tabPage11;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox16;
+        private System.Windows.Forms.CheckBox checkBox20;
+        private System.Windows.Forms.CheckBox checkBox19;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox groupBox17;
+        private System.Windows.Forms.CheckBox checkBox21;
+        private System.Windows.Forms.CheckBox checkBox22;
+        private System.Windows.Forms.GroupBox groupBox18;
+        private System.Windows.Forms.CheckBox checkBox23;
+        private System.Windows.Forms.CheckBox checkBox24;
+        private System.Windows.Forms.CheckBox checkBox25;
+        private System.Windows.Forms.CheckBox checkBox26;
+        private System.Windows.Forms.GroupBox groupBox19;
+        private System.Windows.Forms.CheckBox checkBox27;
+        private System.Windows.Forms.CheckBox checkBox28;
+        private System.Windows.Forms.CheckBox checkBox29;
+        private System.Windows.Forms.CheckBox checkBox30;
+        private System.Windows.Forms.CheckBox checkBox31;
+        private System.Windows.Forms.CheckBox checkBox32;
+        private System.Windows.Forms.CheckBox checkBox33;
+        private System.Windows.Forms.CheckBox checkBox34;
+        private System.Windows.Forms.CheckBox checkBox35;
     }
 }
