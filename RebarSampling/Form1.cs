@@ -79,7 +79,172 @@ namespace RebarSampling
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_path"></param>
+        /// <param name="_node"></param>
+        /// <param name="_level"></param>
+        /// <param name="_morder"></param>
+        /// <returns></returns>
+        private bool SetTreeViewNodes(string _path, TreeNode _node, int _level, Morder _morder)
+        {
+            bool _validfile = false;
+            TreeNode newnode =new TreeNode();
 
+            DirectoryInfo folder = new DirectoryInfo(_path);
+
+            foreach (FileInfo newfile in folder.GetFiles())
+            {
+                if(newfile.Extension == ".ejb")
+                {
+                    _validfile = true;
+                    newnode = new TreeNode();
+                    newnode.Text = Path.GetFileNameWithoutExtension(newfile.Name);
+                    _node.Nodes.Add(newnode);
+
+                    _morder.levelName[_level] = newnode.Text;//将当前文件名作为morder的层级名称
+                    string jsonstr = GeneralClass.readEjin.GetJsonStr(_path + "\\" + newfile.Name,_morder);
+                    GeneralClass.interactivityData?.printlog(3, jsonstr);//存入历史数据
+                }
+            }
+
+            foreach (DirectoryInfo newfolder in folder.GetDirectories())
+            {
+                string newpath = _path+"\\"+newfolder.Name;
+
+                _morder.levelName[_level] = newfolder.Name;//将当前文件夹名作为morder的层级名称
+                newnode = new TreeNode();
+                
+                if (SetTreeViewNodes(newpath, newnode,  _level+1, _morder))//如果下层文件夹有.ejb文件，才需要创建node节点
+                {
+                    _validfile=true;
+
+                    newnode.Text = newfolder.Name;
+                    _node.Nodes.Add(newnode);
+                }               
+            }
+
+            return _validfile;                    
+        }
+
+        private string dialogPath = "";
+        private void button3_Click(object sender, EventArgs e)
+        {
+            InitTreeView1();
+            InitCheckbox();
+            if (GeneralClass.interactivityData?.initStatisticsDGV != null)
+            {
+                GeneralClass.interactivityData?.initStatisticsDGV();//清空统计界面的dgv
+            }
+
+            GeneralClass.interactivityData?.printlog(1, "开始导入E筋料单至数据库文件，请等待。。。");
+
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.Description = "打开料单文件";
+            dialog.SelectedPath = dialogPath;//保留历史记录，方便下次打开
+
+            string folderpath = "";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                folderpath = dialog.SelectedPath;
+                this.dialogPath = folderpath;
+
+                DirectoryInfo folder = new DirectoryInfo(folderpath);
+
+                TreeNode _rootNode = new TreeNode();
+                _rootNode.Text = folder.Name;
+                this.treeView1.Nodes.Add(_rootNode);
+
+                int _level = 0;
+                Morder _morder = new Morder();
+                _morder.levelName[_level] = _rootNode.Text;//
+                
+                SetTreeViewNodes(folderpath, _rootNode,(_level+1), _morder);
+
+            }
+
+
+            GeneralClass.interactivityData?.printlog(1, "E筋料单[" + Path.GetFileNameWithoutExtension(folderpath) + "]导入数据库文件成功！");
+
+
+
+
+
+            #region MyRegion
+
+            //try
+            //{
+            //    //string filepath = "";
+
+            //    //打开excel文件
+            //    OpenFileDialog openFileDialog = new OpenFileDialog();//打开文件夹对话框
+            //    openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            //    openFileDialog.Filter = "E筋文件(*.ejb)|*.ejb|所有文件(*.*)|*.*";
+            //    openFileDialog.Title = "打开料单";
+            //    openFileDialog.FilterIndex = 0;
+            //    openFileDialog.Multiselect = true;
+            //    openFileDialog.CheckFileExists = true;
+            //    openFileDialog.CheckPathExists = true;
+
+
+            //    //treeView1.Nodes.Clear();
+            //    InitTreeView1();
+            //    InitCheckbox();
+            //    if (GeneralClass.interactivityData?.initStatisticsDGV != null)
+            //    {
+            //        GeneralClass.interactivityData?.initStatisticsDGV();//清空统计界面的dgv
+            //    }
+
+            //    //GeneralClass.SQLiteOpt.InitDB(GeneralClass.AllRebarTableName);//先创建并清空db数据库表单
+            //    GeneralClass.SQLiteOpt.InitDB(GeneralClass.AllRebarBKTableName);//先创建并清空db数据库表单
+
+            //    if (openFileDialog.ShowDialog() == DialogResult.OK)
+            //    {
+            //        foreach (string filepath in openFileDialog.FileNames)
+            //        {
+            //            string filename = System.IO.Path.GetFileNameWithoutExtension(filepath); //获取excel文件名作为根节点名称,不带后缀名
+
+            //            this.toolStripStatusLabel1.Text = filepath;//显示文件名称
+
+            //            string tableName = GeneralClass.AllRebarBKTableName;
+
+            //            GeneralClass.interactivityData?.printlog(1, "开始导入E筋料单至数据库文件，请等待。。。");
+            //            //GeneralClass.SQLiteOpt.ExcelToDB(filepath, tableName);//excel文件数据存入数据库
+
+            //            string jsonstr = GeneralClass.readEjin.GetJsonStr(filepath);
+
+
+
+            //            GeneralClass.interactivityData?.printlog(3, jsonstr);//存入历史数据
+
+            //            GeneralClass.interactivityData?.printlog(1, "E筋料单[" + filename + "]导入数据库文件成功！");
+
+            //            //列举所有的sheet名称
+            //            TreeNode tn = new TreeNode();
+            //            TreeNode tn1 = new TreeNode();
+            //            TreeNode tn2 = new TreeNode();
+            //            tn.Text = filename; //获取excel文件名作为根节点名称
+            //            for (int stnum = 0; stnum < GeneralClass.readEXCEL.wb?.NumberOfSheets - 1; stnum++)//因为料单一般最后一页是汇总表，格式不一致，不解析
+            //            {
+            //                ISheet sheet = GeneralClass.readEXCEL.wb?.GetSheetAt(stnum);
+            //                tn1 = new TreeNode();
+            //                tn1.Text = sheet.SheetName;
+
+            //                tn.Nodes.Add(tn1);
+            //            }
+            //            //tn.Checked = true;//设置节点为选中
+            //            treeView1.Nodes.Add(tn);
+
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
+            #endregion
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -682,75 +847,5 @@ namespace RebarSampling
 
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //string filepath = "";
-
-                //打开excel文件
-                OpenFileDialog openFileDialog = new OpenFileDialog();//打开文件夹对话框
-                openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                openFileDialog.Filter = "E筋文件(*.ejb)|*.ejb|所有文件(*.*)|*.*";
-                openFileDialog.Title = "打开料单";
-                openFileDialog.FilterIndex = 0;
-                openFileDialog.Multiselect = true;
-                openFileDialog.CheckFileExists = true;
-                openFileDialog.CheckPathExists = true;
-
-
-                treeView1.Nodes.Clear();
-                if (GeneralClass.interactivityData?.initStatisticsDGV != null)
-                {
-                    GeneralClass.interactivityData?.initStatisticsDGV();//清空统计界面的dgv
-                }
-
-                //GeneralClass.SQLiteOpt.InitDB(GeneralClass.AllRebarTableName);//先创建并清空db数据库表单
-                GeneralClass.SQLiteOpt.InitDB(GeneralClass.AllRebarBKTableName);//先创建并清空db数据库表单
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    foreach (string filepath in openFileDialog.FileNames)
-                    {
-                        string filename = System.IO.Path.GetFileNameWithoutExtension(filepath); //获取excel文件名作为根节点名称,不带后缀名
-
-                        this.toolStripStatusLabel1.Text = filepath;//显示文件名称
-
-                        string tableName = GeneralClass.AllRebarBKTableName;
-
-                        GeneralClass.interactivityData?.printlog(1, "开始导入E筋料单至数据库文件，请等待。。。");
-                        //GeneralClass.SQLiteOpt.ExcelToDB(filepath, tableName);//excel文件数据存入数据库
-
-                        string jsonstr = GeneralClass.readEjin.GetJsonStr(filepath);
-
-
-
-                        GeneralClass.interactivityData?.printlog(1, "E筋料单[" + filename + "]导入数据库文件成功！");
-
-                        //列举所有的sheet名称
-                        TreeNode tn = new TreeNode();
-                        TreeNode tn1 = new TreeNode();
-                        TreeNode tn2 = new TreeNode();
-                        tn.Text = filename; //获取excel文件名作为根节点名称
-                        for (int stnum = 0; stnum < GeneralClass.readEXCEL.wb?.NumberOfSheets - 1; stnum++)//因为料单一般最后一页是汇总表，格式不一致，不解析
-                        {
-                            ISheet sheet = GeneralClass.readEXCEL.wb?.GetSheetAt(stnum);
-                            tn1 = new TreeNode();
-                            tn1.Text = sheet.SheetName;
-
-                            tn.Nodes.Add(tn1);
-                        }
-                        //tn.Checked = true;//设置节点为选中
-                        treeView1.Nodes.Add(tn);
-
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-        }
     }
 }

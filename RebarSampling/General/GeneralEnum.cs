@@ -663,6 +663,28 @@ namespace RebarSampling
         maxColNum
 
     }
+
+    public enum EnumDiameter
+    { 
+        DIAMETER_6,
+        DIAMETER_8,
+        DIAMETER_10,
+        DIAMETER_12,
+        DIAMETER_14,
+        DIAMETER_16,
+        DIAMETER_18,
+        DIAMETER_20,
+        DIAMETER_22,
+        DIAMETER_25,
+        DIAMETER_28,
+        DIAMETER_32,
+        DIAMETER_36,
+        DIAMETER_40,
+
+        maxDiameterNum
+
+    }
+
     /// <summary>
     /// 详细统计界面的行名，钢筋尺寸
     /// </summary>

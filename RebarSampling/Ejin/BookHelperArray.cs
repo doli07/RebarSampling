@@ -75,60 +75,101 @@ namespace RebarSampling
         public string chartparam { get; set; }
 
     }
-
-
     /// <summary>
-    /// 表示一个工程
+    /// 表示一个工程的主信息
     /// </summary>
     public class Morder
     {
-        /// <summary>
-        /// 客户提供的单据号（必填）
-        /// </summary>
-        public string cusbillno { get; set; }
-        /// <summary>
-        /// 工程名称
-        /// </summary>
-        public string projectname { get; set; }
-        /// <summary>
-        /// 项目名称
-        /// </summary>
-        public string xiangmuname { get; set; }
-        /// <summary>
-        /// 客户联系人
-        /// </summary>
-        public string cuslinker { get; set; }
-        /// <summary>
-        /// 联系电话
-        /// </summary>
-        public string linktel { get; set; }
-        /// <summary>
-        /// 发货客户地址
-        /// </summary>
-        public string cusaddress { get; set; }
-        /// <summary>
-        /// 交货日期，字符串格式，年月日时分秒，具体参考json案例（必填）
-        /// </summary>
-        public string jiaohuodate { get; set; }
-        /// <summary>
-        /// 总重量
-        /// </summary>
-        public double weight { get; set; }
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public string remark { get; set; }
-        /// <summary>
-        /// 制单人主键，由建科提供固定的值（必填）
-        /// </summary>
-        public int creator { get; set; } = 1;
-        /// <summary>
-        /// 客户名称（必填）
-        /// XXX工程单位
-        /// </summary>
-        public string customername { get; set; }
+        public Morder() 
+        {
+            levelName = new string[5] { "","","","",""};
+        }
+        public string[] levelName { get; set; }
+        //public Morder() 
+        //{
+        //    levelName_1 = "";
+        //    levelName_2 = "";
+        //    levelName_3 = "";
+        //    levelName_4 = "";
+        //    levelName_5 = "";
+        //}
+        ///// <summary>
+        ///// 第一层级名称，一般为项目名称
+        ///// </summary>
+        //public string levelName_1 { get; set; }
+        ///// <summary>
+        ///// 第二层级名称，一般为楼栋名称
+        ///// </summary>
+        //public string levelName_2 { get; set;}
+        ///// <summary>
+        ///// 第三层级名称，一般为楼层名称
+        ///// </summary>
+        //public string levelName_3 { get; set;} 
+        ///// <summary>
+        ///// 第四层级名称，一般为片区名称
+        ///// </summary>
+        //public string levelName_4 { get; set;}
+        ///// <summary>
+        ///// 第五层级名称，一般为构件类型名
+        ///// </summary>
+        //public string levelName_5 { get; set;}
 
     }
+
+    ///// <summary>
+    ///// 表示一个工程
+    ///// </summary>
+    //public class Morder
+    //{
+    //    /// <summary>
+    //    /// 客户提供的单据号（必填）
+    //    /// </summary>
+    //    public string cusbillno { get; set; }
+    //    /// <summary>
+    //    /// 工程名称
+    //    /// </summary>
+    //    public string projectname { get; set; }
+    //    /// <summary>
+    //    /// 项目名称
+    //    /// </summary>
+    //    public string xiangmuname { get; set; }
+    //    /// <summary>
+    //    /// 客户联系人
+    //    /// </summary>
+    //    public string cuslinker { get; set; }
+    //    /// <summary>
+    //    /// 联系电话
+    //    /// </summary>
+    //    public string linktel { get; set; }
+    //    /// <summary>
+    //    /// 发货客户地址
+    //    /// </summary>
+    //    public string cusaddress { get; set; }
+    //    /// <summary>
+    //    /// 交货日期，字符串格式，年月日时分秒，具体参考json案例（必填）
+    //    /// </summary>
+    //    public string jiaohuodate { get; set; }
+    //    /// <summary>
+    //    /// 总重量
+    //    /// </summary>
+    //    public double weight { get; set; }
+    //    /// <summary>
+    //    /// 备注
+    //    /// </summary>
+    //    public string remark { get; set; }
+    //    /// <summary>
+    //    /// 制单人主键，由建科提供固定的值（必填）
+    //    /// </summary>
+    //    public int creator { get; set; } = 1;
+    //    /// <summary>
+    //    /// 客户名称（必填）
+    //    /// XXX工程单位
+    //    /// </summary>
+    //    public string customername { get; set; }
+    //}
+
+
+
 
     /// <summary>
     /// 管理等待上传的工程数据和料单数据
