@@ -23,7 +23,7 @@ using NPOI.OpenXmlFormats.Spreadsheet;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml.Linq;
 using System.Collections;
-
+using RebarSampling.log;
 
 namespace RebarSampling
 {
@@ -35,6 +35,7 @@ namespace RebarSampling
             //Font font = new Font(textBox1.Font.FontFamily, float.Parse(textBox1.Text), textBox1.Font.Style);
             //Font font = new Font("⿊体", 15);
 
+            queueLogger.Instance().Register();
             GeneralClass.interactivityData.printlog += LogAdd;
             GeneralClass.interactivityData.ifRebarSelected += IfRebarSelected;
             GeneralClass.interactivityData.ifRebarChecked += IfRebarChecked;
@@ -80,7 +81,7 @@ namespace RebarSampling
         }
 
         /// <summary>
-        /// 
+        /// 解析e筋格式文件时，用于树形数据设置节点
         /// </summary>
         /// <param name="_path"></param>
         /// <param name="_node"></param>
@@ -373,7 +374,12 @@ namespace RebarSampling
                             }
                         }
 
-                        Logfile.SaveLog(message, type);
+                        //Logfile.SaveLog(message, type);
+                        queueLogger.Info(message);
+
+
+
+
                     }
                         ));
                 }
@@ -545,7 +551,11 @@ namespace RebarSampling
                 {
                     if (this.panel3.Controls.Contains(form2))//如果当前显示的是form2（统计界面），则执行显示主构件信息
                     {
-                        GeneralClass.interactivityData?.showAssembly();
+                        GeneralClass.interactivityData?.showAssembly(e.Node.Parent.Text,e.Node.Text);
+                    }
+                    if(this.panel3.Controls.Contains(form3))//如果当前显示 的是form3（套料界面），则显示子构件详细信息
+                    {
+                        GeneralClass.interactivityData?.showAssembly(e.Node.Parent.Text,e.Node.Text);
                     }
 
                 }
@@ -798,6 +808,8 @@ namespace RebarSampling
                 //    }
                 //}
                 GeneralClass.SQLiteOpt.ExecuteNonQuery(sqls);//批量存入
+
+                GeneralClass.AllRebarList = GeneralClass.SQLiteOpt.GetAllRebarList(GeneralClass.AllRebarTableName);//取得所有的钢筋数据list
 
                 GeneralClass.interactivityData?.printlog(1, "创建筛选过的钢筋总表完成！");
 

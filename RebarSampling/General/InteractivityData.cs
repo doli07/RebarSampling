@@ -21,7 +21,7 @@ namespace RebarSampling
     /// <summary>
     /// 委托类型，用于操作统计界面显示assembly的料单内容
     /// </summary>
-    public delegate void DelegateShowAssembly();
+    public delegate void DelegateShowAssembly(string _projectName,string _assemblyName);
     /// <summary>
     /// 委托类型，用于操作套料界面显示element构件内容
     /// </summary>
@@ -48,6 +48,14 @@ namespace RebarSampling
     public delegate void DelegateMqttSubscribMsg(string msg);
 
     /// <summary>
+    /// 委托类型，从form2中根据_type搜寻对应的image图片
+    /// </summary>
+    /// <param name="_type">钢筋图形</param>
+    /// <param name="_image">输出图片</param>
+    /// <returns>true：找到了，false：未找到</returns>
+    public delegate bool DelegateFindImage(string _type, out object _image);
+
+    /// <summary>
     /// 内部数据交互类，主要用于不同线程间、不同窗口间传递数据的委托
     /// </summary>
     public class InteractivityData
@@ -71,5 +79,7 @@ namespace RebarSampling
 
         public DelegateMqttPublishMsg mqttpublishmsg { get; set; }
         public DelegateMqttSubscribMsg mqttsubscribmsg { get; set; }
+
+        public DelegateFindImage ifFindImage { get; set; }
     }
 }

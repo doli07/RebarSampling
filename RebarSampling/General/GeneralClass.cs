@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RebarSampling.log;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,11 +27,19 @@ namespace RebarSampling
         /// 操作sqlite文件读取
         /// </summary>
         public static SQLiteOpt SQLiteOpt = new SQLiteOpt();
+        /// <summary>
+        /// 使用queue队列写日志
+        /// </summary>
+        //public static queueLogger quelogger = new queueLogger();
 
         /// <summary>
         /// 所有钢筋数据总的list
         /// </summary>
         public static List<RebarData> AllRebarList = new List<RebarData>();
+        /// <summary>
+        /// 所有构件数据总的list
+        /// </summary>
+        public static List<ElementData> AllElementList = new List<ElementData>();
 
         public static WebServer webServer = new WebServer();
         public static WebClient webClient=new WebClient();

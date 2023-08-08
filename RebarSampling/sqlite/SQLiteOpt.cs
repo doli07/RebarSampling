@@ -17,6 +17,7 @@ using static NPOI.HSSF.Util.HSSFColor;
 using System.Text.RegularExpressions;
 using NPOI.OpenXmlFormats.Dml;
 using NPOI.XWPF.UserModel;
+using NPOI.Util;
 
 namespace RebarSampling
 {
@@ -688,6 +689,46 @@ namespace RebarSampling
             return data;
 
         }
+        public List<GroupbyProjectAssemblyList> QueryAllListByProjectAssembly(List<RebarData> _rebardatalist)
+        {
+            List<GroupbyProjectAssemblyList> returnlist = new List<GroupbyProjectAssemblyList>();
+
+            returnlist = _rebardatalist.GroupBy(x => new { x.ProjectName, x.MainAssemblyName }).Select(
+                y => new GroupbyProjectAssemblyList
+                {
+                    _projectName = y.Key.ProjectName,
+                    _assemblyName = y.Key.MainAssemblyName,
+                    _datalist = y.ToList()
+                }).ToList();
+
+            return returnlist;
+
+        }
+        public List<GroupbyDiameterListWithLength> QueryAllListByDiameterWithLength(List<RebarData> _rebardatalist)
+        {
+            try
+            {
+                double _length = 0;
+
+                List<GroupbyDiameterListWithLength> returnlist = new List<GroupbyDiameterListWithLength>();
+                returnlist = _rebardatalist.GroupBy(x => x.Diameter).Select(
+                    y => new GroupbyDiameterListWithLength
+                    {
+                        _diameter = y.Key,
+                        //_totallength = y.Sum(item => Convert.ToInt32(item.Length) * item.TotalPieceNum),
+                        _totallength = y.Sum(item => (double.TryParse(item.Length, out _length) ? _length : 0) * item.TotalPieceNum),
+                        _totalnum = y.Sum(item => item.TotalPieceNum),
+                        _totalweight = y.Sum(item => item.TotalWeight),
+                        _datalist = y.ToList()
+                    }
+                    ).ToList();
+
+                return returnlist;
+            }
+            catch (Exception ex) { MessageBox.Show("QueryAllListByDiameterWithLength error:" + ex.Message); return null; }
+
+        }
+
         public List<GroupbyDiameterDatalist> QueryAllListByDiameter(List<RebarData> _rebardatalist)
         {
             List<GroupbyDiameterDatalist> returnlist = new List<GroupbyDiameterDatalist>();
@@ -816,57 +857,102 @@ namespace RebarSampling
         /// <param name="_projectName">项目名称，为excel文件名</param>
         /// <param name="_assemblyName">主构件名称，为excel中的sheet名</param>
         /// <returns>返回构件包list</returns>
-        public List<ElementData> GetAllElementList(string _tableName, string _projectName, string _assemblyName)
+        public List<ElementData> GetAllElementList(string _tableName, string _projectName = "", string _assemblyName = "")
         {
             List<ElementData> _elementList = new List<ElementData>();
             ElementData _element = null;
 
-            List<RebarData> _rebarlist = GetAllRebarList(_tableName);
+            //GeneralClass.interactivityData?.printlog(1, "1");
 
-            int _index = 0;
+            //List<RebarData> _rebarlist = GetAllRebarList(_tableName);
+            List<RebarData> _rebarlist = new List<RebarData>();
 
-            foreach (RebarData item in _rebarlist)
+            //GeneralClass.interactivityData?.printlog(1, "2");
+
+            List<GroupbyProjectAssemblyList> _grouplist = QueryAllListByProjectAssembly(GeneralClass.AllRebarList);
+
+            if(_projectName==""&&_assemblyName=="")
             {
-                if (item.ProjectName != _projectName || item.MainAssemblyName != _assemblyName)//筛选项目名和主构件名匹配的
+                //_rebarlist = GeneralClass.AllRebarList.Select(t => new RebarData().Copy(t)).ToList();
+                foreach (var item in GeneralClass.AllRebarList)
                 {
-                    _index = 0;
-                    continue;
+                    RebarData temp = new RebarData();
+                    temp.Copy(item);
+                    _rebarlist.Add(temp);
                 }
-                else
+            }
+            else
+            {
+                foreach(var item in _grouplist)
                 {
-                    _index++;
+                    if(item._projectName==_projectName&&item._assemblyName==_assemblyName)
+                    {
+                        foreach(var tt in item._datalist)
+                        {
+                            RebarData temp = new RebarData();
+                            temp.Copy(tt);
+                            _rebarlist.Add(temp);
+                        }
+                    }
                 }
 
-                //int _index = _rebarlist.IndexOf(item);
+            }
+            //GeneralClass.interactivityData?.printlog(1, "3");
 
+            for(int i=0;i<_rebarlist.Count;i++)
+            {
                 //首行先创建构件
-                if (_index == 1)
+                if(i==0)
                 {
                     _element = new ElementData();
-                    _element.elementName = (item.ElementName != "") ? item.ElementName : "default";//极少数情况，会出现首行没有构件名，用缺省名代替                                 
-                    _element.rebarlist.Add(item);
-                }
+                    _element.projectName = _rebarlist[i].ProjectName;
+                    _element.assemblyName = _rebarlist[i].MainAssemblyName;
+                    _element.elementName = (_rebarlist[i].ElementName != "") ? _rebarlist[i].ElementName : "default";//极少数情况，会出现首行没有构件名，用缺省名代替                                 
+                    _element.rebarlist.Add(_rebarlist[i]);
 
-                int curIndex = _rebarlist.IndexOf(item);
-                if (_index != 1 && item.ElementName != "" && item.ElementName != _rebarlist[curIndex - 1].ElementName)//构件名不为空，且跟上一个元素的构件名不一样，则新建构件
+                    continue;
+                }
+                //GeneralClass.interactivityData?.printlog(1, "3.1");
+
+                //int curIndex = _rebarlist.IndexOf(item);//经测试，indexof会占用大量时间
+
+                //GeneralClass.interactivityData?.printlog(1, "3.2");
+
+                if (i != 0 && _rebarlist[i].ElementName != "" && _rebarlist[i].ElementName != _rebarlist[i - 1].ElementName)//构件名不为空，且跟上一个元素的构件名不一样，则新建构件
                 {
                     if (_element != null)
                     {
                         _elementList.Add(_element);
+                        //GeneralClass.interactivityData?.printlog(1, "3.3");
+
                     }
                     _element = new ElementData();
-                    _element.elementName = item.ElementName;
-                    _element.rebarlist.Add(item);
+                    _element.projectName = _rebarlist[i].ProjectName;
+                    _element.assemblyName = _rebarlist[i].MainAssemblyName;
+                    _element.elementName = _rebarlist[i].ElementName;
+                    _element.rebarlist.Add(_rebarlist[i]);
+
+                    //GeneralClass.interactivityData?.printlog(1, "3.4");
                 }
                 else
                 {
-                    _element.rebarlist.Add(item);//子构件名称为空的，默认为跟前一个不为空的是同一个构件的
+
+                    _element.rebarlist.Add(_rebarlist[i]);//子构件名称为空的，默认为跟前一个不为空的是同一个构件的
+
+                    //GeneralClass.interactivityData?.printlog(1, "3.5");
+
                 }
 
             }
 
+            //GeneralClass.interactivityData?.printlog(1, "4");
 
-
+            //给每个子构件一个index索引号
+            foreach (var item in _elementList)
+            {
+                item.elementIndex = _elementList.IndexOf(item);
+            }
+            //GeneralClass.interactivityData?.printlog(1, "5");
 
             return _elementList;
         }
@@ -910,7 +996,10 @@ namespace RebarSampling
                     rebarData.IfCut = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFCUT + 1].ToString());
                     rebarData.IfBendTwice = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFBENDTWICE + 1].ToString());
 
-                    allRebarList.Add(rebarData);
+                    if (rebarData.TotalPieceNum != 0)
+                    {
+                        allRebarList.Add(rebarData);
+                    }
                 }
             }
 
@@ -1566,13 +1655,14 @@ namespace RebarSampling
                     string[] _num = _data.PieceNumUnitNum.Split('*');
                     if (_num.Length > 1)
                     {
-                        //_tempdata.PieceNumUnitNum= _num[0]+"*"+ (_MultiLength[k].num*Convert.ToInt32( _num[1])).ToString();
-                        _tempdata.PieceNumUnitNum = _MultiLength[k].num.ToString() + "*" + (Convert.ToInt32(_num[0]) * Convert.ToInt32(_num[1])).ToString();
+                        //_tempdata.PieceNumUnitNum = _MultiLength[k].num.ToString() + "*" + (Convert.ToInt32(_num[0]) * Convert.ToInt32(_num[1])).ToString();
+                        _tempdata.PieceNumUnitNum = (_MultiLength[k].num * Convert.ToInt32(_num[0])).ToString() + "*" + Convert.ToInt32(_num[1]).ToString();
+
                     }
                     else
                     {
-                        //_tempdata.PieceNumUnitNum = _num[0] + "*" + (_MultiLength[k].num).ToString();
-                        _tempdata.PieceNumUnitNum = _MultiLength[k].num.ToString() + "*" + _num[0].ToString();
+                        //_tempdata.PieceNumUnitNum = _MultiLength[k].num.ToString() + "*" + _num[0].ToString();
+                        _tempdata.PieceNumUnitNum = (_MultiLength[k].num * Convert.ToInt32(_num[0])).ToString();
                     }
                     _tempdata.TotalPieceNum = _MultiLength[k].num * _data.TotalPieceNum;
                     double tt;

@@ -308,6 +308,8 @@
     <Compile Include="log\logfile.cs" />
     <Compile Include="excel\NpoiExcelReader.cs" />
     <Compile Include="excel\NpoiExcelWriter.cs" />
+    <Compile Include="log\logger.cs" />
+    <Compile Include="log\queueLogger.cs" />
     <Compile Include="mqtt\mqttClient.cs" />
     <Compile Include="mqtt\mqttServer.cs" />
     <Compile Include="Program.cs" />

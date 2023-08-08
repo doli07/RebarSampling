@@ -129,7 +129,7 @@
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(110, 72);
             this.button6.TabIndex = 14;
-            this.button6.Text = "确认筛选";
+            this.button6.Text = "创建总表";
             this.button6.UseVisualStyleBackColor = false;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
@@ -170,7 +170,7 @@
             // 
             this.button11.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button11.Image = ((System.Drawing.Image)(resources.GetObject("button11.Image")));
-            this.button11.Location = new System.Drawing.Point(306, 4);
+            this.button11.Location = new System.Drawing.Point(205, 4);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(90, 80);
             this.button11.TabIndex = 21;
@@ -184,7 +184,7 @@
             // 
             this.button12.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
-            this.button12.Location = new System.Drawing.Point(401, 4);
+            this.button12.Location = new System.Drawing.Point(301, 4);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(90, 80);
             this.button12.TabIndex = 22;
@@ -227,7 +227,7 @@
             // 
             this.button13.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button13.Image = ((System.Drawing.Image)(resources.GetObject("button13.Image")));
-            this.button13.Location = new System.Drawing.Point(594, 4);
+            this.button13.Location = new System.Drawing.Point(493, 4);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(90, 80);
             this.button13.TabIndex = 24;
@@ -240,7 +240,7 @@
             // 
             this.button2.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.Location = new System.Drawing.Point(498, 4);
+            this.button2.Location = new System.Drawing.Point(397, 4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(90, 80);
             this.button2.TabIndex = 23;

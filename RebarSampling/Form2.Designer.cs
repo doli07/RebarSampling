@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -46,6 +46,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.checkBox36 = new System.Windows.Forms.CheckBox();
             this.dataGridView11 = new System.Windows.Forms.DataGridView();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.dataGridView14 = new System.Windows.Forms.DataGridView();
@@ -70,6 +71,8 @@
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage9 = new System.Windows.Forms.TabPage();
             this.dataGridView25 = new System.Windows.Forms.DataGridView();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.dataGridView8 = new System.Windows.Forms.DataGridView();
             this.tabPage10 = new System.Windows.Forms.TabPage();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.tabPage11 = new System.Windows.Forms.TabPage();
@@ -158,7 +161,6 @@
             this.button7 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.checkBox36 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -183,6 +185,8 @@
             this.tabControl2.SuspendLayout();
             this.tabPage9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView25)).BeginInit();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).BeginInit();
             this.tabPage10.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.tabPage11.SuspendLayout();
@@ -380,6 +384,17 @@
             this.tabPage8.TabIndex = 7;
             this.tabPage8.Text = "规格统计";
             this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // checkBox36
+            // 
+            this.checkBox36.AutoSize = true;
+            this.checkBox36.Location = new System.Drawing.Point(28, 41);
+            this.checkBox36.Name = "checkBox36";
+            this.checkBox36.Size = new System.Drawing.Size(134, 28);
+            this.checkBox36.TabIndex = 5;
+            this.checkBox36.Text = "checkBox36";
+            this.checkBox36.UseVisualStyleBackColor = true;
+            this.checkBox36.CheckedChanged += new System.EventHandler(this.checkBox36_CheckedChanged);
             // 
             // dataGridView11
             // 
@@ -641,6 +656,7 @@
             // tabControl2
             // 
             this.tabControl2.Controls.Add(this.tabPage9);
+            this.tabControl2.Controls.Add(this.tabPage5);
             this.tabControl2.Controls.Add(this.tabPage10);
             this.tabControl2.Controls.Add(this.tabPage11);
             this.tabControl2.Location = new System.Drawing.Point(634, 14);
@@ -657,7 +673,7 @@
             this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage9.Size = new System.Drawing.Size(573, 574);
             this.tabPage9.TabIndex = 0;
-            this.tabPage9.Text = "汇总";
+            this.tabPage9.Text = "工艺汇总";
             this.tabPage9.UseVisualStyleBackColor = true;
             // 
             // dataGridView25
@@ -672,6 +688,28 @@
             this.dataGridView25.RowTemplate.Height = 27;
             this.dataGridView25.Size = new System.Drawing.Size(556, 551);
             this.dataGridView25.TabIndex = 10;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.dataGridView8);
+            this.tabPage5.Location = new System.Drawing.Point(4, 33);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(573, 574);
+            this.tabPage5.TabIndex = 3;
+            this.tabPage5.Text = "规格汇总";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView8
+            // 
+            this.dataGridView8.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView8.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView8.Location = new System.Drawing.Point(15, 21);
+            this.dataGridView8.Name = "dataGridView8";
+            this.dataGridView8.RowHeadersWidth = 51;
+            this.dataGridView8.RowTemplate.Height = 27;
+            this.dataGridView8.Size = new System.Drawing.Size(539, 534);
+            this.dataGridView8.TabIndex = 9;
             // 
             // tabPage10
             // 
@@ -834,16 +872,16 @@
             this.panel1.Controls.Add(this.button1);
             this.panel1.Location = new System.Drawing.Point(233, 14);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(395, 668);
+            this.panel1.Size = new System.Drawing.Size(395, 607);
             this.panel1.TabIndex = 11;
             // 
             // panel5
             // 
             this.panel5.Controls.Add(this.dataGridView22);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(0, 453);
+            this.panel5.Location = new System.Drawing.Point(0, 289);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(395, 109);
+            this.panel5.Size = new System.Drawing.Size(395, 59);
             this.panel5.TabIndex = 7;
             // 
             // dataGridView22
@@ -857,15 +895,15 @@
             this.dataGridView22.Name = "dataGridView22";
             this.dataGridView22.RowHeadersWidth = 51;
             this.dataGridView22.RowTemplate.Height = 27;
-            this.dataGridView22.Size = new System.Drawing.Size(395, 109);
+            this.dataGridView22.Size = new System.Drawing.Size(395, 59);
             this.dataGridView22.TabIndex = 5;
             // 
             // button11
             // 
             this.button11.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button11.Location = new System.Drawing.Point(0, 421);
+            this.button11.Location = new System.Drawing.Point(0, 258);
             this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(395, 32);
+            this.button11.Size = new System.Drawing.Size(395, 31);
             this.button11.TabIndex = 6;
             this.button11.Text = "弯曲+套丝";
             this.button11.UseVisualStyleBackColor = true;
@@ -875,9 +913,9 @@
             // 
             this.panel4.Controls.Add(this.dataGridView21);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(0, 321);
+            this.panel4.Location = new System.Drawing.Point(0, 204);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(395, 100);
+            this.panel4.Size = new System.Drawing.Size(395, 54);
             this.panel4.TabIndex = 5;
             // 
             // dataGridView21
@@ -891,13 +929,13 @@
             this.dataGridView21.Name = "dataGridView21";
             this.dataGridView21.RowHeadersWidth = 51;
             this.dataGridView21.RowTemplate.Height = 27;
-            this.dataGridView21.Size = new System.Drawing.Size(395, 100);
+            this.dataGridView21.Size = new System.Drawing.Size(395, 54);
             this.dataGridView21.TabIndex = 4;
             // 
             // button6
             // 
             this.button6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button6.Location = new System.Drawing.Point(0, 289);
+            this.button6.Location = new System.Drawing.Point(0, 172);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(395, 32);
             this.button6.TabIndex = 4;
@@ -909,9 +947,9 @@
             // 
             this.panel3.Controls.Add(this.dataGridView20);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 164);
+            this.panel3.Location = new System.Drawing.Point(0, 117);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(395, 125);
+            this.panel3.Size = new System.Drawing.Size(395, 55);
             this.panel3.TabIndex = 3;
             // 
             // dataGridView20
@@ -925,13 +963,13 @@
             this.dataGridView20.Name = "dataGridView20";
             this.dataGridView20.RowHeadersWidth = 51;
             this.dataGridView20.RowTemplate.Height = 27;
-            this.dataGridView20.Size = new System.Drawing.Size(395, 125);
+            this.dataGridView20.Size = new System.Drawing.Size(395, 55);
             this.dataGridView20.TabIndex = 3;
             // 
             // button2
             // 
             this.button2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button2.Location = new System.Drawing.Point(0, 132);
+            this.button2.Location = new System.Drawing.Point(0, 85);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(395, 32);
             this.button2.TabIndex = 2;
@@ -945,7 +983,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 34);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(395, 98);
+            this.panel2.Size = new System.Drawing.Size(395, 51);
             this.panel2.TabIndex = 1;
             // 
             // dataGridView19
@@ -959,7 +997,7 @@
             this.dataGridView19.Name = "dataGridView19";
             this.dataGridView19.RowHeadersWidth = 51;
             this.dataGridView19.RowTemplate.Height = 27;
-            this.dataGridView19.Size = new System.Drawing.Size(395, 98);
+            this.dataGridView19.Size = new System.Drawing.Size(395, 51);
             this.dataGridView19.TabIndex = 2;
             // 
             // button1
@@ -1356,19 +1394,19 @@
             // 
             // chart1
             // 
-            chartArea7.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea7);
-            legend7.Enabled = false;
-            legend7.Name = "Legend1";
-            this.chart1.Legends.Add(legend7);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(226, 382);
             this.chart1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chart1.Name = "chart1";
-            series7.ChartArea = "ChartArea1";
-            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series7.Legend = "Legend1";
-            series7.Name = "Series1";
-            this.chart1.Series.Add(series7);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(452, 241);
             this.chart1.TabIndex = 4;
             this.chart1.Text = "chart1";
@@ -1771,17 +1809,6 @@
             this.imageList1.Images.SetKeyName(45, "10200.png");
             this.imageList1.Images.SetKeyName(46, "20202.png");
             // 
-            // checkBox36
-            // 
-            this.checkBox36.AutoSize = true;
-            this.checkBox36.Location = new System.Drawing.Point(28, 41);
-            this.checkBox36.Name = "checkBox36";
-            this.checkBox36.Size = new System.Drawing.Size(134, 28);
-            this.checkBox36.TabIndex = 5;
-            this.checkBox36.Text = "checkBox36";
-            this.checkBox36.UseVisualStyleBackColor = true;
-            this.checkBox36.CheckedChanged += new System.EventHandler(this.checkBox36_CheckedChanged);
-            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -1828,6 +1855,8 @@
             this.tabControl2.ResumeLayout(false);
             this.tabPage9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView25)).EndInit();
+            this.tabPage5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).EndInit();
             this.tabPage10.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.tabPage11.ResumeLayout(false);
@@ -2004,5 +2033,7 @@
         private System.Windows.Forms.CheckBox checkBox34;
         private System.Windows.Forms.CheckBox checkBox35;
         private System.Windows.Forms.CheckBox checkBox36;
+        private System.Windows.Forms.DataGridView dataGridView8;
+        private System.Windows.Forms.TabPage tabPage5;
     }
 }
