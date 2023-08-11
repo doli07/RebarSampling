@@ -36,7 +36,9 @@ namespace RebarSampling
     public class GroupbyDiameterListWithLength
     {
         public int _diameter { get; set; }
-        public double _totallength { get; set; }
+        public int _totallength { get; set; }
+        public int _maxlength { get; set; }
+        public int _minlength { get; set; }
         public int _totalnum { get; set; }
         public double _totalweight { get; set; }
         public List<RebarData> _datalist { get; set; }

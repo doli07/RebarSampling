@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Etable;
+using NPOI.OpenXmlFormats.Dml;
+using SixLabors.ImageSharp.PixelFormats;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,6 +26,11 @@ namespace RebarSampling
 
             GeneralClass.interactivityData.mqttpublishmsg += ShowPublisherMsg;
             GeneralClass.interactivityData.mqttsubscribmsg += ShowSubscriberMsg;
+
+            GeneralClass.interactivityData.sendworkbill += SendWorkBill;
+
+            InitControl();
+            InitDGV();
         }
 
         ~Form4()
@@ -37,6 +46,107 @@ namespace RebarSampling
             await GeneralClass.mqttClient.PublisherStop();
             await GeneralClass.mqttClient.SubscriberStop();
         }
+
+        private void InitControl()
+        {
+            this.comboBox1.Items.Clear();
+            this.comboBox1.Items.Add("Φ16");
+            this.comboBox1.Items.Add("Φ18");
+            this.comboBox1.Items.Add("Φ20");
+            this.comboBox1.Items.Add("Φ22");
+            this.comboBox1.Items.Add("Φ25");
+            this.comboBox1.Items.Add("Φ28");
+            this.comboBox1.Items.Add("Φ32");
+            this.comboBox1.Items.Add("Φ36");
+            this.comboBox1.SelectedIndex = 0;
+
+            this.comboBox2.Items.Clear();
+            this.comboBox2.Items.Add("1");
+            this.comboBox2.Items.Add("2");
+            this.comboBox2.Items.Add("3");
+            this.comboBox2.Items.Add("4");
+            this.comboBox2.Items.Add("5");
+            this.comboBox2.Items.Add("6");
+            this.comboBox2.SelectedIndex = 0;
+
+            this.comboBox3.Items.Clear();
+            this.comboBox3.Items.Add("1");
+            this.comboBox3.Items.Add("2");
+            this.comboBox3.Items.Add("3");
+            this.comboBox3.Items.Add("4");
+            this.comboBox3.Items.Add("5");
+            this.comboBox3.Items.Add("6");
+            this.comboBox3.SelectedIndex = 0;
+
+            this.comboBox4.Items.Clear();
+            this.comboBox4.Items.Add("1");
+            this.comboBox4.Items.Add("2");
+            this.comboBox4.Items.Add("3");
+            this.comboBox4.Items.Add("4");
+            this.comboBox4.Items.Add("5");
+            this.comboBox4.Items.Add("6");
+            this.comboBox4.SelectedIndex = 0;
+
+            this.textBox16.Text = "12000";
+            this.textBox18.Text = "0";
+            this.textBox19.Text = "0";
+            this.textBox20.Text = "0";
+
+            this.checkBox1.Checked = false;
+            this.checkBox2.Checked = false;
+            this.checkBox3.Checked = false;
+            this.checkBox4.Checked = false;
+            this.checkBox5.Checked = false;
+            this.checkBox6.Checked = false;
+            this.checkBox7.Checked = false;
+            this.checkBox8.Checked = false;
+            this.checkBox9.Checked = false;
+
+
+        }
+
+        private DataTable m_table;
+        private void InitDGV()
+        {
+            m_table = new DataTable();
+
+            DataColumn column = new DataColumn();
+            column.ColumnName = "序号";
+            column.AutoIncrement = true;
+            column.AutoIncrementSeed = 0;
+            column.AutoIncrementStep = 1;
+            m_table.Columns.Add(column);
+            
+            column = new DataColumn("直径",typeof(int));
+            m_table.Columns.Add(column);
+
+            column = new DataColumn("json", typeof(string));
+            m_table.Columns.Add(column);
+
+            dataGridView1.DataSource = m_table;
+
+            //DataGridViewColumn column;
+            //DataGridViewCell cell;
+
+            ////init datagridview1
+            //column = new DataGridViewColumn();
+            //cell = new DataGridViewTextBoxCell();
+            //column.CellTemplate = cell;//设置单元格模板
+            //column.HeaderText = "序号";//
+            //dataGridView1.Columns.Add(column);
+
+            //column = new DataGridViewColumn();
+            //cell = new DataGridViewTextBoxCell();
+            //column.CellTemplate = cell;//设置单元格模板
+            //column.HeaderText = "直径";//
+            //dataGridView1.Columns.Add(column);
+
+            //column = new DataGridViewColumn();
+            //cell = new DataGridViewTextBoxCell();
+            //column.CellTemplate = cell;//设置单元格模板
+            //column.HeaderText = "json";//
+            //dataGridView1.Columns.Add(column);
+        }
         private void ShowPublisherMsg(string msg)
         {
             if (this != null)
@@ -45,7 +155,7 @@ namespace RebarSampling
                 {
                     //textBox13.Clear();
                     //textBox13.Text += DateTime.Now.ToString() + ":" + msg+"\r\n";
-                    textBox13.Text=textBox13.Text.Insert(0,DateTime.Now.ToString() + ":" + msg + "\r\n");
+                    textBox13.Text = textBox13.Text.Insert(0, DateTime.Now.ToString() + ":" + msg + "\r\n");
 
                 }
                     ));
@@ -59,7 +169,7 @@ namespace RebarSampling
                 {
                     //textBox15.Clear();
                     //textBox15.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
-                    textBox15.Text=textBox15.Text.Insert(0, DateTime.Now.ToString() + ":" + msg + "\r\n");
+                    textBox15.Text = textBox15.Text.Insert(0, DateTime.Now.ToString() + ":" + msg + "\r\n");
 
                 }
                     ));
@@ -73,7 +183,7 @@ namespace RebarSampling
                 {
                     //textBox4.Clear();
                     //textBox4.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
-                    textBox4.Text=textBox4.Text.Insert(0, DateTime.Now.ToString() + ":" + msg + "\r\n");
+                    textBox4.Text = textBox4.Text.Insert(0, DateTime.Now.ToString() + ":" + msg + "\r\n");
 
                 }
                     ));
@@ -88,61 +198,202 @@ namespace RebarSampling
                 {
                     //textBox7.Clear();
                     //textBox7.Text += DateTime.Now.ToString() + ":" + msg + "\r\n";
-                    textBox7.Text=textBox7.Text.Insert(0, DateTime.Now.ToString() + ":" + msg + "\r\n");
+                    textBox7.Text = textBox7.Text.Insert(0, DateTime.Now.ToString() + ":" + msg + "\r\n");
 
                 }
                 ));
             }
         }
-        private void button1_Click(object sender, EventArgs e)
+        private Random _random = new Random();//随机数生成器
+
+        private SingleRebarData CreateSingleRebarData(int _index)
         {
-            List<SingleRebarData> _rebarlist = new List<SingleRebarData>();
+            string _length = "";
+            int _wareno = 0;
+            int _diameter = 0;
+            bool _headtao = false;
+            bool _tailtao = false;
+            bool _bend = false;
+
+
+            switch (_index)
+            {
+                case 0:
+                    _length = textBox18.Text;
+                    _wareno = Convert.ToInt32((string)comboBox2.SelectedItem);
+                    _diameter = Convert.ToInt32(((string)comboBox1.SelectedItem).Substring(1, 2));
+                    _headtao = checkBox1.Checked;
+                    _tailtao = checkBox2.Checked;
+                    _bend = checkBox3.Checked;
+                    break;
+                case 1:
+                    _length = textBox19.Text;
+                    _wareno = Convert.ToInt32((string)comboBox3.SelectedItem);
+                    _diameter = Convert.ToInt32(((string)comboBox1.SelectedItem).Substring(1, 2));
+                    _headtao = checkBox4.Checked;
+                    _tailtao = checkBox5.Checked;
+                    _bend = checkBox6.Checked;
+                    break;
+                case 2:
+                    _length = textBox20.Text;
+                    _wareno = Convert.ToInt32((string)comboBox4.SelectedItem);
+                    _diameter = Convert.ToInt32(((string)comboBox1.SelectedItem).Substring(1, 2));
+                    _headtao = checkBox7.Checked;
+                    _tailtao = checkBox8.Checked;
+                    _bend = checkBox9.Checked;
+                    break;
+            }
 
             SingleRebarData _singleRebar = new SingleRebarData();
-            _singleRebar.SeriNo = 0;
-            _singleRebar.ProjectName = "光谷国际社区";
-            _singleRebar.AssemblyName = "梁";
-            _singleRebar.ElementName = "KL57";
-            _singleRebar.WareNo = 1;
-            _singleRebar.PicNo = "30202";
-            _singleRebar.Level = "C";
-            _singleRebar.Diameter = 22;
-            _singleRebar.Length = 6000;
-            _singleRebar.CornerMsg = "350,90;5300,90;350,0";
-            _singleRebar.IndexCode = "1A5C3";
-            _rebarlist.Add(_singleRebar);
+            GeneralMultiData _mData1 = new GeneralMultiData();
+            GeneralMultiData _mData2 = new GeneralMultiData();
 
-            _singleRebar = new SingleRebarData();
-            _singleRebar.SeriNo = 1;
-            _singleRebar.ProjectName = "光谷国际社区";
-            _singleRebar.AssemblyName = "梁";
-            _singleRebar.ElementName = "KZ1";
-            _singleRebar.WareNo = 2;
-            _singleRebar.PicNo = "10000";
-            _singleRebar.Level = "C";
-            _singleRebar.Diameter = 22;
-            _singleRebar.Length = 2500;
-            _singleRebar.CornerMsg = "0,套;2500,0";
-            _singleRebar.IndexCode = "1A5C4";
-            _rebarlist.Add(_singleRebar);
+            if (_length != "0")
+            {
+                _singleRebar = new SingleRebarData();
+                _singleRebar.SeriNo = _index;
+                _singleRebar.ProjectName = "光谷国际社区";
+                _singleRebar.AssemblyName = "梁";
+                _singleRebar.ElementName = "KL57";
+                _singleRebar.WareNo = _wareno;
+                _singleRebar.PicNo = "30202";
+                _singleRebar.Level = "C";
+                _singleRebar.Diameter = _diameter;
+                _singleRebar.Length = Convert.ToInt32(_length);
+                //根据经验公式计算重量(kg)，保留3位小数
+                _singleRebar.Weight =Math.Round( 0.00617 * (double)_diameter * (double)_diameter * (double)_singleRebar.Length / 1000,3);
 
+                if (_bend)//弯曲
+                {
+                    _mData1 = new GeneralMultiData();
+                    _mData2 = new GeneralMultiData();
+
+                    _mData1.length = (_singleRebar.Length / 4).ToString();
+                    _mData2.length = (_singleRebar.Length * 3 / 4).ToString();
+
+                    _mData1.cornerMsg = _mData1.length + ",90;";
+                    if (_tailtao)//端尾套丝
+                    {
+                        _mData2.cornerMsg = _mData2.length + ",丝;";
+                    }
+                    else//端尾不套丝
+                    {
+                        _mData2.cornerMsg = _mData2.length + ",0;";
+                    }
+                    if (_headtao)//端头套丝
+                    {
+                        _mData1.cornerMsg = "0,套;" + _mData1.cornerMsg;
+                    }
+                    _singleRebar.CornerMsg = _mData1.cornerMsg + _mData2.cornerMsg;
+                }
+                else
+                {
+                    _mData1 = new GeneralMultiData();
+                    _mData1.length = _singleRebar.Length.ToString();
+
+                    if (_tailtao)//端尾套丝
+                    {
+                        _mData1.cornerMsg = _mData1.length + ",丝;";
+                    }
+                    else//端尾不套丝
+                    {
+                        _mData1.cornerMsg = _mData1.length + ",0;";
+                    }
+                    if (_headtao)//端头套丝
+                    {
+                        _mData1.cornerMsg = "0,套;" + _mData1.cornerMsg;
+                    }
+                    _singleRebar.CornerMsg = _mData1.cornerMsg;
+
+                }
+
+                //_singleRebar.CornerMsg = "350,90;5300,90;350,0";
+                //_singleRebar.IndexCode = "1A5C3";
+                _singleRebar.IndexCode = Convert.ToString(_random.Next(100000, 1000000), 16).ToUpper().PadLeft(5, '0');
+
+                //             int a = 123456;
+                //             Convert.ToString(a, 16).ToUpper().PadLeft(8, '0') = 0001E240
+                ////Convert.ToString(a, 16)十进制转为十六进制;
+                ////string.ToUpper()返回大写的格式; 
+                ////String.PadLeft(8,'0'); 表示检查字符串长度是否少于8位,若少于8位,则自动在其左侧以'0'补足。 
+
+                return _singleRebar;
+
+            }
+            else
+            {
+                return null;
+            }
+
+
+
+        }
+
+        private int SeriNo = 0;
+        private void button1_Click(object sender, EventArgs e)
+        {
             WorkBill _workbill = new WorkBill();
+
+            List<SingleRebarData> _rebarlist = new List<SingleRebarData>();
+
+            SingleRebarData _singleRebar;
+
+            for (int i = 0; i < 3; i++)
+            {
+                _singleRebar = CreateSingleRebarData(i);
+                if (_singleRebar != null)
+                {
+                    _rebarlist.Add(_singleRebar);
+                }
+            }
+
+
             _workbill.Msgtype = 2;
-            _workbill.BillNo = "GJSQ_A_06D_01F_20230628_0001";
+            string recordDate = DateTime.Now.ToString("yyyy_MM_dd");
+            this.SeriNo++;
+            _workbill.BillNo = "GJSQ_A_06D_01F_" + recordDate + "_"+this.SeriNo.ToString().PadLeft(4, '0');//四位流水号，用0补全
             _workbill.TotalNum = 100;
-            _workbill.SteelbarNo = 65;
+            _workbill.SteelbarNo = this.SeriNo;
             _workbill.ProjectName = "光谷国际社区";
             _workbill.Block = "A";
             _workbill.Building = "06D";
             _workbill.Floor = "01F";
             _workbill.Level = "C";
-            _workbill.Diameter = 22;
-            _workbill.OriginalLength = 9;
+            _workbill.Diameter = Convert.ToInt32(((string)comboBox1.SelectedItem).Substring(1, 2)); ;
+            _workbill.OriginalLength = Convert.ToInt32(textBox16.Text);
             _workbill.SteelbarList = _rebarlist;
 
-            string sss = GeneralClass.JsonOpt.Serializer(_workbill);
+            string sss = GeneralClass.JsonOpt.Serializer(_workbill);//json序列化
 
             textBox1.Text = sss;
+
+
+
+            ////dataGridView1.Rows.Clear();//清空
+            //DataGridViewRow dgvRow;
+            //DataGridViewCell dgvCell;
+
+            //dgvRow = new DataGridViewRow();
+
+            ////直径
+            //dgvCell = new DataGridViewTextBoxCell();
+            //dgvCell.Value = "Φ"+ _workbill.Diameter;
+            //dgvRow.Cells.Add(dgvCell);
+
+            ////直径
+            //dgvCell = new DataGridViewTextBoxCell();
+            //dgvCell.Value = sss;
+            //dgvRow.Cells.Add(dgvCell);
+
+            ////Φ16
+            //dataGridView1.Rows.Add(dgvRow);
+
+            DataRow _row =m_table.NewRow();
+            _row[1] = _workbill.Diameter;
+            _row[2] = sss;
+            m_table.Rows.Add(_row);
+            dataGridView1.DataSource = m_table;
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -198,7 +449,7 @@ namespace RebarSampling
         private async void buttonServerStop_Click(object sender, EventArgs e)
         {
             buttonServerStart.BackColor = Color.Transparent;
-            buttonServerStart.Enabled=true;
+            buttonServerStart.Enabled = true;
             await GeneralClass.mqttServer.StopMqttServer();
             GeneralClass.interactivityData?.printlog(1, "mqttserver stop");
 
@@ -207,7 +458,7 @@ namespace RebarSampling
         private async void buttonPublisherStart_Click(object sender, EventArgs e)
         {
             buttonPublisherStart.BackColor = Color.LightGreen;
-            buttonPublisherStart.Enabled=false;
+            buttonPublisherStart.Enabled = false;
             await GeneralClass.mqttClient.PublisherStart(textBox10.Text, textBox9.Text);
             GeneralClass.interactivityData?.printlog(1, $"mqttclient publisher start,server:{textBox10.Text}|port:{textBox9.Text}");
 
@@ -216,7 +467,7 @@ namespace RebarSampling
         private async void buttonPublisherStop_Click(object sender, EventArgs e)
         {
             buttonPublisherStart.BackColor = Color.Transparent;
-            buttonPublisherStart.Enabled=true;
+            buttonPublisherStart.Enabled = true;
             await GeneralClass.mqttClient.PublisherStop();
             GeneralClass.interactivityData?.printlog(1, "mqttclient publisher stop");
 
@@ -232,7 +483,7 @@ namespace RebarSampling
         private async void buttonSubscriberStart_Click(object sender, EventArgs e)
         {
             buttonSubscriberStart.BackColor = Color.LightGreen;
-            buttonSubscriberStart.Enabled=false;
+            buttonSubscriberStart.Enabled = false;
             await GeneralClass.mqttClient.SubscriberStart(textBox10.Text, textBox9.Text);
             GeneralClass.interactivityData?.printlog(1, $"mqttclient subscriber start,server:{textBox10.Text}|port:{textBox9.Text}");
 
@@ -251,6 +502,47 @@ namespace RebarSampling
             buttonSubscriberStart.Enabled = true;
             await GeneralClass.mqttClient.SubscriberStop();
             GeneralClass.interactivityData?.printlog(1, "mqttclient subscriber stop");
+
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            InitControl();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            //m_table = new DataTable();
+            //dataGridView1.DataSource = m_table;
+            InitDGV();
+
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            List<string> list = new List<string>();
+
+            if(m_table.Rows.Count!=0)
+            {
+                foreach (DataRow row in m_table.Rows)
+                {
+                    list.Add(row[2].ToString());
+                }
+                int _timestep = Convert.ToInt32(textBox17.Text);
+                GeneralClass.interactivityData?.sendworkbill(list,_timestep);
+
+            }
+        }
+
+
+        private void SendWorkBill(List<string> _jsonlist,int timestep)
+        {
+            foreach(string item in _jsonlist)
+            {
+                GeneralClass.webServer.SendMsg(item);
+                Thread.Sleep(timestep); 
+
+            }
 
         }
     }

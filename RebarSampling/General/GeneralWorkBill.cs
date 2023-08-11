@@ -9,7 +9,7 @@ namespace RebarSampling
     /// <summary>
     /// 单根钢筋的信息
     /// </summary>
-    public struct SingleRebarData
+    public class SingleRebarData
     {
         /// <summary>
         /// 索引号，为当前钢筋在原材钢筋中的排序索引
@@ -48,6 +48,10 @@ namespace RebarSampling
         /// 下料长度
         /// </summary>
         public int Length { get; set; }
+        /// <summary>
+        /// 重量
+        /// </summary>
+        public double Weight { get; set; }
         /// <summary>
         /// 边角结构,
         /// </summary>

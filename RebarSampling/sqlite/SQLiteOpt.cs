@@ -708,7 +708,7 @@ namespace RebarSampling
         {
             try
             {
-                double _length = 0;
+                int _length = 0;
 
                 List<GroupbyDiameterListWithLength> returnlist = new List<GroupbyDiameterListWithLength>();
                 returnlist = _rebardatalist.GroupBy(x => x.Diameter).Select(
@@ -716,7 +716,11 @@ namespace RebarSampling
                     {
                         _diameter = y.Key,
                         //_totallength = y.Sum(item => Convert.ToInt32(item.Length) * item.TotalPieceNum),
-                        _totallength = y.Sum(item => (double.TryParse(item.Length, out _length) ? _length : 0) * item.TotalPieceNum),
+                        //_totallength = y.Sum(item => (double.TryParse(item.Length, out _length) ? _length : 0) * item.TotalPieceNum),
+                        _totallength = y.Sum(item => (int.TryParse(item.Length, out _length) ? _length : ((Convert.ToInt32(item.Length.Split('~')[0]) + Convert.ToInt32(item.Length.Split('~')[1])) / 2)) * item.TotalPieceNum),
+                        _maxlength = y.Max(item=> (int.TryParse(item.Length, out _length) ? _length : ((Convert.ToInt32(item.Length.Split('~')[0]) + Convert.ToInt32(item.Length.Split('~')[1])) / 2))),
+                        _minlength = y.Min(item => (int.TryParse(item.Length, out _length) ? _length : ((Convert.ToInt32(item.Length.Split('~')[0]) + Convert.ToInt32(item.Length.Split('~')[1])) / 2)    )),
+
                         _totalnum = y.Sum(item => item.TotalPieceNum),
                         _totalweight = y.Sum(item => item.TotalWeight),
                         _datalist = y.ToList()
@@ -871,7 +875,7 @@ namespace RebarSampling
 
             List<GroupbyProjectAssemblyList> _grouplist = QueryAllListByProjectAssembly(GeneralClass.AllRebarList);
 
-            if(_projectName==""&&_assemblyName=="")
+            if (_projectName == "" && _assemblyName == "")
             {
                 //_rebarlist = GeneralClass.AllRebarList.Select(t => new RebarData().Copy(t)).ToList();
                 foreach (var item in GeneralClass.AllRebarList)
@@ -883,11 +887,11 @@ namespace RebarSampling
             }
             else
             {
-                foreach(var item in _grouplist)
+                foreach (var item in _grouplist)
                 {
-                    if(item._projectName==_projectName&&item._assemblyName==_assemblyName)
+                    if (item._projectName == _projectName && item._assemblyName == _assemblyName)
                     {
-                        foreach(var tt in item._datalist)
+                        foreach (var tt in item._datalist)
                         {
                             RebarData temp = new RebarData();
                             temp.Copy(tt);
@@ -899,10 +903,10 @@ namespace RebarSampling
             }
             //GeneralClass.interactivityData?.printlog(1, "3");
 
-            for(int i=0;i<_rebarlist.Count;i++)
+            for (int i = 0; i < _rebarlist.Count; i++)
             {
                 //首行先创建构件
-                if(i==0)
+                if (i == 0)
                 {
                     _element = new ElementData();
                     _element.projectName = _rebarlist[i].ProjectName;
@@ -936,13 +940,15 @@ namespace RebarSampling
                 }
                 else
                 {
-
                     _element.rebarlist.Add(_rebarlist[i]);//子构件名称为空的，默认为跟前一个不为空的是同一个构件的
 
                     //GeneralClass.interactivityData?.printlog(1, "3.5");
-
                 }
 
+                if(i== _rebarlist.Count-1)//最后一行保存最后一个构件
+                {
+                    _elementList.Add(_element);
+                }
             }
 
             //GeneralClass.interactivityData?.printlog(1, "4");

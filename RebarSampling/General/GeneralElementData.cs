@@ -35,6 +35,10 @@ namespace RebarSampling
         /// 构件名称
         /// </summary>
         public string elementName { get; set; }
+
+
+
+
         /// <summary>
         /// 构件中所有的钢筋列表
         /// </summary>

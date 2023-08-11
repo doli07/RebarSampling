@@ -1,5 +1,6 @@
 ﻿using Etable;
 using Grand;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -215,48 +216,56 @@ namespace RebarSampling
         private void button1_Click(object sender, EventArgs e)
         {
 
-            ////解析钢筋总表的所有构件
-            //List<GroupbyProjectAssemblyList> _grouplist = GeneralClass.SQLiteOpt.QueryAllListByProjectAssembly(GeneralClass.AllRebarList);
-
-            //GeneralClass.AllElementList.Clear();
-
-            //List<ElementData> _templist = new List<ElementData>();
-            //foreach(var item in _grouplist)
-            //{
-            //    _templist = GeneralClass.SQLiteOpt.GetAllElementList(item._datalist, item._projectName, item._assemblyName);
-            //}
+            //解析钢筋总表的所有构件
 
             GeneralClass.interactivityData?.printlog(1, "开始解析所有料单的构件包");
 
             GeneralClass.AllElementList = GeneralClass.SQLiteOpt.GetAllElementList(GeneralClass.AllRebarTableName);
 
             DataTable dt_z = new DataTable();
+            dt_z.Columns.Add("索引", typeof(int));
             dt_z.Columns.Add("项目名称", typeof(string));
             dt_z.Columns.Add("主构件名", typeof(string));
             dt_z.Columns.Add("子构件名", typeof(string));
-            dt_z.Columns.Add("索引", typeof(int));
             dt_z.Columns.Add("总数量", typeof(int));
             dt_z.Columns.Add("总重量(kg)", typeof(double));
+            dt_z.Columns.Add("直径种类", typeof(int));
+            dt_z.Columns.Add("最大长度", typeof(int));
+            dt_z.Columns.Add("最小长度", typeof(int));
 
 
             int _num = 0;
             double _weight = 0;
+            int _maxlength, _minlength = 0;
             foreach (var item in GeneralClass.AllElementList)
             {
-                _num = 0;
-                _weight = 0;
-                foreach (var tt in item.rebarlist)
-                {
-                    if (tt.Diameter >= 16)
-                    {
-                        _num += tt.TotalPieceNum;
-                        _weight += tt.TotalWeight;
-                    }
-                }
+                var _banglist = item.rebarlist.Where(t => t.Diameter >= 16).ToList();//筛选棒材
+
+                _num = _banglist.Sum(t => t.TotalPieceNum);
+                _weight = _banglist.Sum(t => t.TotalWeight);
+
                 if (checkBox4.Checked ? (_num != 0) : true)//去零显示
                 {
-                    dt_z.Rows.Add(item.projectName, item.assemblyName, item.elementName, item.elementIndex, _num, _weight);
+                    //找最大最小长度值
+                    int _length = 0;
+                    if (_num != 0)
+                    {
+                        _maxlength = _banglist.Max(t => (int.TryParse(t.Length, out _length) ? _length : ((Convert.ToInt32(t.Length.Split('~')[0]) + Convert.ToInt32(t.Length.Split('~')[1])) / 2)));
+                        _minlength = _banglist.Min(t => (int.TryParse(t.Length, out _length) ? _length : ((Convert.ToInt32(t.Length.Split('~')[0]) + Convert.ToInt32(t.Length.Split('~')[1])) / 2)));
+                    }
+                    else
+                    {
+                        _maxlength = 0;
+                        _minlength = 0;
+                    }
+
+                    //找一个构件包中直径种类
+                    var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_banglist);
+
+                    dt_z.Rows.Add(item.elementIndex, item.projectName, item.assemblyName, item.elementName, _num, _weight, _group.Count, _maxlength, _minlength);
+
                 }
+
             }
             dataGridView3.DataSource = dt_z;
             //dataGridView3.Columns[3].DefaultCellStyle.Format = "0.000";        //
@@ -268,27 +277,34 @@ namespace RebarSampling
 
         private void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex > -1)
+            try
             {
-                string _project = dataGridView3.Rows[e.RowIndex].Cells[0].Value.ToString();
-                string _assembly = dataGridView3.Rows[e.RowIndex].Cells[1].Value.ToString();
-                string _element = dataGridView3.Rows[e.RowIndex].Cells[2].Value.ToString();
-                int _index = Convert.ToInt32(dataGridView3.Rows[e.RowIndex].Cells[3].Value.ToString());
 
-                foreach (var item in GeneralClass.AllElementList)
+                //点击dgv3每个构件包时，在dgv4中显示其详细信息
+                if (e.RowIndex > -1)
                 {
-                    if (item.projectName == _project && item.assemblyName == _assembly && item.elementName == _element && item.elementIndex == _index)
+                    string _project = dataGridView3.Rows[e.RowIndex].Cells[1].Value.ToString();
+                    string _assembly = dataGridView3.Rows[e.RowIndex].Cells[2].Value.ToString();
+                    string _element = dataGridView3.Rows[e.RowIndex].Cells[3].Value.ToString();
+                    int _index = Convert.ToInt32(dataGridView3.Rows[e.RowIndex].Cells[0].Value.ToString());
+
+                    foreach (var item in GeneralClass.AllElementList)
                     {
-                        var newlist = item.rebarlist.Where(t => (checkBox2.Checked ? (t.Diameter > 0) : (t.Diameter >= 16))).ToList();//是否显示线材
-                        //Form2.FillDGVWithRebarList(item.rebarlist, dataGridView4);
-                        Form2.FillDGVWithRebarList(newlist, dataGridView4);
+                        if (item.projectName == _project && item.assemblyName == _assembly && item.elementName == _element && item.elementIndex == _index)
+                        {
+                            var newlist = item.rebarlist.Where(t => (checkBox2.Checked ? (t.Diameter > 0) : (t.Diameter >= 16))).ToList();//是否显示线材
+                                                                                                                                          //Form2.FillDGVWithRebarList(item.rebarlist, dataGridView4);
+                            Form2.FillDGVWithRebarList(newlist, dataGridView4);
 
-                        dataGridView4.Columns[5].Visible = false;
+                            dataGridView4.Columns[5].Visible = false;
 
+                        }
                     }
-                }
 
+                }
             }
+            catch (Exception ex) { MessageBox.Show("dataGridView3_CellClick error:" + ex.Message); }
+
         }
 
         private void button2_Click(object sender, EventArgs e)

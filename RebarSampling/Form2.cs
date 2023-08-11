@@ -2114,7 +2114,7 @@ namespace RebarSampling
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        private void FillDGV_Bang_Diameter(List<RebarData> _sonlist,List<RebarData> _mumlist)
+        private void FillDGV_Bang_Diameter(List<RebarData> _sonlist, List<RebarData> _mumlist)
         {
             List<GroupbyDiameterDatalist> _songrouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_sonlist);
             List<GroupbyDiameterDatalist> _mumgrouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_mumlist);
@@ -2128,7 +2128,7 @@ namespace RebarSampling
 
             //_list已经过滤过，棒材、非原材、非多段
             EnumRebarBang _start;
-            if(this.diameterChecked_14)
+            if (this.diameterChecked_14)
             {
                 _start = EnumRebarBang.BANG_C14;
             }
@@ -2138,21 +2138,21 @@ namespace RebarSampling
             }
             int[] _num = new int[(int)EnumRebarBang.maxRebarBangNum];
             double[] _weight = new double[(int)EnumRebarBang.maxRebarBangNum];
-            int total_num=0;
-            double total_weight=0;
+            int total_num = 0;
+            double total_weight = 0;
 
             for (int i = (int)_start; i < (int)EnumRebarBang.maxRebarBangNum; i++)
             {
-                foreach(var item in _songrouplist)
+                foreach (var item in _songrouplist)
                 {
-                    if(item._diameter==Convert.ToInt32( ((EnumRebarBang)i).ToString().Substring(6, 2)))
+                    if (item._diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))
                     {
                         _num[i] = item._totalnum;
                         _weight[i] = item._totalweight;
-                        break; 
+                        break;
                     }
                 }
-                foreach(var item in _mumgrouplist)
+                foreach (var item in _mumgrouplist)
                 {
                     if (item._diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))
                     {
@@ -2581,7 +2581,8 @@ namespace RebarSampling
 
             DataTable dt = new DataTable();
 
-            dt.Columns.Add("长度(mm)", typeof(string));
+            //dt.Columns.Add("长度(mm)", typeof(string));
+            dt.Columns.Add("长度(mm)", typeof(int));
             dt.Columns.Add("数量(根)", typeof(int));
             dt.Columns.Add("数量(%)", typeof(double));
             dt.Columns.Add("重量(kg)", typeof(double));
@@ -2603,16 +2604,22 @@ namespace RebarSampling
                 total_num += item._totalnum;
                 total_weight += item._totalweight;
             }
-
+            int ilength = 0;
             foreach (var item in _sonalllist)
             {
-                dt.Rows.Add(item._length, item._totalnum, (double)item._totalnum / total_num, item._totalweight, item._totalweight / total_weight);
+                if (!int.TryParse(item._length, out ilength))
+                {
+                    string[] tt = item._length.Split('~');
+                    ilength = (Convert.ToInt32(tt[0]) + Convert.ToInt32(tt[1])) / 2;
+                }
+
+                dt.Rows.Add(ilength, item._totalnum, (double)item._totalnum / total_num, item._totalweight, item._totalweight / total_weight);
             }
 
             dataGridView2.DataSource = dt;
-            dataGridView2.Columns[2].DefaultCellStyle.Format = "P1";
+            dataGridView2.Columns[2].DefaultCellStyle.Format = "P2";
             dataGridView2.Columns[3].DefaultCellStyle.Format = "0.00";
-            dataGridView2.Columns[4].DefaultCellStyle.Format = "P1";
+            dataGridView2.Columns[4].DefaultCellStyle.Format = "P2";
 
         }
         /// <summary>

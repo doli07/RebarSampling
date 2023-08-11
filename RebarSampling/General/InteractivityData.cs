@@ -56,6 +56,14 @@ namespace RebarSampling
     public delegate bool DelegateFindImage(string _type, out object _image);
 
     /// <summary>
+    /// 委托类型，发送jsonlist,以timestep为间隔发送时间
+    /// </summary>
+    /// <param name="_list"></param>
+    /// <param name="timeStep"></param>
+    /// <returns></returns>
+    public delegate void DelegateSendWorkBill(List<string> _jsonlist,int timeStep);
+        
+    /// <summary>
     /// 内部数据交互类，主要用于不同线程间、不同窗口间传递数据的委托
     /// </summary>
     public class InteractivityData
@@ -81,5 +89,7 @@ namespace RebarSampling
         public DelegateMqttSubscribMsg mqttsubscribmsg { get; set; }
 
         public DelegateFindImage ifFindImage { get; set; }
+
+        public DelegateSendWorkBill sendworkbill { get; set; }
     }
 }
