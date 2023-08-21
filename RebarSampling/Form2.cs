@@ -287,11 +287,13 @@ namespace RebarSampling
             this.panel5.Visible = false;
             //this.panel6.Visible = false;
 
+            //分子，套，弯
             this.checkBox2.Checked = true;
             this.checkBox3.Checked = true;
             this.checkBox16.Checked = true;
             this.checkBox17.Checked = true;
 
+            //分子，直径
             this.checkBox8.Checked = true;
             this.checkBox9.Checked = true;
             this.checkBox10.Checked = true;
@@ -301,16 +303,25 @@ namespace RebarSampling
             this.checkBox14.Checked = true;
             this.checkBox15.Checked = true;
             this.checkBox18.Checked = true;
+            this.checkBox39.Checked = true;
 
+            //分子，材料
             this.checkBox19.Checked = true;
             this.checkBox20.Checked = true;
+            this.checkBox37.Checked = true;
 
+            //分母，材料
             this.checkBox21.Checked = true;
             this.checkBox22.Checked = true;
+            this.checkBox38.Checked = true;
+
+            //分母，套，弯
             this.checkBox23.Checked = true;
             this.checkBox24.Checked = true;
             this.checkBox25.Checked = true;
             this.checkBox26.Checked = true;
+
+            //分母，直径
             this.checkBox27.Checked = true;
             this.checkBox28.Checked = true;
             this.checkBox29.Checked = true;
@@ -320,7 +331,7 @@ namespace RebarSampling
             this.checkBox33.Checked = true;
             this.checkBox34.Checked = true;
             this.checkBox35.Checked = true;
-
+            this.checkBox40.Checked = true;
 
         }
         private void InitDataGridView8()
@@ -2026,7 +2037,23 @@ namespace RebarSampling
                             &&
                             (
                                 (checkBox19.Checked ? (_dd.IsOriginal) : false) ||
-                                (checkBox20.Checked ? (!_dd.IsOriginal) : false)
+                                (checkBox20.Checked ? (!_dd.IsOriginal
+                                                    &&(_dd.IfBend
+                                                        ||(!_dd.IfBend
+                                                            &&_dd.Length!="3000"
+                                                            &&_dd.Length!="4000"
+                                                            &&_dd.Length!="5000"
+                                                            &&_dd.Length!="6000"
+                                                            &&_dd.Length!="7000"))
+                                                    ) : false)||
+                                (checkBox37.Checked?(!_dd.IsOriginal   
+                                                    &&(!_dd.IfBend)
+                                                    &&(       _dd.Length=="3000"   
+                                                            ||_dd.Length=="4000"
+                                                            ||_dd.Length=="5000"
+                                                            ||_dd.Length=="6000"
+                                                            ||_dd.Length=="7000")
+                                                    ):false)
                             )
                             &&
                             (
@@ -2048,7 +2075,8 @@ namespace RebarSampling
                                 (checkBox13.Checked ? (_dd.Diameter == 25) : false) ||
                                 (checkBox14.Checked ? (_dd.Diameter == 28) : false) ||
                                 (checkBox15.Checked ? (_dd.Diameter == 32) : false) ||
-                                (checkBox18.Checked ? (_dd.Diameter == 36) : false)
+                                (checkBox18.Checked ? (_dd.Diameter == 36) : false) ||
+                                (checkBox39.Checked ? (_dd.Diameter == 40) : false)
                             )
                         )
                     {
@@ -2063,7 +2091,25 @@ namespace RebarSampling
                             &&
                             (
                                 (checkBox22.Checked ? (_dd.IsOriginal) : false) ||
-                                (checkBox21.Checked ? (!_dd.IsOriginal) : false)
+                                //(checkBox21.Checked ? (!_dd.IsOriginal) : false)
+                                (checkBox21.Checked ? (!_dd.IsOriginal
+                                                    && (_dd.IfBend
+                                                        || (!_dd.IfBend
+                                                            && _dd.Length != "3000"
+                                                            && _dd.Length != "4000"
+                                                            && _dd.Length != "5000"
+                                                            && _dd.Length != "6000"
+                                                            && _dd.Length != "7000"))
+                                                    ) : false) ||
+                                (checkBox38.Checked ? (!_dd.IsOriginal
+                                                    && (!_dd.IfBend)
+                                                    && (_dd.Length == "3000"
+                                                            || _dd.Length == "4000"
+                                                            || _dd.Length == "5000"
+                                                            || _dd.Length == "6000"
+                                                            || _dd.Length == "7000")
+                                                    ) : false)
+
                             )
                             &&
                             (
@@ -2085,7 +2131,8 @@ namespace RebarSampling
                                 (checkBox30.Checked ? (_dd.Diameter == 25) : false) ||
                                 (checkBox29.Checked ? (_dd.Diameter == 28) : false) ||
                                 (checkBox28.Checked ? (_dd.Diameter == 32) : false) ||
-                                (checkBox27.Checked ? (_dd.Diameter == 36) : false)
+                                (checkBox27.Checked ? (_dd.Diameter == 36) : false) ||
+                                (checkBox40.Checked ? (_dd.Diameter == 40) : false)
                             )
                         )
                     {

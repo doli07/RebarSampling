@@ -44,6 +44,12 @@ namespace RebarSampling
 
             checkBox3.Checked = false;
             checkBox4.Checked = true;
+
+            checkBox5.Checked = true;
+            checkBox6.Checked = true;
+            checkBox7.Checked = true;
+            checkBox8.Checked = true;
+
         }
         private void InitDataGridView()
         {
@@ -125,13 +131,17 @@ namespace RebarSampling
                         {
                             if (item.rebarlist.Count != 0 && dataGridView1 != null)
                             {
-                                //选择是否显示线材
-                                var newlist = item.rebarlist.Where(t => (checkBox2.Checked ? (t.Diameter > 0) : (t.Diameter >= 16))).ToList();
-                                //Form2.FillDGVWithRebarList(item.rebarlist, dataGridView1);
+                                ////选择是否显示线材
+                                //var newlist = item.rebarlist.Where(t => (checkBox2.Checked ? (t.Diameter > 0) : (t.Diameter >= 16))).ToList();
+
+                                var newlist = PickNewList(item.rebarlist);
+
                                 Form2.FillDGVWithRebarList(newlist, dataGridView1);
-                                ShowElementAddData(item.rebarlist);
-                                checkBox3.Checked = false;
-                                dataGridView1.Columns[5].Visible = false;
+
+                                //ShowElementAddData(item.rebarlist);
+                                ShowElementAddData(newlist);
+
+                                dataGridView1.Columns[5].Visible = checkBox3.Checked;
 
                             }
                         }
@@ -237,9 +247,10 @@ namespace RebarSampling
             int _num = 0;
             double _weight = 0;
             int _maxlength, _minlength = 0;
+
             foreach (var item in GeneralClass.AllElementList)
             {
-                var _banglist = item.rebarlist.Where(t => t.Diameter >= 16).ToList();//筛选棒材
+                var _banglist = PickNewList(item.rebarlist);
 
                 _num = _banglist.Sum(t => t.TotalPieceNum);
                 _weight = _banglist.Sum(t => t.TotalWeight);
@@ -274,6 +285,23 @@ namespace RebarSampling
             GeneralClass.interactivityData?.printlog(1, "所有构件包解析完成");
 
         }
+        /// <summary>
+        /// 筛选棒材,根据checkbox状态筛选是否弯曲，是否套丝
+        /// </summary>
+        /// <param name="_list"></param>
+        /// <returns></returns>
+        private List<RebarData> PickNewList(List<RebarData> _list)
+        {
+            List<RebarData> _newlist = new List<RebarData>();
+
+            _newlist = _list.Where(t =>
+           ((checkBox2.Checked) ? (t.Diameter > 0) : (t.Diameter >= 16)) &&
+           (((checkBox5.Checked) ? (t.IfBend) : false) || ((checkBox6.Checked) ? (!t.IfBend) : false)) &&
+           (((checkBox7.Checked) ? (t.IfTao) : false) || ((checkBox8.Checked) ? (!t.IfTao) : false))
+           ).ToList();//筛选棒材
+
+            return _newlist;
+        }
 
         private void dataGridView3_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -292,11 +320,12 @@ namespace RebarSampling
                     {
                         if (item.projectName == _project && item.assemblyName == _assembly && item.elementName == _element && item.elementIndex == _index)
                         {
-                            var newlist = item.rebarlist.Where(t => (checkBox2.Checked ? (t.Diameter > 0) : (t.Diameter >= 16))).ToList();//是否显示线材
-                                                                                                                                          //Form2.FillDGVWithRebarList(item.rebarlist, dataGridView4);
+                            //var newlist = item.rebarlist.Where(t => (checkBox2.Checked ? (t.Diameter > 0) : (t.Diameter >= 16))).ToList();//是否显示线材
+                            var newlist = PickNewList(item.rebarlist);
+
                             Form2.FillDGVWithRebarList(newlist, dataGridView4);
 
-                            dataGridView4.Columns[5].Visible = false;
+                            dataGridView4.Columns[5].Visible = checkBox3.Checked;
 
                         }
                     }
