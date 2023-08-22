@@ -17,6 +17,8 @@ namespace RebarSampling
             this.assemblyName = "";
             this.elementIndex = 0;
             this.elementName = "";
+            this.diameterType = 0;
+            this.diameterList = new List<int>();
             this.rebarlist = new List<RebarData>();
         }
         /// <summary>
@@ -36,8 +38,14 @@ namespace RebarSampling
         /// </summary>
         public string elementName { get; set; }
 
-
-
+        /// <summary>
+        /// 直径种类
+        /// </summary>
+        public int diameterType { get; set; }
+        /// <summary>
+        /// 所包含的直径规格，Φ16，Φ18，Φ20，Φ22，Φ25，Φ28，Φ32，Φ36，Φ40
+        /// </summary>
+        public List<int> diameterList { get; set; }
 
         /// <summary>
         /// 构件中所有的钢筋列表

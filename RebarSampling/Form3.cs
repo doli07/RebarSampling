@@ -50,6 +50,18 @@ namespace RebarSampling
             checkBox7.Checked = true;
             checkBox8.Checked = true;
 
+            checkBox9.Checked = true;
+            checkBox10.Checked = true;
+            checkBox11.Checked = true;
+            checkBox12.Checked = true;
+            checkBox13.Checked = true;
+            checkBox14.Checked = true;
+            checkBox15.Checked = true;
+            checkBox16.Checked = true;
+            checkBox17.Checked = true;
+
+
+
         }
         private void InitDataGridView()
         {
@@ -240,6 +252,7 @@ namespace RebarSampling
             dt_z.Columns.Add("总数量", typeof(int));
             dt_z.Columns.Add("总重量(kg)", typeof(double));
             dt_z.Columns.Add("直径种类", typeof(int));
+            dt_z.Columns.Add("直径组合(Φ)", typeof(string));
             dt_z.Columns.Add("最大长度", typeof(int));
             dt_z.Columns.Add("最小长度", typeof(int));
 
@@ -273,7 +286,18 @@ namespace RebarSampling
                     //找一个构件包中直径种类
                     var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_banglist);
 
-                    dt_z.Rows.Add(item.elementIndex, item.projectName, item.assemblyName, item.elementName, _num, _weight, _group.Count, _maxlength, _minlength);
+                    var _newgroup = _group.OrderBy(t => t._diameter).ToList();
+                    string sss = "";
+                    foreach (var ttt in _newgroup)
+                    {
+                        sss += ttt._diameter.ToString() + ",";
+                    }
+                    sss.TrimEnd(',');
+
+                    if (PickDiameter(_group.Count))
+                    {
+                        dt_z.Rows.Add(item.elementIndex, item.projectName, item.assemblyName, item.elementName, _num, _weight, _group.Count, sss, _maxlength, _minlength);
+                    }
 
                 }
 
@@ -283,6 +307,33 @@ namespace RebarSampling
             dataGridView3.Columns[5].DefaultCellStyle.Format = "0.00";          //
 
             GeneralClass.interactivityData?.printlog(1, "所有构件包解析完成");
+
+        }
+
+        private bool PickDiameter(int _diametertype)
+        {
+            switch (_diametertype)
+            {
+                case 1:
+                    return checkBox9.Checked ? true:false;
+                case 2:
+                    return checkBox10.Checked ? true : false;
+                case 3:
+                    return checkBox11.Checked ? true : false;
+                case 4:
+                    return checkBox12.Checked ? true : false;
+                case 5:
+                    return checkBox13.Checked ? true : false;
+                case 6:
+                    return checkBox14.Checked ? true : false;
+                case 7:
+                    return checkBox15.Checked ? true : false;
+                case 8:
+                    return checkBox16.Checked ? true : false;
+                case 9:
+                    return checkBox17.Checked ? true : false;
+                default: return false;
+            }
 
         }
         /// <summary>
@@ -379,5 +430,54 @@ namespace RebarSampling
 
 
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //解析钢筋总表的所有构件
+            GeneralClass.interactivityData?.printlog(1, "开始解析所有料单的构件包");
+
+            GeneralClass.AllElementList = GeneralClass.SQLiteOpt.GetAllElementList(GeneralClass.AllRebarTableName);
+
+            DataTable dt_z = new DataTable();
+            //dt_z.Columns.Add("索引", typeof(int));
+            //dt_z.Columns.Add("项目名称", typeof(string));
+            //dt_z.Columns.Add("主构件名", typeof(string));
+            //dt_z.Columns.Add("子构件名", typeof(string));
+            //dt_z.Columns.Add("总数量", typeof(int));
+            //dt_z.Columns.Add("总重量(kg)", typeof(double));
+            //dt_z.Columns.Add("直径种类", typeof(int));
+            //dt_z.Columns.Add("最大长度", typeof(int));
+            //dt_z.Columns.Add("最小长度", typeof(int));
+
+            int _num = 0;
+            //double _weight = 0;
+
+            foreach (var item in GeneralClass.AllElementList)
+            {
+                var _banglist = PickNewList(item.rebarlist);
+
+                _num = _banglist.Sum(t => t.TotalPieceNum);
+                //_weight = _banglist.Sum(t => t.TotalWeight);
+
+                if (checkBox4.Checked ? (_num != 0) : true)//去零显示
+                {
+                    //找一个构件包中直径种类
+                    var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_banglist);
+
+                    //dt_z.Rows.Add(item.elementIndex, item.projectName, item.assemblyName, item.elementName, _num, _weight, _group.Count, _maxlength, _minlength);
+
+                }
+
+            }
+            //dataGridView5.DataSource = dt_z;
+            //dataGridView5.Columns[5].DefaultCellStyle.Format = "0.00";          //
+
+            GeneralClass.interactivityData?.printlog(1, "所有构件包解析完成");
+
+        }
+
+
+
+
     }
 }
