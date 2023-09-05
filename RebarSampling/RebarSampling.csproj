@@ -315,7 +315,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="excel\ReadEXCEL.cs" />
-    <Compile Include="ReadEjin.cs" />
+    <Compile Include="Ejin\ReadEjin.cs" />
     <Compile Include="sqlite\SQLiteOpt.cs" />
     <Compile Include="sqlite\SQLiteHelper.cs" />
     <Compile Include="excel\WorkBookFactory.cs" />
