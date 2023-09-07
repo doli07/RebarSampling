@@ -355,7 +355,18 @@ namespace RebarSampling
                 || _data.CornerMessage.IndexOf("丝") > -1
                 || _data.CornerMessage.IndexOf("反") > -1) ? true : false;//如果边角结构信息中含有“套”或者“丝”或者“反”，则认为其需要套丝
 
-            _data.IfBend = (_data.TypeNum.Substring(0, 1) == "1") ? false : true;//如果图形编号是1开头的，则不用弯，其他都需要弯
+
+            //_data.IfBend = (_data.TypeNum.Substring(0, 1) == "1") ? false : true;//如果图形编号是1开头的，则不用弯，其他都需要弯
+            bool _ifbend = false;
+            List<GeneralMultiData> _MultiData = GetMultiData(_data.CornerMessage);//拆解corner信息,如果存在bend类型的multidata，则需要弯曲,20230907修改bug
+            if(_MultiData!=null)
+            {
+                foreach (var item in _MultiData)
+                {
+                    if (item.headType == EnumMultiHeadType.BEND) _ifbend = true;
+                }
+            }
+            _data.IfBend = _ifbend;
 
             _data.IfCut = (_data.Length == "9000" || _data.Length == "12000") ? false : true;//标注是否需要切断，原材以外的都需要切断
 
@@ -1067,6 +1078,8 @@ namespace RebarSampling
 
                     string[] ss = sss.Split(',');
                     _data.cornerMsg = sss;
+
+                    if (ss.Length != 2) break;  //某些cornermessage不能解析的，直接退出 ，例如：1120*PI+408+15d&FG
 
                     #region _data.headType
                     if (ss[1].Equals("0") || ss[1].Equals("0&D"))

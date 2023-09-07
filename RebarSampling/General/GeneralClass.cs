@@ -18,7 +18,7 @@ namespace RebarSampling
         /// 操作解析E筋格式文件
         /// 通过E筋公司提供的ETable.dll实现
         /// </summary>
-        public static EjinReader readEjin = new EjinReader();
+        //public static EjinReader readEjin = new EjinReader();
         /// <summary>
         /// 操作json序列化与反序列化
         /// </summary>

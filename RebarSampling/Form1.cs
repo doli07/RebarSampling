@@ -105,8 +105,8 @@ namespace RebarSampling
                     _node.Nodes.Add(newnode);
 
                     _morder.levelName[_level] = newnode.Text;//将当前文件名作为morder的层级名称
-                    string jsonstr = GeneralClass.readEjin.GetJsonStr(_path + "\\" + newfile.Name,_morder);
-                    GeneralClass.interactivityData?.printlog(3, jsonstr);//存入历史数据
+                    //string jsonstr = GeneralClass.readEjin.GetJsonStr(_path + "\\" + newfile.Name, _morder);
+                    //GeneralClass.interactivityData?.printlog(3, jsonstr);//存入历史数据
                 }
             }
 

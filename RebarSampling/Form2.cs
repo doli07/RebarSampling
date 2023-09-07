@@ -1,4 +1,4 @@
-﻿using Etable;
+﻿//using Etable;
 using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections;
@@ -2689,8 +2689,8 @@ namespace RebarSampling
 
             int total_num_bend = 0;
             double total_weight_bend = 0;
-            int[] area_totalnum = new int[12];
-            double[] area_totalweight = new double[12];
+            int[] area_totalnum = new int[13];              //添加大于12000的长度区间
+            double[] area_totalweight = new double[13];     
 
             foreach (var item in _mumalllist)
             {
@@ -2705,20 +2705,30 @@ namespace RebarSampling
                 int temp = 0;
                 int.TryParse(item._length, out temp);
 
-                if (temp != 0 && temp / 1000 < 12)
+                //if (temp != 0 && temp / 1000 < 12)
+                //{
+                //    area_totalnum[temp / 1000] += item._totalnum;
+                //    area_totalweight[temp / 1000] += item._totalweight;
+                //}
+                if (temp <= 0) continue;
+
+                if ( temp / 1000 < 12)
                 {
                     area_totalnum[temp / 1000] += item._totalnum;
                     area_totalweight[temp / 1000] += item._totalweight;
                 }
                 else
                 {
-                    continue;
+                    area_totalnum[12] += item._totalnum;
+                    area_totalweight[12] += item._totalweight;
                 }
             }
             for (int i = 0; i < 12; i++)
             {
-                dt.Rows.Add((i * 1000).ToString() + "~" + ((i + 1) * 1000).ToString(), area_totalnum[i], (double)area_totalnum[i] / (double)total_num_bend, area_totalweight[i], area_totalweight[i] / total_weight_bend);
+                dt.Rows.Add((i * 1000).ToString() + "~" + ((i + 1) * 1000-1).ToString(), area_totalnum[i], (double)area_totalnum[i] / (double)total_num_bend, area_totalweight[i], area_totalweight[i] / total_weight_bend);
             }
+            dt.Rows.Add((12 * 1000).ToString() + "~" , area_totalnum[12], (double)area_totalnum[12] / (double)total_num_bend, area_totalweight[12], area_totalweight[12] / total_weight_bend);
+
             dataGridView3.DataSource = dt;
             dataGridView3.Columns[2].DefaultCellStyle.Format = "P1";
             dataGridView3.Columns[3].DefaultCellStyle.Format = "0.00";
