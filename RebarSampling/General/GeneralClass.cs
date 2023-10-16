@@ -1,4 +1,5 @@
-﻿using RebarSampling.log;
+﻿using RebarSampling.GeneralWorkBill;
+using RebarSampling.log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,15 @@ namespace RebarSampling
         /// 操作sqlite文件读取
         /// </summary>
         public static SQLiteOpt SQLiteOpt = new SQLiteOpt();
+        /// <summary>
+        /// 操作工单
+        /// </summary>
+        public static WorkBillOpt WorkBillOpt = new WorkBillOpt();
+        /// <summary>
+        /// 钢筋json数据的list
+        /// </summary>
+        public static List<string> jsonList = new List<string>();//生成的jsonstr的集合
+
         /// <summary>
         /// 使用queue队列写日志
         /// </summary>
@@ -75,6 +85,23 @@ namespace RebarSampling
         /// </summary>
         public static string AllRebarTableName = "allsheet";
 
+        /// <summary>
+        /// 9米原材
+        /// </summary>
+        public const int OriginalLength1 = 9000;
+        /// <summary>
+        /// 12米原材
+        /// </summary>
+        public const int OriginalLength2 = 12000;
+
+        /// <summary>
+        /// 仓位数
+        /// </summary>
+        public static readonly int[] wareNum = new int[(int)EnumWareNumGroup.maxNum] { 8, 4, 2, 1 };
+        /// <summary>
+        /// 仓位划分的数量区间，四种仓位，三个节点:15,50,100
+        /// </summary>
+        public static readonly int[] wareArea = new int[3] { 15, 50, 100 };
         /// <summary>
         /// 钢筋总数据库的名称
         /// </summary>

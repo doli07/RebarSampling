@@ -63,9 +63,11 @@
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.checkBox38 = new System.Windows.Forms.CheckBox();
             this.checkBox21 = new System.Windows.Forms.CheckBox();
             this.checkBox22 = new System.Windows.Forms.CheckBox();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.checkBox37 = new System.Windows.Forms.CheckBox();
             this.checkBox20 = new System.Windows.Forms.CheckBox();
             this.checkBox19 = new System.Windows.Forms.CheckBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
@@ -102,6 +104,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.checkBox40 = new System.Windows.Forms.CheckBox();
             this.checkBox27 = new System.Windows.Forms.CheckBox();
             this.checkBox28 = new System.Windows.Forms.CheckBox();
             this.checkBox29 = new System.Windows.Forms.CheckBox();
@@ -112,6 +115,7 @@
             this.checkBox34 = new System.Windows.Forms.CheckBox();
             this.checkBox35 = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox39 = new System.Windows.Forms.CheckBox();
             this.checkBox18 = new System.Windows.Forms.CheckBox();
             this.checkBox15 = new System.Windows.Forms.CheckBox();
             this.checkBox14 = new System.Windows.Forms.CheckBox();
@@ -161,10 +165,6 @@
             this.button7 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.checkBox37 = new System.Windows.Forms.CheckBox();
-            this.checkBox38 = new System.Windows.Forms.CheckBox();
-            this.checkBox39 = new System.Windows.Forms.CheckBox();
-            this.checkBox40 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -607,6 +607,16 @@
             this.groupBox17.TabStop = false;
             this.groupBox17.Text = "1";
             // 
+            // checkBox38
+            // 
+            this.checkBox38.AutoSize = true;
+            this.checkBox38.Location = new System.Drawing.Point(8, 78);
+            this.checkBox38.Name = "checkBox38";
+            this.checkBox38.Size = new System.Drawing.Size(104, 28);
+            this.checkBox38.TabIndex = 2;
+            this.checkBox38.Text = "非原整数";
+            this.checkBox38.UseVisualStyleBackColor = true;
+            // 
             // checkBox21
             // 
             this.checkBox21.AutoSize = true;
@@ -638,6 +648,16 @@
             this.groupBox16.TabIndex = 13;
             this.groupBox16.TabStop = false;
             this.groupBox16.Text = "1";
+            // 
+            // checkBox37
+            // 
+            this.checkBox37.AutoSize = true;
+            this.checkBox37.Location = new System.Drawing.Point(8, 78);
+            this.checkBox37.Name = "checkBox37";
+            this.checkBox37.Size = new System.Drawing.Size(104, 28);
+            this.checkBox37.TabIndex = 2;
+            this.checkBox37.Text = "非原整数";
+            this.checkBox37.UseVisualStyleBackColor = true;
             // 
             // checkBox20
             // 
@@ -1048,6 +1068,16 @@
             this.groupBox19.TabStop = false;
             this.groupBox19.Text = "3";
             // 
+            // checkBox40
+            // 
+            this.checkBox40.AutoSize = true;
+            this.checkBox40.Location = new System.Drawing.Point(16, 273);
+            this.checkBox40.Name = "checkBox40";
+            this.checkBox40.Size = new System.Drawing.Size(69, 28);
+            this.checkBox40.TabIndex = 13;
+            this.checkBox40.Text = "Φ40";
+            this.checkBox40.UseVisualStyleBackColor = true;
+            // 
             // checkBox27
             // 
             this.checkBox27.AutoSize = true;
@@ -1156,6 +1186,16 @@
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "3";
+            // 
+            // checkBox39
+            // 
+            this.checkBox39.AutoSize = true;
+            this.checkBox39.Location = new System.Drawing.Point(16, 273);
+            this.checkBox39.Name = "checkBox39";
+            this.checkBox39.Size = new System.Drawing.Size(69, 28);
+            this.checkBox39.TabIndex = 13;
+            this.checkBox39.Text = "Φ40";
+            this.checkBox39.UseVisualStyleBackColor = true;
             // 
             // checkBox18
             // 
@@ -1816,46 +1856,10 @@
             this.imageList1.Images.SetKeyName(44, "10100.png");
             this.imageList1.Images.SetKeyName(45, "10200.png");
             this.imageList1.Images.SetKeyName(46, "20202.png");
-            // 
-            // checkBox37
-            // 
-            this.checkBox37.AutoSize = true;
-            this.checkBox37.Location = new System.Drawing.Point(8, 78);
-            this.checkBox37.Name = "checkBox37";
-            this.checkBox37.Size = new System.Drawing.Size(104, 28);
-            this.checkBox37.TabIndex = 2;
-            this.checkBox37.Text = "非原整数";
-            this.checkBox37.UseVisualStyleBackColor = true;
-            // 
-            // checkBox38
-            // 
-            this.checkBox38.AutoSize = true;
-            this.checkBox38.Location = new System.Drawing.Point(8, 78);
-            this.checkBox38.Name = "checkBox38";
-            this.checkBox38.Size = new System.Drawing.Size(104, 28);
-            this.checkBox38.TabIndex = 2;
-            this.checkBox38.Text = "非原整数";
-            this.checkBox38.UseVisualStyleBackColor = true;
-            // 
-            // checkBox39
-            // 
-            this.checkBox39.AutoSize = true;
-            this.checkBox39.Location = new System.Drawing.Point(16, 273);
-            this.checkBox39.Name = "checkBox39";
-            this.checkBox39.Size = new System.Drawing.Size(69, 28);
-            this.checkBox39.TabIndex = 13;
-            this.checkBox39.Text = "Φ40";
-            this.checkBox39.UseVisualStyleBackColor = true;
-            // 
-            // checkBox40
-            // 
-            this.checkBox40.AutoSize = true;
-            this.checkBox40.Location = new System.Drawing.Point(16, 273);
-            this.checkBox40.Name = "checkBox40";
-            this.checkBox40.Size = new System.Drawing.Size(69, 28);
-            this.checkBox40.TabIndex = 13;
-            this.checkBox40.Text = "Φ40";
-            this.checkBox40.UseVisualStyleBackColor = true;
+            this.imageList1.Images.SetKeyName(47, "62020.png");
+            this.imageList1.Images.SetKeyName(48, "62021.png");
+            this.imageList1.Images.SetKeyName(49, "62022.png");
+            this.imageList1.Images.SetKeyName(50, "62023.png");
             // 
             // Form2
             // 

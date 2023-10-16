@@ -937,7 +937,7 @@ namespace RebarSampling
 
                 GeneralClass.AllRebarList = GeneralClass.SQLiteOpt.GetAllRebarList(GeneralClass.AllRebarTableName);//取得所有的钢筋数据list
 
-                List<GroupbyDiameterDatalist> _grouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(GeneralClass.AllRebarList);
+                List<GroupbyDiameterlist> _grouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(GeneralClass.AllRebarList);
 
                 int[] _num = new int[(int)EnumDiameter.maxDiameterNum];
                 double[] _weight = new double[(int)EnumDiameter.maxDiameterNum];
@@ -1306,7 +1306,7 @@ namespace RebarSampling
         private void FillDGV_Xian_type(List<RebarData> _list, ref DataGridView _dgv, out int _totalnum, out double _totalweight)
         {
             //
-            List<GroupbyDiameterDatalist> _grouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_list);
+            List<GroupbyDiameterlist> _grouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_list);
 
             int[] _num = new int[(int)EnumDiameter.maxDiameterNum];
             double[] _weight = new double[(int)EnumDiameter.maxDiameterNum];
@@ -1817,7 +1817,7 @@ namespace RebarSampling
 
             List<GroupbyTaoBendDatalist> _typelist = GeneralClass.SQLiteOpt.QueryAllListByTaoBend(_sonlist);
 
-            List<GroupbyDiameterDatalist> _diameterlist = null;
+            List<GroupbyDiameterlist> _diameterlist = null;
             int totalnum = 0;
             double totalweight = 0;
 
@@ -2163,8 +2163,8 @@ namespace RebarSampling
 
         private void FillDGV_Bang_Diameter(List<RebarData> _sonlist, List<RebarData> _mumlist)
         {
-            List<GroupbyDiameterDatalist> _songrouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_sonlist);
-            List<GroupbyDiameterDatalist> _mumgrouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_mumlist);
+            List<GroupbyDiameterlist> _songrouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_sonlist);
+            List<GroupbyDiameterlist> _mumgrouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_mumlist);
 
             DataTable dt_z = new DataTable();
             dt_z.Columns.Add("直径", typeof(string));

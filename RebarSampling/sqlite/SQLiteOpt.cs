@@ -744,11 +744,11 @@ namespace RebarSampling
 
         }
 
-        public List<GroupbyDiameterDatalist> QueryAllListByDiameter(List<RebarData> _rebardatalist)
+        public List<GroupbyDiameterlist> QueryAllListByDiameter(List<RebarData> _rebardatalist)
         {
-            List<GroupbyDiameterDatalist> returnlist = new List<GroupbyDiameterDatalist>();
+            List<GroupbyDiameterlist> returnlist = new List<GroupbyDiameterlist>();
             returnlist = _rebardatalist.GroupBy(x => x.Diameter).Select(
-                y => new GroupbyDiameterDatalist
+                y => new GroupbyDiameterlist
                 {
                     _diameter = y.Key,
                     _totalnum = y.Sum(item => item.TotalPieceNum),
@@ -884,6 +884,7 @@ namespace RebarSampling
 
             //GeneralClass.interactivityData?.printlog(1, "2");
 
+            //根据项目名称、主构件名称获取所有的钢筋list
             List<GroupbyProjectAssemblyList> _grouplist = QueryAllListByProjectAssembly(GeneralClass.AllRebarList);
 
             if (_projectName == "" && _assemblyName == "")
@@ -891,7 +892,7 @@ namespace RebarSampling
                 //_rebarlist = GeneralClass.AllRebarList.Select(t => new RebarData().Copy(t)).ToList();
                 foreach (var item in GeneralClass.AllRebarList)
                 {
-                    RebarData temp = new RebarData();
+                    RebarData temp = new RebarData();   //注意：此处应采用new方法，进行深度拷贝，否则容易出错
                     temp.Copy(item);
                     _rebarlist.Add(temp);
                 }
@@ -914,6 +915,12 @@ namespace RebarSampling
             }
             //GeneralClass.interactivityData?.printlog(1, "3");
 
+
+            /*** 筛选组建真正的子构件包，
+             * 策略：以【前一个不为空】且【连续两行不一致】的子构件名分组，生成一个构件包，并将子构件名作为构件包名称
+             * 注意有很多特殊情况：
+             * 1、某些翻样人员不按规范，将构件包的注释加在子构件名下面，造成构件包识别时，拆分开了
+             *      解决方案：增加规则，前一行子构件名含“#”字符为子构件名，不含则判定为注释说明**/
             for (int i = 0; i < _rebarlist.Count; i++)
             {
                 //首行先创建构件
@@ -935,25 +942,33 @@ namespace RebarSampling
 
                 if (i != 0 && _rebarlist[i].ElementName != "" && _rebarlist[i].ElementName != _rebarlist[i - 1].ElementName)//构件名不为空，且跟上一个元素的构件名不一样，则新建构件
                 {
-                    if (_element != null)
+                    if (_rebarlist[i-1].ElementName.IndexOf('#')>-1 && _rebarlist[i].ElementName.IndexOf('#')==-1)//前一行含有“#”，本行不含“#”，则表示本行为注释
                     {
-                        _elementList.Add(_element);
-                        //GeneralClass.interactivityData?.printlog(1, "3.3");
+                        _element.rebarlist.Add(_rebarlist[i]);//本行为注释的，纳入同一个构件包
+                        _element.elementName += _rebarlist[i].ElementName;  //合并两行的子构件名为一个名称
+                        _rebarlist[i - 1].ElementName += _rebarlist[i].ElementName;//修改前一行的子构件名
+                        _rebarlist[i].ElementName = _rebarlist[i - 1].ElementName;//更新当前行的子构件名
 
                     }
-                    _element = new ElementData();
-                    _element.projectName = _rebarlist[i].ProjectName;
-                    _element.assemblyName = _rebarlist[i].MainAssemblyName;
-                    _element.elementName = _rebarlist[i].ElementName;
-                    _element.rebarlist.Add(_rebarlist[i]);
+                    else
+                    {
+                        if (_element != null)
+                        {
+                            _elementList.Add(_element);
+                        }
+                        _element = new ElementData();
+                        _element.projectName = _rebarlist[i].ProjectName;
+                        _element.assemblyName = _rebarlist[i].MainAssemblyName;
+                        _element.elementName = _rebarlist[i].ElementName;
+                        _element.rebarlist.Add(_rebarlist[i]);
+                    }
 
-                    //GeneralClass.interactivityData?.printlog(1, "3.4");
+
                 }
                 else
                 {
                     _element.rebarlist.Add(_rebarlist[i]);//子构件名称为空的，默认为跟前一个不为空的是同一个构件的
 
-                    //GeneralClass.interactivityData?.printlog(1, "3.5");
                 }
 
                 if(i== _rebarlist.Count-1)//最后一行保存最后一个构件
@@ -980,6 +995,10 @@ namespace RebarSampling
         /// <returns>返回所有的钢筋list</returns>
         public List<RebarData> GetAllRebarList(string _tableName)
         {
+            try
+            {
+                    
+
             List<RebarData> allRebarList = new List<RebarData>();   //钢筋总表的list
             RebarData rebarData = new RebarData();              //新建一个对象
 
@@ -991,6 +1010,7 @@ namespace RebarSampling
                 foreach (DataRow row in dt.Rows)
                 {
                     rebarData = new RebarData();
+                    rebarData.IndexNo =int.Parse(row[0].ToString());//数据库索引
                     rebarData.ProjectName = row[(int)EnumAllRebarTableColName.PROJECT_NAME + 1].ToString();
                     rebarData.MainAssemblyName = row[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME + 1].ToString();
                     rebarData.ElementName = row[(int)EnumAllRebarTableColName.ELEMENT_NAME + 1].ToString();
@@ -1021,6 +1041,9 @@ namespace RebarSampling
             }
 
             return allRebarList;
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); return null; }
+
         }
         /// <summary>
         /// 判断字符串是否为整数，包括负整数

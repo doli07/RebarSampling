@@ -30,7 +30,7 @@ namespace RebarSampling
             GeneralClass.interactivityData.sendworkbill += SendWorkBill;
 
             InitControl();
-            InitDGV();
+            //InitDGV();
         }
 
         ~Form4()
@@ -116,8 +116,8 @@ namespace RebarSampling
             column.AutoIncrementSeed = 0;
             column.AutoIncrementStep = 1;
             m_table.Columns.Add(column);
-            
-            column = new DataColumn("直径",typeof(int));
+
+            column = new DataColumn("直径", typeof(int));
             m_table.Columns.Add(column);
 
             column = new DataColumn("json", typeof(string));
@@ -209,7 +209,7 @@ namespace RebarSampling
         private SingleRebarData CreateSingleRebarData(int _index)
         {
             string _length = "";
-            int _wareno = 0;
+            string _wareno = "";
             int _diameter = 0;
             bool _headtao = false;
             bool _tailtao = false;
@@ -220,7 +220,7 @@ namespace RebarSampling
             {
                 case 0:
                     _length = textBox18.Text;
-                    _wareno = Convert.ToInt32((string)comboBox2.SelectedItem);
+                    _wareno = (string)comboBox2.SelectedItem;
                     _diameter = Convert.ToInt32(((string)comboBox1.SelectedItem).Substring(1, 2));
                     _headtao = checkBox1.Checked;
                     _tailtao = checkBox2.Checked;
@@ -228,7 +228,7 @@ namespace RebarSampling
                     break;
                 case 1:
                     _length = textBox19.Text;
-                    _wareno = Convert.ToInt32((string)comboBox3.SelectedItem);
+                    _wareno = (string)comboBox3.SelectedItem;
                     _diameter = Convert.ToInt32(((string)comboBox1.SelectedItem).Substring(1, 2));
                     _headtao = checkBox4.Checked;
                     _tailtao = checkBox5.Checked;
@@ -236,7 +236,7 @@ namespace RebarSampling
                     break;
                 case 2:
                     _length = textBox20.Text;
-                    _wareno = Convert.ToInt32((string)comboBox4.SelectedItem);
+                    _wareno = (string)comboBox4.SelectedItem;
                     _diameter = Convert.ToInt32(((string)comboBox1.SelectedItem).Substring(1, 2));
                     _headtao = checkBox7.Checked;
                     _tailtao = checkBox8.Checked;
@@ -251,17 +251,17 @@ namespace RebarSampling
             if (_length != "0")
             {
                 _singleRebar = new SingleRebarData();
-                _singleRebar.SeriNo = _index;
+                _singleRebar.SeriNo = _index.ToString();
                 _singleRebar.ProjectName = "光谷国际社区";
                 _singleRebar.AssemblyName = "梁";
                 _singleRebar.ElementName = "KL57";
-                _singleRebar.WareNo = _wareno;
+                _singleRebar.WareInfo = _wareno;
                 _singleRebar.PicNo = "30202";
                 _singleRebar.Level = "C";
                 _singleRebar.Diameter = _diameter;
                 _singleRebar.Length = Convert.ToInt32(_length);
                 //根据经验公式计算重量(kg)，保留3位小数
-                _singleRebar.Weight =Math.Round( 0.00617 * (double)_diameter * (double)_diameter * (double)_singleRebar.Length / 1000,3);
+                _singleRebar.Weight = Math.Round(0.00617 * (double)_diameter * (double)_diameter * (double)_singleRebar.Length / 1000, 3);
 
                 if (_bend)//弯曲
                 {
@@ -351,9 +351,9 @@ namespace RebarSampling
             _workbill.Msgtype = 2;
             string recordDate = DateTime.Now.ToString("yyyy_MM_dd");
             this.SeriNo++;
-            _workbill.BillNo = "GJSQ_A_06D_01F_" + recordDate + "_"+this.SeriNo.ToString().PadLeft(4, '0');//四位流水号，用0补全
-            _workbill.TotalNum = 100;
-            _workbill.SteelbarNo = this.SeriNo;
+            _workbill.BillNo = "GJSQ_A_06D_01F_" + recordDate + "_" + this.SeriNo.ToString().PadLeft(4, '0');//四位流水号，用0补全
+            //_workbill.TotalNum = 100;
+            _workbill.SteelbarNo = this.SeriNo.ToString();
             _workbill.ProjectName = "光谷国际社区";
             _workbill.Block = "A";
             _workbill.Building = "06D";
@@ -388,7 +388,7 @@ namespace RebarSampling
             ////Φ16
             //dataGridView1.Rows.Add(dgvRow);
 
-            DataRow _row =m_table.NewRow();
+            DataRow _row = m_table.NewRow();
             _row[1] = _workbill.Diameter;
             _row[2] = sss;
             m_table.Rows.Add(_row);
@@ -522,28 +522,80 @@ namespace RebarSampling
         {
             List<string> list = new List<string>();
 
-            if(m_table.Rows.Count!=0)
+            if (m_table.Rows.Count != 0)
             {
                 foreach (DataRow row in m_table.Rows)
                 {
                     list.Add(row[2].ToString());
                 }
                 int _timestep = Convert.ToInt32(textBox17.Text);
-                GeneralClass.interactivityData?.sendworkbill(list,_timestep);
+                GeneralClass.interactivityData?.sendworkbill(list, _timestep);
 
             }
         }
 
 
-        private void SendWorkBill(List<string> _jsonlist,int timestep)
+        private void SendWorkBill(List<string> _jsonlist, int timestep)
         {
-            foreach(string item in _jsonlist)
+            Thread thread = new Thread(() =>
             {
-                GeneralClass.webServer.SendMsg(item);
-                Thread.Sleep(timestep); 
-
+                foreach (string item in _jsonlist)
+                {
+                    GeneralClass.webServer.SendMsg(item);
+                    Thread.Sleep(timestep);
+                }
             }
+                );
+            thread.IsBackground = true;
+            thread.Start();
 
         }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            if (GeneralClass.jsonList.Count != 0)
+            {
+                int _timestep = Convert.ToInt32(textBox17.Text);
+                //GeneralClass.interactivityData?.sendworkbill(GeneralClass.jsonList, _timestep);
+
+                Thread thread = new Thread(() =>
+                {
+                    foreach (string item in GeneralClass.jsonList)
+                    {
+                        GeneralClass.webServer.SendMsg(item);
+                        Thread.Sleep(_timestep);
+                    }
+                });
+                thread.IsBackground = true;
+                thread.Start();
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            InitDGV();
+
+            foreach (var item in GeneralClass.jsonList)
+            {
+                DataRow _row = m_table.NewRow();
+                //_row[1] = _workbill.Diameter;
+                _row[2] = item;
+                m_table.Rows.Add(_row);
+            }
+
+            dataGridView1.DataSource = m_table;
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+            if(e.RowIndex >= 0)
+            {
+                string sss = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+                textBox1.Text = sss;
+            }
+        }
+
+
     }
 }

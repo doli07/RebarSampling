@@ -735,6 +735,48 @@ namespace RebarSampling
 
         maxRebarBangNum
     }
+    /// <summary>
+    /// 钢筋螺距区间，Φ16~Φ22用2.5螺距，Φ25~Φ32用3.0螺距，Φ36~Φ40用3.5螺距
+    /// </summary>
+    public enum EnumDiameterPitchType
+    { 
+        NONE=-1,
+        PITCH_1,
+        PITCH_2,
+        PITCH_3,
+        PITCH_12,
+        PITCH_13,
+        PITCH_23,
+        PITCH_123,
+
+        maxPitchType
+    }
+
+    /// <summary>
+    /// 钢筋数量分组，原则：EIGHT:1~15(8仓)，FOUR:16~50(4仓)，TWO:51~100(2仓)，ONE:100~(1仓)
+    /// </summary>
+    public enum EnumWareNumGroup
+    { 
+        NONE=-1,
+        /// <summary>
+        /// 1~15(8仓)
+        /// </summary>
+        EIGHT,
+        /// <summary>
+        /// 16~50(4仓)
+        /// </summary>
+        FOUR,
+        /// <summary>
+        /// 51~100(2仓)
+        /// </summary>
+        TWO,
+        /// <summary>
+        /// 100~(1仓)
+        /// </summary>
+        ONE,
+
+        maxNum
+    }
 
     /// <summary>
     /// 多段接头类型，接头包含:"原头、弯、套、变径套、反套、丝、反丝、搭、单、双、对、竖",

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SuperWebSocket;
 using System.Web;
+using System.Windows.Forms;
 
 namespace RebarSampling
 {
@@ -57,7 +58,7 @@ namespace RebarSampling
                 sessionList.Clear();
                 ws.Stop();
                 ws.Dispose();
-                ws= null;
+                ws = null;
             }
         }
 
@@ -95,18 +96,27 @@ namespace RebarSampling
         }
         private void SendToAll(WebSocketSession session, string msg)
         {
-            foreach (var sendsession in session.AppServer.GetAllSessions())
+            try
             {
-                sendsession.Send(msg);
+                foreach (var sendsession in session.AppServer.GetAllSessions())
+                {
+                    sendsession.Send(msg);
+                }
             }
+            catch (Exception e) { MessageBox.Show("SendToAll error:" + e.Message); }
         }
 
         public void SendMsg(string msg)
         {
-            foreach(WebSocketSession session in sessionList)
+            try
             {
-                SendToAll(session, msg);
+                foreach (WebSocketSession session in sessionList)
+                {
+                    SendToAll(session, msg);
+                }
             }
+            catch (Exception e) { MessageBox.Show("SendMsg error:" + e.Message); }
+
         }
     }
 }

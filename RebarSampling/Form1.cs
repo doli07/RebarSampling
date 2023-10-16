@@ -859,5 +859,9 @@ namespace RebarSampling
 
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            this.splitContainer1.Panel1Collapsed = !this.splitContainer1.Panel1Collapsed;
+        }
     }
 }
