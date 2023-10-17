@@ -28,8 +28,10 @@ namespace RebarSampling
             InitTreeView1();
             InitTreeView();
             InitCheckBox();
+            //InitDgvTaoliao();
 
             GeneralClass.interactivityData.showAssembly += ShowAllElement;
+
         }
 
         private void InitTreeView1()
@@ -491,12 +493,16 @@ namespace RebarSampling
 
         }
 
+        private List<RebarTaoLiao> m_rebarTaoliaoList = new List<RebarTaoLiao>();
         private void CreatWorkBill(List<List<ElementDataFB>>[] _elementlist)
         {
             WorkBillMsg wbMsg = new WorkBillMsg();      //工单信息
             //SingleRebarMsg srMsg = new SingleRebarMsg();//单段钢筋信息
             List<RebarData> _list = new List<RebarData>();
             List<GroupbyDiameterListWithLength> _group = new List<GroupbyDiameterListWithLength>();
+
+            //m_rebarTaoliaoList.Clear(); 
+            RebarTaoLiao _rebarTao = new RebarTaoLiao();
 
             for (int i = 0; i < (int)EnumWareNumGroup.maxNum; i++)/*仓*/
             {
@@ -513,8 +519,10 @@ namespace RebarSampling
                     }
 
                     var _newgroup = _group.GroupBy(x => x._diameter).ToList();//在一个批次内部，按照直径分类
-                    foreach (var eee in _newgroup)       //不同直径
+                    foreach (var eee in _newgroup)       /*子批次，不同直径*/
                     {
+                        _rebarTao = new RebarTaoLiao();//套料后的
+
                         var _grouplist = eee.ToList();
 
                         _list.Clear();
@@ -522,7 +530,7 @@ namespace RebarSampling
                         {
                             _list.AddRange(mmm._datalist);//准备好rebardata的list，准备进行长度套料
                         }
-                        foreach(var kkk in _list)//修改curChildBatch
+                        foreach (var kkk in _list)//修改curChildBatch
                         {
                             BatchMsg batchmsg = new BatchMsg();
                             batchmsg = kkk.BatchMsg;
@@ -549,20 +557,25 @@ namespace RebarSampling
 
                             string jsonstr = GeneralClass.WorkBillOpt.CreateWorkBill(wbMsg, aaa);
                             GeneralClass.jsonList.Add(jsonstr);
+
+                            _rebarTao._rebarlist.Add(aaa);
                         }
                         //更新dgv11
                         string diameterStr = "";
                         if (item[0].diameterList.Count > 2)
                         {
                             diameterStr = "多直径";
+                            _rebarTao.DiameterType = EnumDiameterType.MULTI;
                         }
                         else if (item[0].diameterList.Count == 2)
                         {
                             diameterStr = "两直径";
+                            _rebarTao.DiameterType = EnumDiameterType.TWO;
                         }
                         else
                         {
                             diameterStr = "单直径";
+                            _rebarTao.DiameterType = EnumDiameterType.ONE;
                         }
                         //直径种类，仓位，批次，直径，总数量，总长度，利用率
                         dt_wb.Rows.Add(diameterStr,
@@ -573,6 +586,12 @@ namespace RebarSampling
                             (double)totallength / 1000,
                             (double)totallength / (double)(_newlist.Count * GeneralClass.OriginalLength2));
 
+                        //更新套料后的rebarlist
+                        _rebarTao.WareNumType = (EnumWareNumGroup)i;
+                        _rebarTao.BatchNo = _elementlist[i].IndexOf(item);
+                        _rebarTao.Diameter = eee.Key;
+
+                        m_rebarTaoliaoList.Add(_rebarTao);
 
                     }
 
@@ -607,6 +626,8 @@ namespace RebarSampling
 
 
             GeneralClass.jsonList.Clear();
+            m_rebarTaoliaoList.Clear();
+
             CreatWorkBill(_oneWorklist);//单直径worklist
             CreatWorkBill(_twoWorklist);//双直径worklist
             CreatWorkBill(_multiWorklist);//多直径worklist
@@ -711,7 +732,7 @@ namespace RebarSampling
         /// <summary>
         /// 多直径种类构件包分组后的工单，分三个维度：[]维度代表仓位区间，list(外)维度代表直径种类，List(内)维度代表所包含的构件包list
         /// </summary>
-        List<List<ElementDataFB>>[] _multiWorklist = new List<List<ElementDataFB>>[(int)EnumWareNumGroup.maxNum] {
+        private List<List<ElementDataFB>>[] _multiWorklist = new List<List<ElementDataFB>>[(int)EnumWareNumGroup.maxNum] {
             new List<List<ElementDataFB>>(),
             new List<List<ElementDataFB>>(),
             new List<List<ElementDataFB>>(),
@@ -719,7 +740,7 @@ namespace RebarSampling
         /// <summary>
         /// 单直径种类构件包分组后的工单
         /// </summary>
-        List<List<ElementDataFB>>[] _oneWorklist = new List<List<ElementDataFB>>[(int)EnumWareNumGroup.maxNum] {
+        private List<List<ElementDataFB>>[] _oneWorklist = new List<List<ElementDataFB>>[(int)EnumWareNumGroup.maxNum] {
             new List<List<ElementDataFB>>(),
             new List<List<ElementDataFB>>(),
             new List<List<ElementDataFB>>(),
@@ -727,11 +748,15 @@ namespace RebarSampling
         /// <summary>
         /// 两直径种类构件包分组后的工单
         /// </summary>
-        List<List<ElementDataFB>>[] _twoWorklist = new List<List<ElementDataFB>>[(int)EnumWareNumGroup.maxNum] {
+        private List<List<ElementDataFB>>[] _twoWorklist = new List<List<ElementDataFB>>[(int)EnumWareNumGroup.maxNum] {
             new List<List<ElementDataFB>>(),
             new List<List<ElementDataFB>>(),
             new List<List<ElementDataFB>>(),
             new List<List<ElementDataFB>>()};//分组后的构件包，按照数量仓位分组
+
+        private List<List<Rebar>> _oneRebarList = new List<List<Rebar>>();
+        private List<List<Rebar>> _twoRebarList = new List<List<Rebar>>();
+        private List<List<Rebar>> _multiRebarList = new List<List<Rebar>>();
 
 
         private void button6_Click(object sender, EventArgs e)
@@ -899,14 +924,14 @@ namespace RebarSampling
             int _totalChildBatch = 0;
             int _chilBatchNo = 0;
 
-            List<GroupbyDiameterListWithLength> _dlist= new List<GroupbyDiameterListWithLength>();
+            List<GroupbyDiameterListWithLength> _dlist = new List<GroupbyDiameterListWithLength>();
 
             //先统计总共多少个批次
             for (int i = 0; i < (int)EnumWareNumGroup.maxNum; i++)/*仓*/
             {
                 foreach (var item in _onelist[i])/*批次*/
                 {
-                    _totalbatch++;                    
+                    _totalbatch++;
                 }
             }
             for (int i = 0; i < (int)EnumWareNumGroup.maxNum; i++)/*仓*/
@@ -1355,6 +1380,192 @@ namespace RebarSampling
                 dataGridView8.Columns[6].DefaultCellStyle.Format = "0.00";          //
 
             }
+
+        }
+
+        private Bitmap PaintPic(List<Rebar> _rebarlist)
+        {
+            Bitmap bitmap = new Bitmap(500,30);//新建一个bitmap，用于绘图
+
+            //Graphics g = this.pictureBox1.CreateGraphics();
+            Graphics g = System.Drawing.Graphics.FromImage(bitmap);//从bitmap中建一个画图对象
+            g.Clear(Color.White);
+
+            int maxPointX = 456;
+            int startY = 25;
+            int _start = 0;
+            int _end = 0;
+            int _lengthSum = 0;
+
+
+            Pen _pen;
+            Point p1, p2;
+
+            string text;
+            int fontsize = 10;
+            int fontX = 0;
+            int fontY = 0;
+
+            Font _font = new Font("微软雅黑", fontsize, FontStyle.Regular);
+            Brush _brush = new SolidBrush(Color.Green);
+
+            foreach (var item in _rebarlist)
+            {
+                _start = (int)((double)_lengthSum / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
+                _end = (int)((double)(_lengthSum + item.length) / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
+
+                _pen = new Pen(new SolidBrush(Color.Green), 3);
+                p1 = new Point(_start, startY);
+                p2 = new Point(_end, startY);
+                g.DrawLine(_pen, p1, p2);//画绿线
+
+                _pen=new Pen(new SolidBrush(Color.Black),3);
+                p1=new Point(_start, startY);
+                p2 = new Point(_start, startY - 5);
+                g.DrawLine(_pen, p1, p2);//画竖向的小黑线
+
+                text = item.Length;
+                fontX = (_start + _end) / 2;
+                fontY = startY - 20;
+                g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度
+
+                _lengthSum += item.length;
+            }
+
+            if (_lengthSum < GeneralClass.OriginalLength2)
+            {
+                _start = (int)((double)_lengthSum / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
+                _end = (int)((double)(GeneralClass.OriginalLength2) / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
+
+                _pen = new Pen(new SolidBrush(Color.Red), 3);
+                p1 = new Point(_start, startY);
+                p2 = new Point(_end, startY);
+                g.DrawLine(_pen, p1, p2);//画红线
+
+                _pen = new Pen(new SolidBrush(Color.Black), 3);
+                p1 = new Point(_start, startY);
+                p2 = new Point(_start, startY - 5);
+                g.DrawLine(_pen, p1, p2);//画竖向的小黑线
+
+                text = (GeneralClass.OriginalLength2 - _lengthSum).ToString();
+                fontX = (_start + _end) / 2;
+                fontY = startY - 20;
+                _brush = new SolidBrush(Color.Red);
+                g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度
+
+            }
+
+            //bitmap = (Bitmap)this.pictureBox1.Image.Clone();
+            return bitmap;
+        }
+        private void button7_Click(object sender, EventArgs e)
+        {
+            foreach (var item in m_rebarTaoliaoList)
+            {
+                foreach (var ttt in item._rebarlist)
+                {
+                    this.pictureBox1.Image = PaintPic(ttt);
+                    //PaintPic(ttt);
+
+                    MessageBox.Show("11");
+                }
+            }
+        }
+
+        private void InitDgvTaoliao()
+        {
+            DataGridViewColumn column;
+            DataGridViewCell cell;
+            DataGridViewImageColumn imageColumn;
+
+            column = new DataGridViewColumn();
+            cell = new DataGridViewTextBoxCell();
+            column.CellTemplate = cell;//设置单元格模板
+            column.HeaderText = "序号";
+            dataGridView12.Columns.Add(column);
+
+            imageColumn = new DataGridViewImageColumn();
+            imageColumn.HeaderText = "图形";
+            imageColumn.ImageLayout = DataGridViewImageCellLayout.Stretch;//设置图片可以根据单元格大小进行自动调整
+            dataGridView12.Columns.Add(imageColumn);
+
+            //dataGridView12.Rows.Clear();
+        }
+
+        private void dataGridView11_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                //点击dgv11每个构件包时，在dgv12中显示其详细套料信息
+                if (e.RowIndex > -1)
+                {
+                    //直径种类
+                    EnumDiameterType _type;
+                    string sss = dataGridView11.Rows[e.RowIndex].Cells[0].Value.ToString();
+                    if(sss=="多直径")
+                    {
+                        _type = EnumDiameterType.MULTI;
+                    }
+                    else if(sss=="单直径")
+                    {
+                        _type = EnumDiameterType.ONE;
+                    }
+                    else if(sss == "两直径")
+                    {
+                        _type = EnumDiameterType.TWO;
+                    }
+                    else
+                    {
+                        _type = EnumDiameterType.NONE;
+                    }
+
+                    //仓位数
+                    EnumWareNumGroup _ware;
+                    int _wareno = (int)dataGridView11.Rows[e.RowIndex].Cells[1].Value;
+                    if (_wareno == GeneralClass.wareNum[0])
+                    {
+                        _ware = EnumWareNumGroup.EIGHT;
+                    }
+                    else if(_wareno == GeneralClass.wareNum[1])
+                    {
+                        _ware = EnumWareNumGroup.FOUR;
+                    }
+                    else if (_wareno == GeneralClass.wareNum[2])
+                    {
+                        _ware = EnumWareNumGroup.TWO;
+                    }
+                    else if (_wareno == GeneralClass.wareNum[3])
+                    {
+                        _ware = EnumWareNumGroup.ONE;
+                    }
+                    else
+                    {
+                        _ware=EnumWareNumGroup.NONE;
+                    }
+
+                    int _batchNo = (int)dataGridView11.Rows[e.RowIndex].Cells[2].Value;
+
+                    int _diameter = (int)dataGridView11.Rows[e.RowIndex].Cells[3].Value;
+
+                    DataTable dt= new DataTable();
+                    dt.Columns.Add("序号", typeof(int));
+                    dt.Columns.Add("钢筋原材分段",typeof(Image));
+
+                    var item = m_rebarTaoliaoList.Where(t => t.DiameterType == _type && t.WareNumType == _ware && t.BatchNo == _batchNo && t.Diameter == _diameter);
+                    foreach(var ttt in item.ToList())
+                    {
+                        foreach(var eee in ttt._rebarlist)
+                        {
+                            int _index = ttt._rebarlist.IndexOf(eee);
+                            dt.Rows.Add(_index, PaintPic(eee));
+                        }
+                    }
+
+                    dataGridView12.DataSource = dt;
+                    
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("dataGridView11_CellClick error:" + ex.Message); }
 
         }
     }

@@ -6,6 +6,30 @@ using System.Threading.Tasks;
 
 namespace RebarSampling
 {
+    /// <summary>
+    /// 套料之后的钢筋rebar列表
+    /// </summary>
+    public class RebarTaoLiao
+    {
+        public RebarTaoLiao() 
+        {
+            DiameterType = EnumDiameterType.NONE;
+            WareNumType = EnumWareNumGroup.NONE;
+            BatchNo = 0;
+            Diameter = 0;
+            _rebarlist=new List<List<Rebar>>();
+        }
+        public EnumDiameterType DiameterType { get; set; }
+
+        public EnumWareNumGroup WareNumType { get; set; }
+
+        public int BatchNo { get; set; } 
+
+        public int Diameter { get; set; }
+
+        public List<List<Rebar>> _rebarlist { get; set; }
+    }
+
     public struct BatchMsg
     {
         /// <summary>

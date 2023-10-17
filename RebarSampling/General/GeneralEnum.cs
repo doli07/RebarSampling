@@ -777,6 +777,28 @@ namespace RebarSampling
 
         maxNum
     }
+    /// <summary>
+    /// 一种直径，两种直径，多种直径
+    /// </summary>
+    public enum EnumDiameterType
+    { 
+        NONE=-1,
+        /// <summary>
+        /// 一种直径
+        /// </summary>
+        ONE,
+        /// <summary>
+        /// 两种直径
+        /// </summary>
+        TWO,
+        /// <summary>
+        /// 多种直径
+        /// </summary>
+        MULTI,
+
+        maxDiameterType
+    }
+
 
     /// <summary>
     /// 多段接头类型，接头包含:"原头、弯、套、变径套、反套、丝、反丝、搭、单、双、对、竖",

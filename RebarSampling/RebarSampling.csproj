@@ -297,7 +297,9 @@
     <Compile Include="excel\IExcelReader.cs" />
     <Compile Include="excel\IExcelWriter.cs" />
     <Compile Include="General\InteractivityData.cs" />
-    <Compile Include="Graphics\Graphics.cs" />
+    <Compile Include="Graphics\Graphics.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="http\http.cs" />
     <Compile Include="json\json.cs" />
     <Compile Include="log\logfile.cs" />
