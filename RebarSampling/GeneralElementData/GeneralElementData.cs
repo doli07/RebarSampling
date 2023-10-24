@@ -253,7 +253,7 @@ namespace RebarSampling
                 {
                     return (num==this.diameterList.Count)?true:false;
                 }
-                else if(_includeNum>0 &&_includeNum<10)//部分包含，至少包含_includeNum种直径
+                else if(_includeNum>=0 &&_includeNum<10)//部分包含，至少包含_includeNum种直径
                 {
                     return (num >= _includeNum) ? true : false;
                 }

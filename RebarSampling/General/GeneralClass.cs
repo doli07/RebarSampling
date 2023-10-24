@@ -99,6 +99,14 @@ namespace RebarSampling
         /// </summary>
         public static readonly int[] wareNum = new int[(int)EnumWareNumGroup.maxNum] { 8, 4, 2, 1 };
         /// <summary>
+        /// 多直径分组包含直径种类数量，1，2，100(全包含)
+        /// </summary>
+        public static readonly int m_inclueNum = 0;
+        /// <summary>
+        /// 分组时，是否判定螺距类型
+        /// </summary>
+        public static readonly bool m_checkPitchType = false;
+        /// <summary>
         /// 仓位划分的数量区间，四种仓位，三个节点:15,50,100
         /// </summary>
         public static readonly int[] wareArea = new int[3] { 15, 50, 100 };
@@ -106,6 +114,10 @@ namespace RebarSampling
         /// 钢筋总数据库的名称
         /// </summary>
         public static string AllRebarDBfileName = "aa";
+        /// <summary>
+        /// 找不到图形编号的图形是否用默认图片代替
+        /// </summary>
+        public static readonly bool m_showNoFindPic = true;
 
         public static string[] sRebarAssemblyTypeName = new string[(int)EnumRebarAssemblyType.maxAssemblyNum]
             {

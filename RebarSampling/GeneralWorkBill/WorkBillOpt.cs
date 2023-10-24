@@ -112,7 +112,7 @@ namespace RebarSampling.GeneralWorkBill
             _singleRebar.AssemblyName = _data.MainAssemblyName;
             _singleRebar.ElementName = _data.ElementName;
             _singleRebar.WareInfo = _msg.wareMsg.channel.ToString() + "_" +GeneralClass.wareNum[(int)_msg.wareMsg.totalware] .ToString() + "_" + _msg.wareMsg.wareno.ToString();
-            _singleRebar.PicNo = _data.TypeNum;
+            _singleRebar.PicNo = _data.PicTypeNum;
             _singleRebar.Level = _data.Level;
             _singleRebar.Diameter = _data.Diameter;
             if (_data.Length.Contains('~'))
@@ -128,7 +128,10 @@ namespace RebarSampling.GeneralWorkBill
             //根据经验公式计算重量(kg)，保留3位小数
             _singleRebar.Weight = Math.Round(0.00617 * (double)_singleRebar.Diameter * (double)_singleRebar.Diameter * (double)_singleRebar.Length / 1000, 3);
             _singleRebar.CornerMsg = _data.CornerMessage;
-            _singleRebar.IndexCode = Convert.ToString(_data.IndexNo, 16).ToUpper().PadLeft(5, '0');//转换成5位的16进制数
+            /*转换规则：钢筋数据库indexcode   +   同一个钢筋rebardata中的流水号
+            //          4位的16进制数         +   2位的16进制数            */
+            _singleRebar.IndexCode = Convert.ToString(_data.IndexNo, 16).ToUpper().PadLeft(4, '0')+
+                Convert.ToString(_data.seriNo,16).ToUpper().PadLeft(2,'0');
 
             return _singleRebar;
         }

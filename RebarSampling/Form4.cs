@@ -1,4 +1,5 @@
 ﻿//using Etable;
+using Newtonsoft.Json;
 using NPOI.OpenXmlFormats.Dml;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
@@ -592,7 +593,10 @@ namespace RebarSampling
             if(e.RowIndex >= 0)
             {
                 string sss = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
-                textBox1.Text = sss;
+
+                var jsonObj=JsonConvert.DeserializeObject(sss);// 将JSON字符串转换为对象
+
+                textBox1.Text = JsonConvert.SerializeObject(jsonObj,Formatting.Indented);// 在textBox.Text中显示格式化的JSON内容
             }
         }
 

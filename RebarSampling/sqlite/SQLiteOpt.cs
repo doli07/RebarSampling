@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using NPOI.OpenXmlFormats.Dml;
 using NPOI.XWPF.UserModel;
 using NPOI.Util;
+using System.ComponentModel;
 
 namespace RebarSampling
 {
@@ -117,7 +118,7 @@ namespace RebarSampling
                             sqlstr += "'" + rowdata.ProjectName + "'" + ",";
                             sqlstr += "'" + rowdata.MainAssemblyName + "'" + ",";
                             sqlstr += "'" + rowdata.ElementName + "'" + ",";
-                            sqlstr += "'" + rowdata.TypeNum + "'" + ",";
+                            sqlstr += "'" + rowdata.PicTypeNum + "'" + ",";
                             sqlstr += "'" + rowdata.Level + "'" + ",";
                             sqlstr += rowdata.Diameter.ToString() + ",";
                             sqlstr += "'" + rowdata.RebarPic + "'" + ",";
@@ -278,7 +279,7 @@ namespace RebarSampling
                     rebarData.MainAssemblyName = sheetname;//将sheetname赋予钢筋的主构件名称
 
                     rebarData.ElementName = dr[0].ToString();
-                    rebarData.TypeNum = dr[startindex].ToString();
+                    rebarData.PicTypeNum = dr[startindex].ToString();
 
                     string level_diameter = dr[startindex + 1].ToString();
                     if (level_diameter != "" && level_diameter.Length >= 2)//将级别直径（如C14）拆分开
@@ -370,9 +371,9 @@ namespace RebarSampling
 
             _data.IfCut = (_data.Length == "9000" || _data.Length == "12000") ? false : true;//标注是否需要切断，原材以外的都需要切断
 
-            _data.IfBendTwice = (_data.TypeNum.Substring(0, 1) == "1"
-                || _data.TypeNum.Substring(0, 1) == "2"
-                || _data.TypeNum.Substring(0, 1) == "3") ? false : true;//1、2、3开头的图形编号为需要弯折两次以下的，其他的需要弯折2次以上
+            _data.IfBendTwice = (_data.PicTypeNum.Substring(0, 1) == "1"
+                || _data.PicTypeNum.Substring(0, 1) == "2"
+                || _data.PicTypeNum.Substring(0, 1) == "3") ? false : true;//1、2、3开头的图形编号为需要弯折两次以下的，其他的需要弯折2次以上
 
         }
         /// <summary>
@@ -415,7 +416,7 @@ namespace RebarSampling
                     foreach (RebarData _ddd in _rebarDataList /*_newdatalist*/)
                     {
                         //把TotalPieceNum==0的多段排除出去
-                        if (_ddd.TypeNum == _type.ToString().Substring(2, 5) && (_ddd.TotalPieceNum != 0) &&
+                        if (_ddd.PicTypeNum == _type.ToString().Substring(2, 5) && (_ddd.TotalPieceNum != 0) &&
                            (_iffilter ? (_ddd.IfCut == _ifcut && _ddd.IfBend == _ifbend && _ddd.IfTao == _iftao) : true))
                         {
                             _detaildata.TotalPieceNum += _ddd.TotalPieceNum;
@@ -473,27 +474,27 @@ namespace RebarSampling
 
                             _detaildata.CutNum += 1;
                             //计算弯曲数量，切断数量
-                            if (_ddd.TypeNum.Substring(0, 1) == "2")
+                            if (_ddd.PicTypeNum.Substring(0, 1) == "2")
                             {
                                 _detaildata.BendNum += 1;
                             }
-                            else if (_ddd.TypeNum.Substring(0, 1) == "3")
+                            else if (_ddd.PicTypeNum.Substring(0, 1) == "3")
                             {
                                 _detaildata.BendNum += 2;
                             }
-                            else if (_ddd.TypeNum.Substring(0, 1) == "4")
+                            else if (_ddd.PicTypeNum.Substring(0, 1) == "4")
                             {
                                 _detaildata.BendNum += 3;
                             }
-                            else if (_ddd.TypeNum.Substring(0, 1) == "5")
+                            else if (_ddd.PicTypeNum.Substring(0, 1) == "5")
                             {
                                 _detaildata.BendNum += 4;
                             }
-                            else if (_ddd.TypeNum.Substring(0, 1) == "6")
+                            else if (_ddd.PicTypeNum.Substring(0, 1) == "6")
                             {
                                 _detaildata.BendNum += 6;//不定，平均等于6吧
                             }
-                            else if (_ddd.TypeNum.Substring(0, 1) == "7")
+                            else if (_ddd.PicTypeNum.Substring(0, 1) == "7")
                             {
                                 _detaildata.BendNum += 6;
                             }
@@ -822,47 +823,31 @@ namespace RebarSampling
         /// <returns></returns>
         public List<EnumRebarPicType> GetExistedRebarTypeList(List<RebarData> _rebardatalist)
         {
+            List<EnumRebarPicType> _typelist = new List<EnumRebarPicType>();
+
             try
             {
-                List<EnumRebarPicType> _typelist = new List<EnumRebarPicType>();
+                var item = _rebardatalist.GroupBy(t=>t.PicTypeNum).ToList();
 
-                bool _exist = false;
-
-                foreach (RebarData _data in _rebardatalist)
+                foreach(var ttt in item)
                 {
-                    _exist = false;
-                    if (_typelist.Count != 0)
-                    {
-                        foreach (EnumRebarPicType _type in _typelist)
-                        {
-                            string str = _type.ToString();
-                            if (_data.TypeNum == str.Substring(2, str.Length - 2))
-                            {
-                                _exist = true;
-                            }
-                        }
+                    string s = "T_" + ttt.Key;
+                    EnumRebarPicType _enum /*= (EnumRebarPicType)Enum.Parse(typeof(EnumRebarPicType), s, true)*/;
 
-                        if (!_exist)
-                        {
-                            string s = "T_" + _data.TypeNum;
-                            EnumRebarPicType _enum = (EnumRebarPicType)Enum.Parse(typeof(EnumRebarPicType), s, true);//从string转化为enum
-                            _typelist.Add(_enum);
-                        }
+                    if( Enum.TryParse(s, out _enum))
+                    {
+                        _typelist.Add(_enum);
                     }
                     else
                     {
-                        string s = "T_" + _data.TypeNum;
-                        EnumRebarPicType _enum = (EnumRebarPicType)Enum.Parse(typeof(EnumRebarPicType), s, true);//从string转化为enum
-                        _typelist.Add(_enum);
-                    }
-
+                        MessageBox.Show("GetExistedRebarTypeList error:" + s+" No Found!");
+                    }                      
+                    
                 }
 
                 return _typelist;
-
-
             }
-            catch (Exception ex) { MessageBox.Show("GetMultiData error:" + ex.Message); return null; }
+            catch (Exception ex) { MessageBox.Show("GetExistedRebarTypeList error:" + ex.Message); return _typelist; }
 
         }
         /// <summary>
@@ -1014,7 +999,7 @@ namespace RebarSampling
                     rebarData.ProjectName = row[(int)EnumAllRebarTableColName.PROJECT_NAME + 1].ToString();
                     rebarData.MainAssemblyName = row[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME + 1].ToString();
                     rebarData.ElementName = row[(int)EnumAllRebarTableColName.ELEMENT_NAME + 1].ToString();
-                    rebarData.TypeNum = row[(int)EnumAllRebarTableColName.TYPE_NAME + 1].ToString();
+                    rebarData.PicTypeNum = row[(int)EnumAllRebarTableColName.TYPE_NAME + 1].ToString();
                     rebarData.Level = row[(int)EnumAllRebarTableColName.LEVEL + 1].ToString();
                     rebarData.Diameter = Convert.ToInt32(row[(int)EnumAllRebarTableColName.DIAMETER + 1].ToString());
                     rebarData.RebarPic = row[(int)EnumAllRebarTableColName.REBAR_PIC + 1].ToString();
@@ -1285,8 +1270,8 @@ namespace RebarSampling
 
             foreach (RebarData _dd in _rebarDataList)
             {
-                if (_dd.TypeNum == "70000") { continue; }//7000的图形为异类，排除掉
-                if (_dd.TypeNum == "74201" && _dd.IsMulti) { continue; }
+                if (_dd.PicTypeNum == "70000") { continue; }//7000的图形为异类，排除掉
+                if (_dd.PicTypeNum == "74201" && _dd.IsMulti) { continue; }
                 if (_dd.IsOriginal && !_dd.IfCut && !_dd.IfBend && !_dd.IfTao && !_dd.IfBendTwice)//第一种情况，原本就是原材的，数量直接加
                 {
                     _data.TotalPieceNum += _dd.TotalPieceNum;
@@ -1347,8 +1332,8 @@ namespace RebarSampling
 
                 foreach (RebarData _dd in _rebarDataList)
                 {
-                    if (_dd.TypeNum == "70000") { continue; }//7000的图形为异类，排除掉
-                    if (_dd.TypeNum == "74201" && _dd.IsMulti) { continue; }
+                    if (_dd.PicTypeNum == "70000") { continue; }//7000的图形为异类，排除掉
+                    if (_dd.PicTypeNum == "74201" && _dd.IsMulti) { continue; }
 
                     if (_dd.IsOriginal && _dd.IfTao && !_dd.IfCut && !_dd.IfBend && !_dd.IfBendTwice)//第一种情况，原本就是原材,仅需套丝
                     {
@@ -1457,8 +1442,8 @@ namespace RebarSampling
 
                 foreach (RebarData _dd in _rebarDataList)
                 {
-                    if (_dd.TypeNum == "70000") { continue; }//70000的图形为异类，排除掉
-                    if (_dd.TypeNum == "74201" && _dd.IsMulti) { continue; }
+                    if (_dd.PicTypeNum == "70000") { continue; }//70000的图形为异类，排除掉
+                    if (_dd.PicTypeNum == "74201" && _dd.IsMulti) { continue; }
 
                     if (_dd.IsOriginal && !_dd.IfTao && !_dd.IfCut && (_dd.IfBend || _dd.IfBendTwice))//第一种情况，原本就是原材,仅需弯曲
                     {
@@ -1528,7 +1513,7 @@ namespace RebarSampling
                             pair = new KeyValuePair<string, object>(GeneralClass.sRebarColumnName[pp], _data.ElementName);
                             break;
                         case (int)EnumAllRebarTableColName.TYPE_NAME:
-                            pair = new KeyValuePair<string, object>(GeneralClass.sRebarColumnName[pp], _data.TypeNum);
+                            pair = new KeyValuePair<string, object>(GeneralClass.sRebarColumnName[pp], _data.PicTypeNum);
                             break;
                         case (int)EnumAllRebarTableColName.LEVEL:
                             pair = new KeyValuePair<string, object>(GeneralClass.sRebarColumnName[pp], _data.Level);

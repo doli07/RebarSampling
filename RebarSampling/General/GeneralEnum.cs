@@ -246,6 +246,7 @@ namespace RebarSampling
 
         T_51000,
         T_50010,
+        T_50261,
         T_50505,
         T_50606,
         T_50707,
@@ -295,6 +296,7 @@ namespace RebarSampling
         T_70000,
         T_75001,
         T_75020,
+        T_74200,
         T_74201,
         T_74202,
         T_74203,

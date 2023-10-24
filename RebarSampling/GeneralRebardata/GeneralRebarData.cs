@@ -132,7 +132,7 @@ namespace RebarSampling
             this.ProjectName = "";
             this.MainAssemblyName = "";
             this.ElementName = "";
-            this.TypeNum = "";
+            this.PicTypeNum = "";
             this.Level = "";
             this.Diameter = 0;
             this.RebarPic = "";
@@ -161,7 +161,7 @@ namespace RebarSampling
             this.ProjectName = "";
             this.MainAssemblyName = "";
             this.ElementName = "";
-            this.TypeNum = "";
+            this.PicTypeNum = "";
             this.Level = "";
             this.Diameter = 0;
             this.RebarPic = "";
@@ -190,7 +190,7 @@ namespace RebarSampling
             this.ProjectName = _data.ProjectName;
             this.MainAssemblyName = _data.MainAssemblyName;
             this.ElementName = _data.ElementName;
-            this.TypeNum = _data.TypeNum;
+            this.PicTypeNum = _data.PicTypeNum;
             this.Level = _data.Level;
             this.Diameter = _data.Diameter;
             this.RebarPic = _data.RebarPic;
@@ -236,9 +236,9 @@ namespace RebarSampling
         /// </summary>
         public string ElementName { get; set; }
         /// <summary>
-        /// 构件类型编号
+        /// 钢筋简图类型编号
         /// </summary>
-        public string TypeNum { get; set; }
+        public string PicTypeNum { get; set; }
         /// <summary>
         /// 级别
         /// </summary>
