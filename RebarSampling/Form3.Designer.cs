@@ -37,15 +37,18 @@
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.dataGridView9 = new System.Windows.Forms.DataGridView();
             this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.treeView3 = new System.Windows.Forms.TreeView();
+            this.treeView4 = new System.Windows.Forms.TreeView();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.treeView5 = new System.Windows.Forms.TreeView();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.treeView2 = new System.Windows.Forms.TreeView();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.treeView3 = new System.Windows.Forms.TreeView();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.treeView4 = new System.Windows.Forms.TreeView();
             this.dataGridView8 = new System.Windows.Forms.DataGridView();
             this.button6 = new System.Windows.Forms.Button();
             this.tabPage10 = new System.Windows.Forms.TabPage();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.dataGridView12 = new System.Windows.Forms.DataGridView();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -70,9 +73,8 @@
             this.tabPage8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView9)).BeginInit();
             this.tabControl2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.tabPage5.SuspendLayout();
-            this.tabPage6.SuspendLayout();
-            this.tabPage7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).BeginInit();
             this.tabPage10.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView12)).BeginInit();
@@ -112,11 +114,11 @@
             this.tabControl3.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.tabControl3.Controls.Add(this.tabPage9);
             this.tabControl3.Controls.Add(this.tabPage8);
-            this.tabControl3.Location = new System.Drawing.Point(201, 260);
+            this.tabControl3.Location = new System.Drawing.Point(318, 260);
             this.tabControl3.Multiline = true;
             this.tabControl3.Name = "tabControl3";
             this.tabControl3.SelectedIndex = 0;
-            this.tabControl3.Size = new System.Drawing.Size(990, 198);
+            this.tabControl3.Size = new System.Drawing.Size(1145, 198);
             this.tabControl3.TabIndex = 12;
             // 
             // tabPage9
@@ -125,7 +127,7 @@
             this.tabPage9.Location = new System.Drawing.Point(4, 28);
             this.tabPage9.Name = "tabPage9";
             this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage9.Size = new System.Drawing.Size(982, 166);
+            this.tabPage9.Size = new System.Drawing.Size(1137, 166);
             this.tabPage9.TabIndex = 1;
             this.tabPage9.Text = "各直径数量统计";
             this.tabPage9.UseVisualStyleBackColor = true;
@@ -148,7 +150,7 @@
             this.tabPage8.Location = new System.Drawing.Point(4, 28);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(982, 166);
+            this.tabPage8.Size = new System.Drawing.Size(1137, 166);
             this.tabPage8.TabIndex = 0;
             this.tabPage8.Text = "构件包详细";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -162,20 +164,64 @@
             this.dataGridView9.Name = "dataGridView9";
             this.dataGridView9.RowHeadersWidth = 51;
             this.dataGridView9.RowTemplate.Height = 27;
-            this.dataGridView9.Size = new System.Drawing.Size(983, 167);
+            this.dataGridView9.Size = new System.Drawing.Size(1108, 167);
             this.dataGridView9.TabIndex = 2;
             this.dataGridView9.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView9_CellFormatting);
             // 
             // tabControl2
             // 
+            this.tabControl2.Controls.Add(this.tabPage3);
             this.tabControl2.Controls.Add(this.tabPage5);
-            this.tabControl2.Controls.Add(this.tabPage6);
-            this.tabControl2.Controls.Add(this.tabPage7);
             this.tabControl2.Location = new System.Drawing.Point(8, 70);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(187, 385);
+            this.tabControl2.Size = new System.Drawing.Size(308, 385);
             this.tabControl2.TabIndex = 4;
+            // 
+            // treeView3
+            // 
+            this.treeView3.Location = new System.Drawing.Point(62, 597);
+            this.treeView3.Name = "treeView3";
+            this.treeView3.Size = new System.Drawing.Size(46, 38);
+            this.treeView3.TabIndex = 0;
+            this.treeView3.Visible = false;
+            this.treeView3.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView3_AfterSelect);
+            // 
+            // treeView4
+            // 
+            this.treeView4.Location = new System.Drawing.Point(131, 597);
+            this.treeView4.Name = "treeView4";
+            this.treeView4.Size = new System.Drawing.Size(46, 38);
+            this.treeView4.TabIndex = 0;
+            this.treeView4.Visible = false;
+            this.treeView4.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView4_AfterSelect);
+            // 
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(197, 597);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(46, 38);
+            this.treeView1.TabIndex = 0;
+            this.treeView1.Visible = false;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.treeView5);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(300, 356);
+            this.tabPage3.TabIndex = 4;
+            this.tabPage3.Text = "1~4种直径";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // treeView5
+            // 
+            this.treeView5.Location = new System.Drawing.Point(3, 3);
+            this.treeView5.Name = "treeView5";
+            this.treeView5.Size = new System.Drawing.Size(235, 346);
+            this.treeView5.TabIndex = 0;
+            this.treeView5.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView5_AfterSelect);
             // 
             // tabPage5
             // 
@@ -183,66 +229,29 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(179, 356);
+            this.tabPage5.Size = new System.Drawing.Size(300, 356);
             this.tabPage5.TabIndex = 0;
-            this.tabPage5.Text = "多直径";
+            this.tabPage5.Text = "5种直径及以上";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // treeView2
             // 
             this.treeView2.Location = new System.Drawing.Point(6, 6);
             this.treeView2.Name = "treeView2";
-            this.treeView2.Size = new System.Drawing.Size(167, 347);
+            this.treeView2.Size = new System.Drawing.Size(271, 347);
             this.treeView2.TabIndex = 3;
             this.treeView2.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView2_AfterSelect);
-            // 
-            // tabPage6
-            // 
-            this.tabPage6.Controls.Add(this.treeView3);
-            this.tabPage6.Location = new System.Drawing.Point(4, 25);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(179, 356);
-            this.tabPage6.TabIndex = 1;
-            this.tabPage6.Text = "单直径";
-            this.tabPage6.UseVisualStyleBackColor = true;
-            // 
-            // treeView3
-            // 
-            this.treeView3.Location = new System.Drawing.Point(6, 6);
-            this.treeView3.Name = "treeView3";
-            this.treeView3.Size = new System.Drawing.Size(167, 347);
-            this.treeView3.TabIndex = 0;
-            this.treeView3.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView3_AfterSelect);
-            // 
-            // tabPage7
-            // 
-            this.tabPage7.Controls.Add(this.treeView4);
-            this.tabPage7.Location = new System.Drawing.Point(4, 25);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Size = new System.Drawing.Size(179, 356);
-            this.tabPage7.TabIndex = 2;
-            this.tabPage7.Text = "两直径";
-            this.tabPage7.UseVisualStyleBackColor = true;
-            // 
-            // treeView4
-            // 
-            this.treeView4.Location = new System.Drawing.Point(3, 3);
-            this.treeView4.Name = "treeView4";
-            this.treeView4.Size = new System.Drawing.Size(173, 350);
-            this.treeView4.TabIndex = 0;
-            this.treeView4.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView4_AfterSelect);
             // 
             // dataGridView8
             // 
             this.dataGridView8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView8.Location = new System.Drawing.Point(201, 7);
+            this.dataGridView8.Location = new System.Drawing.Point(322, 7);
             this.dataGridView8.Name = "dataGridView8";
             this.dataGridView8.ReadOnly = true;
             this.dataGridView8.RowHeadersWidth = 51;
             this.dataGridView8.RowTemplate.Height = 27;
             this.dataGridView8.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView8.Size = new System.Drawing.Size(987, 247);
+            this.dataGridView8.Size = new System.Drawing.Size(1141, 247);
             this.dataGridView8.TabIndex = 1;
             this.dataGridView8.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView8_CellClick);
             // 
@@ -251,7 +260,7 @@
             this.button6.BackColor = System.Drawing.Color.DarkSalmon;
             this.button6.Location = new System.Drawing.Point(6, 6);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(179, 57);
+            this.button6.Size = new System.Drawing.Size(310, 57);
             this.button6.TabIndex = 0;
             this.button6.Text = "组合匹配";
             this.button6.UseVisualStyleBackColor = false;
@@ -259,6 +268,8 @@
             // 
             // tabPage10
             // 
+            this.tabPage10.Controls.Add(this.textBox4);
+            this.tabPage10.Controls.Add(this.label4);
             this.tabPage10.Controls.Add(this.dataGridView12);
             this.tabPage10.Controls.Add(this.textBox3);
             this.tabPage10.Controls.Add(this.label3);
@@ -275,6 +286,22 @@
             this.tabPage10.Text = "生成工单";
             this.tabPage10.UseVisualStyleBackColor = true;
             // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(727, 433);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(100, 25);
+            this.textBox4.TabIndex = 13;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(661, 440);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(60, 15);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "废料率:";
+            // 
             // dataGridView12
             // 
             this.dataGridView12.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
@@ -290,7 +317,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(519, 433);
+            this.textBox3.Location = new System.Drawing.Point(528, 433);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 25);
             this.textBox3.TabIndex = 10;
@@ -300,9 +327,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(441, 440);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(60, 15);
+            this.label3.Size = new System.Drawing.Size(90, 15);
             this.label3.TabIndex = 9;
-            this.label3.Text = "利用率:";
+            this.label3.Text = "一次利用率:";
             // 
             // label2
             // 
@@ -442,6 +469,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1578, 723);
+            this.Controls.Add(this.treeView3);
+            this.Controls.Add(this.treeView4);
+            this.Controls.Add(this.treeView1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.dataGridView7);
             this.Controls.Add(this.dataGridView6);
@@ -460,9 +490,8 @@
             this.tabPage8.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView9)).EndInit();
             this.tabControl2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).EndInit();
             this.tabPage10.ResumeLayout(false);
             this.tabPage10.PerformLayout();
@@ -493,9 +522,7 @@
         private System.Windows.Forms.TreeView treeView2;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.TreeView treeView3;
-        private System.Windows.Forms.TabPage tabPage7;
         private System.Windows.Forms.TreeView treeView4;
         private System.Windows.Forms.TabControl tabControl3;
         private System.Windows.Forms.TabPage tabPage8;
@@ -511,5 +538,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dataGridView12;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView treeView5;
     }
 }

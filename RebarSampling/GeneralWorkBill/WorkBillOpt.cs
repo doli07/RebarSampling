@@ -78,7 +78,7 @@ namespace RebarSampling.GeneralWorkBill
                 _workbill.SteelbarList.Add(CreateSingleRebarData(msg, item));
             }
 
-            returnstr = GeneralClass.JsonOpt.Serializer(_workbill);//json序列化
+            returnstr = NewtonJson.Serializer(_workbill);//json序列化
 
             return returnstr;
         }

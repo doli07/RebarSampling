@@ -43,6 +43,7 @@
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button5 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -205,6 +206,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button5);
             this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.button13);
             this.panel1.Controls.Add(this.button2);
@@ -218,12 +220,26 @@
             this.panel1.Size = new System.Drawing.Size(1646, 64);
             this.panel1.TabIndex = 23;
             // 
+            // button5
+            // 
+            this.button5.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
+            this.button5.Location = new System.Drawing.Point(664, 3);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(163, 56);
+            this.button5.TabIndex = 26;
+            this.button5.Text = "系统设置";
+            this.button5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button5.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.button5.UseVisualStyleBackColor = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // button3
             // 
             this.button3.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button3.Location = new System.Drawing.Point(823, 3);
+            this.button3.Location = new System.Drawing.Point(997, 5);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(163, 56);
             this.button3.TabIndex = 25;
@@ -239,7 +255,7 @@
             this.button13.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button13.Image = ((System.Drawing.Image)(resources.GetObject("button13.Image")));
             this.button13.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button13.Location = new System.Drawing.Point(659, 3);
+            this.button13.Location = new System.Drawing.Point(833, 3);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(163, 56);
             this.button13.TabIndex = 24;
@@ -380,6 +396,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button button5;
     }
 }
 

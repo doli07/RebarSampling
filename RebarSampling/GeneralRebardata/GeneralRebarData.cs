@@ -32,8 +32,10 @@ namespace RebarSampling
         public string _assemblyName { get; set; }
         public List<RebarData> _datalist { get; set; }
     }
-
-    public class GroupbyDiameterListWithLength
+    /// <summary>
+    /// 根据直径进行分组的rebardata的list
+    /// </summary>
+    public class GroupbyDiaWithLength
     {
         public int _diameter { get; set; }
         public int _totallength { get; set; }
@@ -47,7 +49,7 @@ namespace RebarSampling
     /// <summary>
     /// 按照钢筋直径进行检索的数据list，自动统计数量、重量
     /// </summary>
-    public class GroupbyDiameterlist
+    public class GroupbyDia
     {
         public int _diameter { get; set; }
         public int _totalnum { get; set; }

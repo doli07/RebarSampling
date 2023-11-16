@@ -690,7 +690,7 @@ namespace RebarSampling
     /// <summary>
     /// 详细统计界面的行名，钢筋尺寸
     /// </summary>
-    public enum EnumDetailTableRowName
+    public enum EnumBangOrXian
     { 
         XIAN_A6,
         XIAN_A8,
@@ -780,7 +780,7 @@ namespace RebarSampling
         maxNum
     }
     /// <summary>
-    /// 一种直径，两种直径，多种直径
+    /// 1~4种直径，多种直径
     /// </summary>
     public enum EnumDiameterType
     { 
@@ -788,11 +788,16 @@ namespace RebarSampling
         /// <summary>
         /// 一种直径
         /// </summary>
-        ONE,
+        //ONE,
         /// <summary>
         /// 两种直径
         /// </summary>
-        TWO,
+        //TWO,
+
+        /// <summary>
+        /// 1~4种直径
+        /// </summary>
+        FEW,
         /// <summary>
         /// 多种直径
         /// </summary>
@@ -856,6 +861,25 @@ namespace RebarSampling
         /// 竖
         /// </summary>
         SHU
+    }
+
+    public enum EnumFactoryType
+    {
+        NONE = -1,
+        /// <summary>
+        /// 标配工厂，4条套丝线，6个辊道成品仓
+        /// </summary>
+        Standard,
+        /// <summary>
+        /// 低配工厂，2条套丝线，2个辊道成品仓
+        /// </summary>
+        Reduction,
+        /// <summary>
+        /// 实验线，1条套丝线，1个辊道成品仓
+        /// </summary>
+        Experiment,
+
+        maxFactoryType
     }
 
 }

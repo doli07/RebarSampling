@@ -44,6 +44,7 @@ namespace RebarSampling
         private Form2 form2;
         private Form3 form3;
         private Form4 form4;
+        private Form5 form5;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -61,6 +62,11 @@ namespace RebarSampling
             form4.TopLevel = false;
             form4.FormBorderStyle = FormBorderStyle.None;
             form4.Dock = DockStyle.Fill;
+
+            form5 = new Form5();
+            form5.TopLevel = false;
+            form5.FormBorderStyle = FormBorderStyle.None;
+            form5.Dock = DockStyle.Fill;
 
             InitCheckbox();
             InitTreeView1();
@@ -826,8 +832,9 @@ namespace RebarSampling
         private void button12_Click(object sender, EventArgs e)
         {
             button11.BackColor = SystemColors.GradientInactiveCaption;
-            button2.BackColor = SystemColors.GradientInactiveCaption;
             button12.BackColor = Color.Wheat;
+            button2.BackColor = SystemColors.GradientInactiveCaption;
+            button5.BackColor = SystemColors.GradientInactiveCaption;
 
             form3.Show();
             this.panel3.Controls.Clear();
@@ -838,9 +845,10 @@ namespace RebarSampling
 
         private void button11_Click(object sender, EventArgs e)
         {
-            button2.BackColor = SystemColors.GradientInactiveCaption;
-            button12.BackColor = SystemColors.GradientInactiveCaption;
             button11.BackColor = Color.Wheat;
+            button12.BackColor = SystemColors.GradientInactiveCaption;
+            button2.BackColor = SystemColors.GradientInactiveCaption;
+            button5.BackColor = SystemColors.GradientInactiveCaption;
 
             form2.Show();
             this.panel3.Controls.Clear();
@@ -852,6 +860,7 @@ namespace RebarSampling
             button11.BackColor = SystemColors.GradientInactiveCaption;
             button12.BackColor = SystemColors.GradientInactiveCaption;
             button2.BackColor = Color.Wheat;
+            button5.BackColor = SystemColors.GradientInactiveCaption;
 
             form4.Show();
             this.panel3.Controls.Clear();
@@ -861,7 +870,19 @@ namespace RebarSampling
 
         private void button4_Click(object sender, EventArgs e)
         {
-            this.splitContainer1.Panel1Collapsed = !this.splitContainer1.Panel1Collapsed;
+            this.splitContainer1.Panel1Collapsed = !this.splitContainer1.Panel1Collapsed;//隐藏导航栏
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            button11.BackColor = SystemColors.GradientInactiveCaption;
+            button12.BackColor = SystemColors.GradientInactiveCaption;
+            button2.BackColor = SystemColors.GradientInactiveCaption;
+            button5.BackColor = Color.Wheat;
+
+            form5.Show();
+            this.panel3.Controls.Clear();
+            this.panel3.Controls.Add(form5);
         }
     }
 }

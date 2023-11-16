@@ -1,17 +1,9 @@
 ﻿//using Etable;
-using Newtonsoft.Json;
-using NPOI.OpenXmlFormats.Dml;
-using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RebarSampling
@@ -364,7 +356,7 @@ namespace RebarSampling
             _workbill.OriginalLength = Convert.ToInt32(textBox16.Text);
             _workbill.SteelbarList = _rebarlist;
 
-            string sss = GeneralClass.JsonOpt.Serializer(_workbill);//json序列化
+            string sss = NewtonJson.Serializer(_workbill);//json序列化
 
             textBox1.Text = sss;
 
@@ -594,9 +586,11 @@ namespace RebarSampling
             {
                 string sss = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
 
-                var jsonObj=JsonConvert.DeserializeObject(sss);// 将JSON字符串转换为对象
+                //var jsonObj=JsonConvert.DeserializeObject(sss);
+                //textBox1.Text = JsonConvert.SerializeObject(jsonObj,Formatting.Indented);
 
-                textBox1.Text = JsonConvert.SerializeObject(jsonObj,Formatting.Indented);// 在textBox.Text中显示格式化的JSON内容
+                var jsonobj = NewtonJson.Deserializer<WorkBill>(sss);// 将JSON字符串转换为对象
+                textBox1.Text = NewtonJson.Serializer(jsonobj);// 在textBox.Text中显示格式化的JSON内容
             }
         }
 

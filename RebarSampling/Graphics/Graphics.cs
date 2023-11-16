@@ -14,6 +14,7 @@ namespace RebarSampling
     /// </summary>
     public class graphics
     {
+
         public static Bitmap PaintRebar(List<Rebar> _rebarlist)
         {
             Bitmap bitmap = new Bitmap(650, 30);//新建一个bitmap，用于绘图
@@ -65,28 +66,52 @@ namespace RebarSampling
 
             if (_lengthSum < GeneralClass.OriginalLength2)
             {
-                _start = (int)((double)_lengthSum / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
-                _end = (int)((double)(GeneralClass.OriginalLength2) / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
+                if((GeneralClass.OriginalLength2-_lengthSum)<300)//小于300，当废料处理，用红色线
+                {
+                    _start = (int)((double)_lengthSum / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
+                    _end = (int)((double)(GeneralClass.OriginalLength2) / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
 
-                _pen = new Pen(new SolidBrush(Color.Red), 3);
-                p1 = new Point(_start, startY);
-                p2 = new Point(_end, startY);
-                g.DrawLine(_pen, p1, p2);//画红线
+                    _pen = new Pen(new SolidBrush(Color.Red), 3);
+                    p1 = new Point(_start, startY);
+                    p2 = new Point(_end, startY);
+                    g.DrawLine(_pen, p1, p2);//画红线
 
-                _pen = new Pen(new SolidBrush(Color.Black), 3);
-                p1 = new Point(_start, startY);
-                p2 = new Point(_start, startY - 5);
-                g.DrawLine(_pen, p1, p2);//画竖向的小黑线
+                    _pen = new Pen(new SolidBrush(Color.Black), 3);
+                    p1 = new Point(_start, startY);
+                    p2 = new Point(_start, startY - 5);
+                    g.DrawLine(_pen, p1, p2);//画竖向的小黑线
 
-                text = (GeneralClass.OriginalLength2 - _lengthSum).ToString();
-                fontX = (_start + _end) / 2;
-                fontY = startY - 20;
-                _brush = new SolidBrush(Color.Red);
-                g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度
+                    text = (GeneralClass.OriginalLength2 - _lengthSum).ToString();
+                    fontX = (_start + _end) / 2;
+                    fontY = startY - 20;
+                    _brush = new SolidBrush(Color.Red);
+                    g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度
+                }
+                else//大于等于300，当余料处理，用蓝色线
+                {
+                    _start = (int)((double)_lengthSum / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
+                    _end = (int)((double)(GeneralClass.OriginalLength2) / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
+
+                    _pen = new Pen(new SolidBrush(Color.Blue), 3);
+                    p1 = new Point(_start, startY);
+                    p2 = new Point(_end, startY);
+                    g.DrawLine(_pen, p1, p2);//画蓝线
+
+                    _pen = new Pen(new SolidBrush(Color.Black), 3);
+                    p1 = new Point(_start, startY);
+                    p2 = new Point(_start, startY - 5);
+                    g.DrawLine(_pen, p1, p2);//画竖向的小黑线
+
+                    text = (GeneralClass.OriginalLength2 - _lengthSum).ToString();
+                    fontX = (_start + _end) / 2;
+                    fontY = startY - 20;
+                    _brush = new SolidBrush(Color.Blue);
+                    g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度
+                }
+
 
             }
 
-            //bitmap = (Bitmap)this.pictureBox1.Image.Clone();
             return bitmap;
         }
     }

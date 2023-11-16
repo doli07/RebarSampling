@@ -518,17 +518,17 @@ namespace RebarSampling
             try
             {
                 //List<GeneralDetailData>[] _allList=new List<GeneralDetailData>[(int)EnumDetailTableRowName.maxRowNum];
-                List<KeyValuePair<EnumRebarPicType, GeneralDetailData>>[] _allList = new List<KeyValuePair<EnumRebarPicType, GeneralDetailData>>[(int)EnumDetailTableRowName.maxRowNum];
+                List<KeyValuePair<EnumRebarPicType, GeneralDetailData>>[] _allList = new List<KeyValuePair<EnumRebarPicType, GeneralDetailData>>[(int)EnumBangOrXian.maxRowNum];
 
                 //List<GeneralDetailData> _list = new List<GeneralDetailData>();
                 List<KeyValuePair<EnumRebarPicType, GeneralDetailData>> _list = new List<KeyValuePair<EnumRebarPicType, GeneralDetailData>>();
                 string _level = "";
                 int _diameter = 0;
 
-                for (int i = (int)EnumDetailTableRowName.XIAN_A6; i < (int)EnumDetailTableRowName.maxRowNum; i++)
+                for (int i = (int)EnumBangOrXian.XIAN_A6; i < (int)EnumBangOrXian.maxRowNum; i++)
                 {
                     //_list.Clear();//注意要先清掉
-                    string ss = ((EnumDetailTableRowName)i).ToString().Split('_')[1];//例如：BANG_C14，截取后一段
+                    string ss = ((EnumBangOrXian)i).ToString().Split('_')[1];//例如：BANG_C14，截取后一段
                     _level = ss.Substring(0, 1);
                     _diameter = Convert.ToInt32(ss.Substring(1, ss.Length - 1));
 
@@ -569,16 +569,16 @@ namespace RebarSampling
             {
                 //定义三维数组，尺寸*工艺*分析项
                 //object[,,] _alldata = new object[(int)EnumDetailTableRowName.maxRowNum, (int)EnumDetailTableColName.ONLY_CUT, (int)EnumDetailItem.maxItemNum];//先处理三个原材的
-                object[,,] _alldata = new object[(int)EnumDetailTableColName.ONLY_CUT, (int)EnumDetailTableRowName.maxRowNum, (int)EnumDetailItem.maxItemNum];//先处理三个原材的
+                object[,,] _alldata = new object[(int)EnumDetailTableColName.ONLY_CUT, (int)EnumBangOrXian.maxRowNum, (int)EnumDetailItem.maxItemNum];//先处理三个原材的
 
                 GeneralDetailData[] _data = new GeneralDetailData[(int)EnumDetailTableColName.ONLY_CUT];//先处理三个原材的
 
                 string _level = "";
                 int _diameter = 0;
 
-                for (int i = (int)EnumDetailTableRowName.XIAN_A6; i < (int)EnumDetailTableRowName.maxRowNum; i++)
+                for (int i = (int)EnumBangOrXian.XIAN_A6; i < (int)EnumBangOrXian.maxRowNum; i++)
                 {
-                    string ss = ((EnumDetailTableRowName)i).ToString().Split('_')[1];//例如：BANG_C14，截取后一段
+                    string ss = ((EnumBangOrXian)i).ToString().Split('_')[1];//例如：BANG_C14，截取后一段
                     _level = ss.Substring(0, 1);
                     _diameter = Convert.ToInt32(ss.Substring(1, ss.Length - 1));
 
@@ -716,15 +716,15 @@ namespace RebarSampling
             return returnlist;
 
         }
-        public List<GroupbyDiameterListWithLength> QueryAllListByDiameterWithLength(List<RebarData> _rebardatalist)
+        public List<GroupbyDiaWithLength> QueryAllListByDiameterWithLength(List<RebarData> _rebardatalist)
         {
             try
             {
                 int _length = 0;
 
-                List<GroupbyDiameterListWithLength> returnlist = new List<GroupbyDiameterListWithLength>();
+                List<GroupbyDiaWithLength> returnlist = new List<GroupbyDiaWithLength>();
                 returnlist = _rebardatalist.GroupBy(x => x.Diameter).Select(
-                    y => new GroupbyDiameterListWithLength
+                    y => new GroupbyDiaWithLength
                     {
                         _diameter = y.Key,
                         //_totallength = y.Sum(item => Convert.ToInt32(item.Length) * item.TotalPieceNum),
@@ -745,11 +745,11 @@ namespace RebarSampling
 
         }
 
-        public List<GroupbyDiameterlist> QueryAllListByDiameter(List<RebarData> _rebardatalist)
+        public List<GroupbyDia> QueryAllListByDiameter(List<RebarData> _rebardatalist)
         {
-            List<GroupbyDiameterlist> returnlist = new List<GroupbyDiameterlist>();
+            List<GroupbyDia> returnlist = new List<GroupbyDia>();
             returnlist = _rebardatalist.GroupBy(x => x.Diameter).Select(
-                y => new GroupbyDiameterlist
+                y => new GroupbyDia
                 {
                     _diameter = y.Key,
                     _totalnum = y.Sum(item => item.TotalPieceNum),

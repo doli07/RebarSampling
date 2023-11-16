@@ -18,42 +18,54 @@ namespace RebarSampling
         /// </summary>
         public static void ChartPieShow(string _title, List<string> x, List<int> y, Chart _chart)
         {
+            //标题
+            _chart.Titles.Clear();
+            _chart.Titles.Add(_title);
+            _chart.Titles[0].Alignment = ContentAlignment.TopCenter;
+
             _chart.Series[0].ChartType = SeriesChartType.Pie; // 图类型
-            _chart.Series[0]["PieLabelStyle"] = "Outside"; // 将文字移到外侧
-            _chart.Series[0]["PieLineColor"] = "Black"; // 绘制黑色的连线
-            _chart.Series[0].IsValueShownAsLabel = false;
+            //_chart.Series[0]["PieLabelStyle"] = "Outside"; // 将文字移到外侧
+            //_chart.Series[0]["PieLineColor"] = "Black"; // 绘制黑色的连线
+            _chart.Series[0].Label = "#PERCENT{P1}";
+            _chart.Series[0].IsValueShownAsLabel = true;
             _chart.Series[0].Points.DataBindXY(x, y);
 
             _chart.Legends[0].Enabled = true;//右侧legend启用
             _chart.Legends[0].Alignment = StringAlignment.Center;
             _chart.Legends[0].Docking = Docking.Right;
-            _chart.Legends[0].Title = _title;
+            //_chart.Legends[0].Title = _title;
 
             for (int i = 0; i < _chart.Series[0].Points.Count; i++)
             {
                 //_chart.Series[0].Points[p].Label = "#VALX\n#PERCENT{P0}\n";
                 _chart.Series[0].Points[i].IsVisibleInLegend = true;
-                _chart.Series[0].Points[i].LegendText = x[i] + "   " + (Convert.ToDouble(y[i]) / Convert.ToDouble(y.Sum())).ToString("P1");
+                _chart.Series[0].Points[i].LegendText = x[i]+" "+y[i].ToString() /*+ "   " + (Convert.ToDouble(y[i]) / Convert.ToDouble(y.Sum())).ToString("P1")*/;
             }
         }
         public static void ChartPieShow(string _title, List<string> x, List<double> y, Chart _chart)
         {
+            //标题
+            _chart.Titles.Clear();
+            _chart.Titles.Add(_title);
+            _chart.Titles[0].Alignment = ContentAlignment.TopCenter;
+
             _chart.Series[0].ChartType = SeriesChartType.Pie; // 图类型
-            _chart.Series[0]["PieLabelStyle"] = "Outside"; // 将文字移到外侧
-            _chart.Series[0]["PieLineColor"] = "Black"; // 绘制黑色的连线
-            _chart.Series[0].IsValueShownAsLabel = false;
+            //_chart.Series[0]["PieLabelStyle"] = "Outside"; // 将文字移到外侧
+            //_chart.Series[0]["PieLineColor"] = "Black"; // 绘制黑色的连线
+            _chart.Series[0].Label = "#PERCENT{P1}";
+            _chart.Series[0].IsValueShownAsLabel = true;
             _chart.Series[0].Points.DataBindXY(x, y);
 
             _chart.Legends[0].Enabled = true;//右侧legend启用
             _chart.Legends[0].Alignment = StringAlignment.Center;
             _chart.Legends[0].Docking = Docking.Right;
-            _chart.Legends[0].Title = _title;
+            //_chart.Legends[0].Title = _title;
 
             for (int i = 0; i < _chart.Series[0].Points.Count; i++)
             {
                 //_chart.Series[0].Points[p].Label = "#VALX\n#PERCENT{P0}\n";
                 _chart.Series[0].Points[i].IsVisibleInLegend = true;
-                _chart.Series[0].Points[i].LegendText = x[i] + "   " + (Convert.ToDouble(y[i]) / Convert.ToDouble(y.Sum())).ToString("P1");
+                _chart.Series[0].Points[i].LegendText = x[i] +" "+y[i].ToString()/*+ "   " + (Convert.ToDouble(y[i]) / Convert.ToDouble(y.Sum())).ToString("P1")*/;
             }
         }
         /// <summary>
@@ -74,6 +86,8 @@ namespace RebarSampling
             _chart.ChartAreas[0].AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash; //设置网格类型为虚线
             //标签显示数据
             _chart.Series[0].IsValueShownAsLabel = true;//设置显示示数
+            //_chart.Series[0].Label = "#PERCENT{P1}";//显示百分比
+
             //右侧legend
             _chart.Legends[0].Enabled = false;//不显示图例右侧legend
             //绑定数据
@@ -94,6 +108,7 @@ namespace RebarSampling
             _chart.ChartAreas[0].AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash; //设置网格类型为虚线
             //标签显示数据
             _chart.Series[0].IsValueShownAsLabel = true;//设置显示示数
+            //_chart.Series[0].Label = "#PERCENT{P1}";//显示百分比
             //右侧legend
             _chart.Legends[0].Enabled = false;//不显示图例右侧legend
             //绑定数据

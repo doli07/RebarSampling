@@ -3,6 +3,7 @@ using RebarSampling.log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +24,8 @@ namespace RebarSampling
         /// <summary>
         /// 操作json序列化与反序列化
         /// </summary>
-        public static json JsonOpt = new json();
+        //public static json JsonOpt = new json();
+        public static NewtonJson JsonOpt = new NewtonJson();
         /// <summary>
         /// 操作sqlite文件读取
         /// </summary>
@@ -52,20 +54,20 @@ namespace RebarSampling
         public static List<ElementData> AllElementList = new List<ElementData>();
 
         public static WebServer webServer = new WebServer();
-        public static WebClient webClient=new WebClient();
+        public static WebClient webClient = new WebClient();
 
         public static MqttServerOpt mqttServer = new MqttServerOpt();
         public static MqttClientOpt mqttClient = new MqttClientOpt();
         /// <summary>
         /// detail分析用的三维数组，尺寸*工艺*分析项
         /// </summary>
-        public static object[,,] AllDetailData = new object[(int)EnumDetailTableColName.ONLY_CUT, (int)EnumDetailTableRowName.maxRowNum, (int)EnumDetailItem.maxItemNum];//先处理三个原材的
+        public static object[,,] AllDetailData = new object[(int)EnumDetailTableColName.ONLY_CUT, (int)EnumBangOrXian.maxRowNum, (int)EnumDetailItem.maxItemNum];//先处理三个原材的
         //public static object[,,] AllDetailData = new object[(int)EnumDetailTableRowName.maxRowNum, (int)EnumDetailTableColName.ONLY_CUT, (int)EnumDetailItem.maxItemNum];//先处理三个原材的
 
         /// <summary>
         /// detail分析除了原材以外的所有图形
         /// </summary>
-        public static List<KeyValuePair<EnumRebarPicType, GeneralDetailData>>[] AllDetailOtherData = new List<KeyValuePair<EnumRebarPicType, GeneralDetailData>>[(int)EnumDetailTableRowName.maxRowNum];
+        public static List<KeyValuePair<EnumRebarPicType, GeneralDetailData>>[] AllDetailOtherData = new List<KeyValuePair<EnumRebarPicType, GeneralDetailData>>[(int)EnumBangOrXian.maxRowNum];
         /// <summary>
         /// 读excel时，存储已存在的rebarType，放入list中
         /// </summary>
@@ -94,12 +96,48 @@ namespace RebarSampling
         /// </summary>
         public const int OriginalLength2 = 12000;
 
+        //public static int[] wareNum = new int[(int)EnumWareNumGroup.maxNum] { 48, 12, 6, 3 };
+
+        private static int[] warenum = new int[(int)EnumWareNumGroup.maxNum] /*{ 48,12,6,3}*/;
         /// <summary>
         /// 仓位数
         /// </summary>
-        public static readonly int[] wareNum = new int[(int)EnumWareNumGroup.maxNum] { 8, 4, 2, 1 };
+        public static int[] wareNum
+        {
+            get
+            {
+                switch (m_factoryType)
+                {
+                    case EnumFactoryType.Standard:
+                        warenum[(int)EnumWareNumGroup.EIGHT] = 48;
+                        warenum[(int)EnumWareNumGroup.FOUR] = 12;
+                        warenum[(int)EnumWareNumGroup.TWO] = 6;
+                        warenum[(int)EnumWareNumGroup.ONE] = 3;
+                        break;
+                    case EnumFactoryType.Reduction:
+                        warenum[(int)EnumWareNumGroup.EIGHT] = 48;
+                        warenum[(int)EnumWareNumGroup.FOUR] = 12;
+                        warenum[(int)EnumWareNumGroup.TWO] = 6;
+                        warenum[(int)EnumWareNumGroup.ONE] = 3;
+                        break;
+                    case EnumFactoryType.Experiment:
+                        warenum[(int)EnumWareNumGroup.EIGHT] = 8;
+                        warenum[(int)EnumWareNumGroup.FOUR] = 4;
+                        warenum[(int)EnumWareNumGroup.TWO] = 2;
+                        warenum[(int)EnumWareNumGroup.ONE] = 1;
+                        break;
+                }
+                return warenum;
+            }
+            set { warenum = value; }
+        }
+
         /// <summary>
-        /// 多直径分组包含直径种类数量，1，2，100(全包含)
+        /// 直径种类的中文描述，1~4种直径，5~种直径
+        /// </summary>
+        public static readonly string[] m_DiaType = new string[(int)EnumDiameterType.maxDiameterType] { "1~4种直径", "5~种直径" };
+        /// <summary>
+        /// 多直径分组包含直径种类数量，0(不考虑包含关系),1，2，100(全包含)
         /// </summary>
         public static readonly int m_inclueNum = 0;
         /// <summary>
@@ -110,6 +148,8 @@ namespace RebarSampling
         /// 仓位划分的数量区间，四种仓位，三个节点:15,50,100
         /// </summary>
         public static readonly int[] wareArea = new int[3] { 15, 50, 100 };
+
+
         /// <summary>
         /// 钢筋总数据库的名称
         /// </summary>
@@ -117,7 +157,28 @@ namespace RebarSampling
         /// <summary>
         /// 找不到图形编号的图形是否用默认图片代替
         /// </summary>
-        public static readonly bool m_showNoFindPic = true;
+        public static bool m_showNoFindPic = true;
+
+
+        /*************配置文件**************/
+        public static ConfigData CfgData { get; set; }
+
+        /// <summary>
+        /// 工厂类型，分为标配、低配、实验
+        /// </summary>
+        public static EnumFactoryType m_factoryType { get { return CfgData.Factorytype; } set { m_factoryType = value; } }
+        /// <summary>
+        /// Φ12直径钢筋归类于线材还是棒材，false为线材，true为棒材
+        /// </summary>
+        public static bool m_typeC12 { get { return CfgData.TypeC12; } set { m_typeC12 = value; } }
+        /// <summary>
+        /// Φ14直径钢筋归类于线材还是棒材，false为线材，true为棒材
+        /// </summary>
+        public static bool m_typeC14 { get { return CfgData.TypeC14; } set { m_typeC14 = value; } }
+
+        /*************配置文件**************/
+
+
 
         public static string[] sRebarAssemblyTypeName = new string[(int)EnumRebarAssemblyType.maxAssemblyNum]
             {
@@ -167,7 +228,7 @@ namespace RebarSampling
             "备注"
         };
 
-        public static string[] sDetailTableRowName = new string[(int)EnumDetailTableRowName.maxRowNum]
+        public static string[] sDetailTableRowName = new string[(int)EnumBangOrXian.maxRowNum]
         {
             "A6",
             "A8",
