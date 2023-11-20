@@ -13,7 +13,7 @@ namespace RebarSampling.GeneralWorkBill
         /// </summary>
         /// <param name="_rebarlist">排布在一根原材上的钢筋信息</param>
         /// <returns>json格式数据</returns>
-        public string CreateWorkBill(WorkBillMsg _msg, List<Rebar> _rebarlist)
+        public string CreateWorkBill(WorkBillMsg _msg, RebarOri _rebarlist)
         {
             //int shift = 1;//班次
             //int totalBatch = 100;//总批次
@@ -39,18 +39,18 @@ namespace RebarSampling.GeneralWorkBill
                                 + _msg.shift.ToString() + "_"
                                 //+ _msg.BatchMsg.totalBatch.ToString() + "_"
                                 //+ _msg.BatchMsg.curBatch.ToString();
-                                + _rebarlist[0].BatchMsg.totalBatch.ToString().PadLeft(3,'0') + "_"
-                                + _rebarlist[0].BatchMsg.curBatch.ToString().PadLeft(3,'0')+"-"
-                                + _rebarlist[0].BatchMsg.totalchildBatch.ToString().PadLeft(3, '0') + "_"
-                                + (_rebarlist[0].BatchMsg.curChildBatch+1).ToString().PadLeft(3, '0');
+                                + _rebarlist._list[0].BatchMsg.totalBatch.ToString().PadLeft(3,'0') + "_"
+                                + _rebarlist._list[0].BatchMsg.curBatch.ToString().PadLeft(3,'0')+"-"
+                                + _rebarlist._list[0].BatchMsg.totalchildBatch.ToString().PadLeft(3, '0') + "_"
+                                + (_rebarlist._list[0].BatchMsg.curChildBatch+1).ToString().PadLeft(3, '0');
             _workbill.SteelbarNo = _Date + "_"
                                 + _msg.shift.ToString() + "_"
                                 //+ _msg.BatchMsg.totalBatch.ToString() + "_"
                                 //+ _msg.BatchMsg.curBatch.ToString() + "_"
-                                + _rebarlist[0].BatchMsg.totalBatch.ToString().PadLeft(3,'0') + "_"
-                                + _rebarlist[0].BatchMsg.curBatch.ToString().PadLeft(3,'0') + "-"
-                                + _rebarlist[0].BatchMsg.totalchildBatch.ToString().PadLeft(3, '0') + "_"
-                                + (_rebarlist[0].BatchMsg.curChildBatch+1).ToString().PadLeft(3, '0') + "-"
+                                + _rebarlist._list[0].BatchMsg.totalBatch.ToString().PadLeft(3,'0') + "_"
+                                + _rebarlist._list[0].BatchMsg.curBatch.ToString().PadLeft(3,'0') + "-"
+                                + _rebarlist._list[0].BatchMsg.totalchildBatch.ToString().PadLeft(3, '0') + "_"
+                                + (_rebarlist._list[0].BatchMsg.curChildBatch+1).ToString().PadLeft(3, '0') + "-"
                                 + _msg.totalOriginal.ToString().PadLeft(3,'0') + "_"
                                 +( _msg.curOriginal+1).ToString().PadLeft(3,'0');
             _workbill.ProjectName = _msg.projectName;
@@ -58,12 +58,12 @@ namespace RebarSampling.GeneralWorkBill
             _workbill.Building = _msg.building;
             _workbill.Floor = _msg.floor;
             _workbill.Level = _msg.level;
-            _workbill.Diameter = _rebarlist[0].Diameter;
+            _workbill.Diameter = _rebarlist._list[0].Diameter;
             _workbill.Brand = _msg.brand;
             _workbill.Specification = _msg.specification;
             _workbill.OriginalLength = _msg.originLength;
             //_workbill.SteelbarList = _rebarlist;
-            foreach (var item in _rebarlist)
+            foreach (var item in _rebarlist._list)
             {
                 SingleRebarMsg msg = new SingleRebarMsg();
                 msg.shift = _msg.shift;
@@ -72,7 +72,7 @@ namespace RebarSampling.GeneralWorkBill
                 msg.BatchMsg = item.BatchMsg;
                 msg.totalOriginal = _msg.totalOriginal;
                 msg.curOriginal = _msg.curOriginal;
-                msg.curSingle = /*item.seriNo;*/ _rebarlist.IndexOf(item);
+                msg.curSingle = /*item.seriNo;*/ _rebarlist._list.IndexOf(item);
                 msg.wareMsg = item.WareMsg;
 
                 _workbill.SteelbarList.Add(CreateSingleRebarData(msg, item));

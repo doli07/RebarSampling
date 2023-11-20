@@ -267,7 +267,7 @@
     <Compile Include="Form5.Designer.cs">
       <DependentUpon>Form5.cs</DependentUpon>
     </Compile>
-    <Compile Include="GeneralAlgorithm\algorithm.cs" />
+    <Compile Include="Algorithm\algorithm.cs" />
     <Compile Include="Ejin\BookHelperArray.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

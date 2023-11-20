@@ -15,7 +15,7 @@ namespace RebarSampling
     public class graphics
     {
 
-        public static Bitmap PaintRebar(List<Rebar> _rebarlist)
+        public static Bitmap PaintRebar(RebarOri _rebarlist)
         {
             Bitmap bitmap = new Bitmap(650, 30);//新建一个bitmap，用于绘图
 
@@ -41,7 +41,7 @@ namespace RebarSampling
             Font _font = new Font("微软雅黑", fontsize, FontStyle.Regular);
             Brush _brush = new SolidBrush(Color.Green);
 
-            foreach (var item in _rebarlist)
+            foreach (var item in _rebarlist._list)
             {
                 _start = (int)((double)_lengthSum / (double)GeneralClass.OriginalLength2 * (double)maxPointX);
                 _end = (int)((double)(_lengthSum + item.length) / (double)GeneralClass.OriginalLength2 * (double)maxPointX);

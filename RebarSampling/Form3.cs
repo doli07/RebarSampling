@@ -211,7 +211,7 @@ namespace RebarSampling
                             string jsonstr = GeneralClass.WorkBillOpt.CreateWorkBill(wbMsg, aaa);
                             GeneralClass.jsonList.Add(jsonstr);
 
-                            _yuliao = GeneralClass.OriginalLength2 - aaa.Sum(t => t.length);//计算余料
+                            _yuliao = GeneralClass.OriginalLength2 - aaa._totalLength;//计算余料
                             _feiliao += (_yuliao < 300) ? _yuliao : 0;//短于300的余料当作废料
 
                             _rebarTao._rebarlist.Add(aaa);

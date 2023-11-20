@@ -17,7 +17,7 @@ namespace RebarSampling
             WareNumType = EnumWareNumGroup.NONE;
             BatchNo = 0;
             Diameter = 0;
-            _rebarlist=new List<List<Rebar>>();
+            _rebarlist=new List<RebarOri>();
         }
         public EnumDiameterType DiameterType { get; set; }
 
@@ -27,7 +27,7 @@ namespace RebarSampling
 
         public int Diameter { get; set; }
 
-        public List<List<Rebar>> _rebarlist { get; set; }
+        public List<RebarOri> _rebarlist { get; set; }
     }
 
     public struct BatchMsg

@@ -85,7 +85,45 @@ namespace RebarSampling
         public List<RebarData> _datalist { get; set; }
     }
 
+    /// <summary>
+    /// 钢筋原材，由多个小段rebar组成
+    /// </summary>
+    public class RebarOri
+    {
+        public RebarOri() 
+        {
+            this._list = new List<Rebar>();
+        }
+        /// <summary>
+        /// 剩余长度
+        /// </summary>
+        public int _lengthleft 
+        { 
+            get
+            {
+                if(this._list.Count!=0)
+                {
+                    return GeneralClass.OriginalLength2 - this._list.Sum(t => t.length);
 
+                }
+                else { return -1; }
+            }
+        }
+        /// <summary>
+        /// 当前小段总长
+        /// </summary>
+        public int _totalLength
+        {
+            get
+            {
+                return this._list.Sum(t => t.length);
+            }
+        }
+        /// <summary>
+        /// 钢筋小段的list
+        /// </summary>
+        public List<Rebar> _list { get; set; }
+    }
 
 
     /// <summary>
