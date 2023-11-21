@@ -21,8 +21,8 @@ namespace RebarSampling
         public static List<RebarOri> Taoliao(List<RebarData> _list, out int _totallength)
         {
             List<Rebar> _alllist = ListDescend(_list);//降序展开
-                                                      //List<Rebar> _alllist = ExpandList(_list);//展开
-                                                      //List<Rebar> _alllist = AscendList(_list);//升序展开
+            //List<Rebar> _alllist = ListExpand(_list);//展开
+            //List<Rebar> _alllist = ListAscend(_list);//升序展开
 
 
             _totallength = _alllist.Sum(t => t.length);//统计总长度
