@@ -20,38 +20,27 @@ namespace RebarSampling
         /// <returns>返回套料后的原材钢筋</returns>
         public static List<RebarOri> Taoliao(List<RebarData> _list, out int _totallength)
         {
-            List<Rebar> _alllist = DescendList(_list);//降序展开
+            List<Rebar> _alllist = ListDescend(_list);//降序展开
                                                       //List<Rebar> _alllist = ExpandList(_list);//展开
                                                       //List<Rebar> _alllist = AscendList(_list);//升序展开
 
 
             _totallength = _alllist.Sum(t => t.length);//统计总长度
 
-            List<RebarOri> _returnlist = Algorithm_FFD(_alllist);//FFD首次适应算法
+            //List<RebarOri> _returnlist = Algorithm_FFD(_alllist);//FFD首次适应算法
+            List<RebarOri> _returnlist = Algorithm_FFD_1(_alllist);//FFD首次适应算法，改进版
+
             //List<RebarOri> _returnlist = Algorithm_BFD(_alllist);//BFD最佳适应算法
 
             return _returnlist;
         }
-        //public static List<List<Rebar>> Taoliao(List<RebarData> _list, out int _totallength)
-        //{
-        //    List<Rebar> _alllist = DescendList(_list);//降序展开
-        //    //List<Rebar> _alllist = ExpandList(_list);//展开
-        //    //List<Rebar> _alllist = AscendList(_list);//升序展开
-
-        //    _totallength = _alllist.Sum(t => t.length);//统计总长度
-
-        //    List<List<Rebar>> _returnlist = Algorithm_FFD(_alllist);//FFD首次适应算法
-        //    //List<List<Rebar>> _returnlist = Algorithm_BFD(_alllist);//BFD最佳适应算法
-
-        //    return _returnlist;
-        //}
 
         /// <summary>
         /// 展开rebardata，并降序排列
         /// </summary>
         /// <param name="_list"></param>
         /// <returns></returns>
-        private static List<Rebar> DescendList(List<RebarData> _list)
+        private static List<Rebar> ListDescend(List<RebarData> _list)
         {
             List<Rebar> _alllist = new List<Rebar>();
             Rebar rebar = new Rebar();
@@ -77,7 +66,7 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_list"></param>
         /// <returns></returns>
-        private static List<Rebar> ExpandList(List<RebarData> _list)
+        private static List<Rebar> ListExpand(List<RebarData> _list)
         {
             List<Rebar> _alllist = new List<Rebar>();
             Rebar rebar = new Rebar();
@@ -101,7 +90,7 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_list"></param>
         /// <returns></returns>
-        private static List<Rebar> AscendList(List<RebarData> _list)
+        private static List<Rebar> ListAscend(List<RebarData> _list)
         {
             List<Rebar> _alllist = new List<Rebar>();
             Rebar rebar = new Rebar();
@@ -133,7 +122,7 @@ namespace RebarSampling
         private static List<RebarOri> Algorithm_FFD(List<Rebar> _alllist)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp =new RebarOri();
+            RebarOri _temp = new RebarOri();
 
             foreach (var item in _alllist)//取一根钢筋过来
             {
@@ -172,7 +161,7 @@ namespace RebarSampling
 
             return _returnlist;
         }
-        
+
 
         /// <summary>
         /// 最佳适应算法BFD（best fit），匹配升序
@@ -290,31 +279,133 @@ namespace RebarSampling
                 }
             }
 
-
+            CutTail(ref _returnlist);
             ////最后一根的尾料做处理
+            //bool _flag = false;
+
             //if (_returnlist.Last()._lengthleft > 3000)//如果最后一根的尾料超过3000的处理，3000以下的先不管
             //{
-            //    foreach (var item in _returnlist.Last()._list)
+            //    foreach (var item in _returnlist.Last()._list.ToArray())//_returnlist.Last()._list可能会修改，所以用toArray
             //    {
-            //        for
+            //        _flag = FindTwoRebarLeftMatch(item, ref _returnlist);
+            //        if (_flag)
+            //        {
+            //            GeneralClass.interactivityData?.printlog(1, "find match success!");
+            //            _returnlist.Last()._list.Remove(item);//塞成功了，则从总的list中去掉当前这个小段rebar
+            //        }
+
+            //    }
+            //    if(_returnlist.Last()._list.Count==0)
+            //    {
+            //        _returnlist.Remove(_returnlist.Last());//如果最后一个钢筋原材已经空了，则去掉
+
             //    }
             //}
 
             return _returnlist;
         }
 
+        private static void CutTail(ref List<RebarOri> _list)
+        {
+            //最后一根的尾料做处理
+            bool _flag = false;
 
-        //private static bool FindTwoRebarLeft()
-        //{
+            if (_list.Last()._lengthleft > 2000)//如果最后一根的尾料超过2000的处理，2000以下的先不管
+            {
+                foreach (var item in _list.Last()._list.ToArray())//_returnlist.Last()._list可能会修改，所以用toArray
+                {
+                    _flag = FindTwoRebarLeftMatch(item, ref _list);
+                    if (_flag)
+                    {
+                        GeneralClass.interactivityData?.printlog(1, "find match success!");
+                        _list.Last()._list.Remove(item);//塞成功了，则从总的list中去掉当前这个小段rebar
+                    }
 
-        //}
-        ///// <summary>
-        ///// 交换两根原材中的小段位置，插入一个小段
-        ///// </summary>
-        ///// <returns></returns>
-        //private static bool ExchangeJoin(Rebar _rebar, ref List<Rebar> _list1, ref List<Rebar> _list2)
-        //{
+                }
+                if (_list.Last()._list.Count == 0)
+                {
+                    _list.Remove(_list.Last());//如果最后一个钢筋原材已经空了，则去掉
 
-        //}
+                    CutTail(ref _list);//递归
+                }
+            }
+        }
+        /// <summary>
+        /// 在总的钢筋原材list中，从第一个到倒数第二个钢筋原材，遍历查找是否有可以塞得下当前小段rebar的两条原材
+        /// </summary>
+        /// <param name="_rebar"></param>
+        /// <param name="_returnlist"></param>
+        /// <returns></returns>
+        private static bool FindTwoRebarLeftMatch(Rebar _rebar, ref List<RebarOri> _returnlist)
+        {
+            RebarOri _temp1;
+            RebarOri _temp2;
+
+            for (int i = 0; i < _returnlist.Count - 1; i++)
+            {
+                _temp1 = _returnlist[i];
+                for (int j = i; j < _returnlist.Count - 1; j++)
+                {
+                    _temp2 = _returnlist[j];
+                    if ((_temp1._lengthleft + _temp2._lengthleft) > _rebar.length)
+                    {
+                        bool _flag = ExchangeJoin(_rebar, ref _temp1, ref _temp2);
+                        if (_flag)
+                        {
+                            GeneralClass.interactivityData?.printlog(1, "exchange success!");
+                            _returnlist[i] = _temp1;//修改的值再传回去
+                            _returnlist[j] = _temp2;
+                            return true;
+                        }
+                    }
+                }
+
+            }
+
+            return false;
+        }
+        /// <summary>
+        /// 交换两根原材中的小段位置，插入一个小段
+        /// 算法思路：
+        /// 1、将插入的小段与原本两个list合并为一个list
+        /// 2、问题简化为：如何把一堆数据分成和接近的两组
+        /// </summary>
+        /// <returns></returns>
+        private static bool ExchangeJoin(Rebar _rebar, ref RebarOri _ori1, ref RebarOri _ori2)
+        {
+            //先合并所有rebar成一个list
+            List<Rebar> _allrebar = new List<Rebar>();
+            _allrebar.AddRange(_ori1._list);
+            _allrebar.AddRange(_ori2._list);
+            _allrebar.Add(_rebar);
+
+            _allrebar = _allrebar.OrderByDescending(t => t.length).ToList();//降序排列
+
+            //分成和接近的两组
+            List<Rebar> _list1 = new List<Rebar>();
+            List<Rebar> _list2 = new List<Rebar>();
+
+            for (int i = 0; i < _allrebar.Count; i++)
+            {
+                if (_list1.Sum(t => t.length) <= _list2.Sum(t => t.length))
+                {
+                    _list1.Add(_allrebar[i]);
+                }
+                else
+                {
+                    _list2.Add(_allrebar[i]);
+                }
+            }
+
+            //如果分成两组的长度都没有超过原材长度，则分配成功
+            if (_list1.Sum(t => t.length) <= GeneralClass.OriginalLength2 && _list2.Sum(t => t.length) <= GeneralClass.OriginalLength2)
+            {
+                _ori1._list = _list1;//
+                _ori2._list = _list2;
+                return true;
+            }
+            else { return false; }
+
+        }
     }
 }
