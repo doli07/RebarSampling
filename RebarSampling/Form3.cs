@@ -26,12 +26,14 @@ namespace RebarSampling
 
             InitDataGridView();
             InitDataGridView9();
+            InitDataGridView11();
             InitTreeView();
             //InitCheckBox();
             //InitDgvTaoliao();
 
 
         }
+
 
 
 
@@ -73,19 +75,20 @@ namespace RebarSampling
         }
         private void InitDataGridView()
         {
-
-
             DataTable dt = new DataTable();
             dataGridView10.DataSource = dt;
             dataGridView8.DataSource = dt;
         }
 
-
-
-
-
-
-
+        private void InitDataGridView11()
+        {
+            //解决datagirdview11在加载大量数据时卡顿的bug，20231123
+            //在设置ＤataGridView 的AutoSizeColumnsMode以及AotuSizeRowsMode这两项时尽量选择None，不要AllCells,实在需要选择DisplayedCells
+            dataGridView11.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            dataGridView11.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView11.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            dataGridView11.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+        }
 
         private void ShowElementAddData(List<ElementDataFB> _fblist, DataGridView _dgv)
         {
@@ -222,7 +225,12 @@ namespace RebarSampling
         /// 套料之后的所有原材list
         /// </summary>
         private List<RebarTaoLiao> m_rebarTaoliaoList = new List<RebarTaoLiao>();
-        private void CreatWorkBillFromElementList(List<ElementBatch> _elementlist)
+        /// <summary>
+        /// 创建工单，并且更新dgv绑定的datatable
+        /// </summary>
+        /// <param name="_dt"></param>
+        /// <param name="_elementlist"></param>
+        private void CreatWorkBillFromElementList( ref DataTable _dt, List<ElementBatch> _elementlist)
         {
             WorkBillMsg wbMsg = new WorkBillMsg();      //工单信息
 
@@ -282,7 +290,7 @@ namespace RebarSampling
                     }
 
                     //直径种类，仓位，批次，直径，总数量，总长度，废料，利用率
-                    dt_wb.Rows.Add(diameterStr,
+                    _dt.Rows.Add(diameterStr,
                         GeneralClass.wareNum[(int)item.numGroup],
                         //_elementlist[i].IndexOf(item),
                         item.curBatch,
@@ -310,7 +318,7 @@ namespace RebarSampling
         /// <summary>
         /// 工单datatable
         /// </summary>
-        private static DataTable dt_wb = new DataTable();
+        //private static DataTable dt_wb = new DataTable();
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -322,7 +330,7 @@ namespace RebarSampling
             }
             GeneralClass.interactivityData?.printlog(1, "开始创建工单");
 
-            dt_wb = new DataTable();
+            DataTable dt_wb = new DataTable();
             dt_wb.Columns.Add("类型", typeof(string));
             dt_wb.Columns.Add("仓位", typeof(int));
             dt_wb.Columns.Add("批次", typeof(int));
@@ -340,7 +348,7 @@ namespace RebarSampling
 
             //CreatWorkBillFromElementList(_fewWorklist);//1~4种直径worklist
             //CreatWorkBillFromElementList(_multiWorklist);//5种以上直径worklist
-            CreatWorkBillFromElementList(_allbatch);
+            CreatWorkBillFromElementList(ref dt_wb, _allbatch);
 
             GeneralClass.interactivityData?.printlog(1, "创建工单完成");
 

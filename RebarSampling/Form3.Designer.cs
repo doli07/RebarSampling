@@ -37,9 +37,6 @@
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.dataGridView9 = new System.Windows.Forms.DataGridView();
             this.tabControl2 = new System.Windows.Forms.TabControl();
-            this.treeView3 = new System.Windows.Forms.TreeView();
-            this.treeView4 = new System.Windows.Forms.TreeView();
-            this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.treeView5 = new System.Windows.Forms.TreeView();
             this.tabPage5 = new System.Windows.Forms.TabPage();
@@ -58,6 +55,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView11 = new System.Windows.Forms.DataGridView();
             this.button2 = new System.Windows.Forms.Button();
+            this.treeView3 = new System.Windows.Forms.TreeView();
+            this.treeView4 = new System.Windows.Forms.TreeView();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.dataGridView7 = new System.Windows.Forms.DataGridView();
             this.button5 = new System.Windows.Forms.Button();
             this.dataGridView6 = new System.Windows.Forms.DataGridView();
@@ -177,33 +177,6 @@
             this.tabControl2.SelectedIndex = 0;
             this.tabControl2.Size = new System.Drawing.Size(308, 385);
             this.tabControl2.TabIndex = 4;
-            // 
-            // treeView3
-            // 
-            this.treeView3.Location = new System.Drawing.Point(62, 597);
-            this.treeView3.Name = "treeView3";
-            this.treeView3.Size = new System.Drawing.Size(46, 38);
-            this.treeView3.TabIndex = 0;
-            this.treeView3.Visible = false;
-            this.treeView3.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView3_AfterSelect);
-            // 
-            // treeView4
-            // 
-            this.treeView4.Location = new System.Drawing.Point(131, 597);
-            this.treeView4.Name = "treeView4";
-            this.treeView4.Size = new System.Drawing.Size(46, 38);
-            this.treeView4.TabIndex = 0;
-            this.treeView4.Visible = false;
-            this.treeView4.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView4_AfterSelect);
-            // 
-            // treeView1
-            // 
-            this.treeView1.Location = new System.Drawing.Point(197, 597);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(46, 38);
-            this.treeView1.TabIndex = 0;
-            this.treeView1.Visible = false;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // tabPage3
             // 
@@ -365,8 +338,6 @@
             // 
             // dataGridView11
             // 
-            this.dataGridView11.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGridView11.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView11.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView11.Location = new System.Drawing.Point(8, 52);
             this.dataGridView11.Name = "dataGridView11";
@@ -388,6 +359,33 @@
             this.button2.Text = "生成工单";
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // treeView3
+            // 
+            this.treeView3.Location = new System.Drawing.Point(62, 597);
+            this.treeView3.Name = "treeView3";
+            this.treeView3.Size = new System.Drawing.Size(46, 38);
+            this.treeView3.TabIndex = 0;
+            this.treeView3.Visible = false;
+            this.treeView3.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView3_AfterSelect);
+            // 
+            // treeView4
+            // 
+            this.treeView4.Location = new System.Drawing.Point(131, 597);
+            this.treeView4.Name = "treeView4";
+            this.treeView4.Size = new System.Drawing.Size(46, 38);
+            this.treeView4.TabIndex = 0;
+            this.treeView4.Visible = false;
+            this.treeView4.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView4_AfterSelect);
+            // 
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(197, 597);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(46, 38);
+            this.treeView1.TabIndex = 0;
+            this.treeView1.Visible = false;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // dataGridView7
             // 

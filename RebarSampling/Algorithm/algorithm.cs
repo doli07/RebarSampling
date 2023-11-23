@@ -317,7 +317,7 @@ namespace RebarSampling
                     _flag = FindTwoRebarLeftMatch(item, ref _list);
                     if (_flag)
                     {
-                        GeneralClass.interactivityData?.printlog(1, "find match success!");
+                        //GeneralClass.interactivityData?.printlog(1, "find match success!");
                         _list.Last()._list.Remove(item);//塞成功了，则从总的list中去掉当前这个小段rebar
                     }
 
@@ -352,7 +352,7 @@ namespace RebarSampling
                         bool _flag = ExchangeJoin(_rebar, ref _temp1, ref _temp2);
                         if (_flag)
                         {
-                            GeneralClass.interactivityData?.printlog(1, "exchange success!");
+                            //GeneralClass.interactivityData?.printlog(1, "exchange success!");
                             _returnlist[i] = _temp1;//修改的值再传回去
                             _returnlist[j] = _temp2;
                             return true;
