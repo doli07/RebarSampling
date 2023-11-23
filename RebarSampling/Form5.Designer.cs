@@ -79,10 +79,10 @@
             this.radioButton2.AutoSize = true;
             this.radioButton2.Location = new System.Drawing.Point(30, 59);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(88, 19);
+            this.radioButton2.Size = new System.Drawing.Size(184, 19);
             this.radioButton2.TabIndex = 1;
             this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "低配工厂";
+            this.radioButton2.Text = "无人工厂(48/24/12/6)";
             this.radioButton2.UseVisualStyleBackColor = true;
             // 
             // radioButton1

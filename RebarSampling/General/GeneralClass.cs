@@ -116,9 +116,9 @@ namespace RebarSampling
                         break;
                     case EnumFactoryType.Reduction:
                         warenum[(int)EnumWareNumGroup.EIGHT] = 48;
-                        warenum[(int)EnumWareNumGroup.FOUR] = 12;
-                        warenum[(int)EnumWareNumGroup.TWO] = 6;
-                        warenum[(int)EnumWareNumGroup.ONE] = 3;
+                        warenum[(int)EnumWareNumGroup.FOUR] = 24;
+                        warenum[(int)EnumWareNumGroup.TWO] = 12;
+                        warenum[(int)EnumWareNumGroup.ONE] = 6;
                         break;
                     case EnumFactoryType.Experiment:
                         warenum[(int)EnumWareNumGroup.EIGHT] = 8;

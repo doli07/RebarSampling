@@ -84,7 +84,7 @@
             this.treeView1.FullRowSelect = true;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(297, 430);
+            this.treeView1.Size = new System.Drawing.Size(297, 363);
             this.treeView1.TabIndex = 5;
             this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -96,9 +96,9 @@
             this.columnHeader2});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 595);
+            this.listView1.Location = new System.Drawing.Point(0, 520);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(297, 94);
+            this.listView1.Size = new System.Drawing.Size(297, 169);
             this.listView1.TabIndex = 12;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -298,9 +298,9 @@
             this.groupBox1.Controls.Add(this.checkedListBox1);
             this.groupBox1.Controls.Add(this.checkBox3);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 430);
+            this.groupBox1.Location = new System.Drawing.Point(0, 363);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(297, 165);
+            this.groupBox1.Size = new System.Drawing.Size(297, 157);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             // 

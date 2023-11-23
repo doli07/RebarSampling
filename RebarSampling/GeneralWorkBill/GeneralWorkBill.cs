@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RebarSampling
 {
     /// <summary>
-    /// 套料之后的钢筋rebar列表
+    /// 套料之后的钢筋原材rebarOri列表
     /// </summary>
     public class RebarTaoLiao
     {
@@ -17,17 +17,28 @@ namespace RebarSampling
             WareNumType = EnumWareNumGroup.NONE;
             BatchNo = 0;
             Diameter = 0;
-            _rebarlist=new List<RebarOri>();
+            _rebarOriList=new List<RebarOri>();
         }
+        /// <summary>
+        /// 直径分组类型，1~4种/5种以上
+        /// </summary>
         public EnumDiameterType DiameterType { get; set; }
-
+        /// <summary>
+        /// 料仓类型，8/4/2/1仓
+        /// </summary>
         public EnumWareNumGroup WareNumType { get; set; }
-
+        /// <summary>
+        /// 批次
+        /// </summary>
         public int BatchNo { get; set; } 
-
+        /// <summary>
+        /// 直径
+        /// </summary>
         public int Diameter { get; set; }
-
-        public List<RebarOri> _rebarlist { get; set; }
+        /// <summary>
+        /// 钢筋原材list
+        /// </summary>
+        public List<RebarOri> _rebarOriList { get; set; }
     }
 
     public struct BatchMsg

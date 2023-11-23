@@ -7,6 +7,49 @@ using System.Threading.Tasks;
 
 namespace RebarSampling
 {
+
+    #region ElementDadBatch大的构件批（按直径种类包含关系分组，不考虑数量仓位分区）
+    /// <summary>
+    /// 大构件批，里面为直径种类具有包含关系的构件批，不考虑数量仓位分区
+    /// </summary>
+    public class ElementDadBatch
+    {
+        public ElementDadBatch()
+        {
+            this.batchlist = new List<ElementBatch>();
+        }
+        public List<EnumRebarBang> diameterList
+        {
+            get
+            {
+                List<EnumRebarBang> _list = new List<EnumRebarBang>();
+
+                if (this.batchlist.Count != 0)
+                {
+                    foreach (var item in this.batchlist)
+                    {
+                        _list.AddRange(item.diameterList);//汇总
+                    }
+                    _list = _list.Distinct().OrderBy(t => t).ToList();//去除重复、并按照升序排序
+                }
+                return _list;
+            }
+        }
+
+        public List<ElementBatch> batchlist { get; set; }
+        /// <summary>
+        /// 查找当前大批与其他大批有几种直径是相同的
+        /// </summary>
+        /// <param name="_batch">目标大批</param>
+        /// <param name="_sameNum">相同直径的种类</param>
+        /// <returns></returns>
+        public bool IfHaveSameDia(ElementDadBatch _dadBatch, int _sameNum)
+        {
+            return (this.diameterList.Intersect(_dadBatch.diameterList).ToList().Count == _sameNum) ? true : false;//求交集用intersect
+        }
+    }
+    #endregion
+
     #region ElementChildBatch构件子批（按直径分）
     public class ElementChildBatch
     {
@@ -72,6 +115,28 @@ namespace RebarSampling
         /// </summary>
         public int curBatch { get; set; }
         /// <summary>
+        /// 当前批次的仓位分类，一般来说跟批次内构件一致
+        /// </summary>
+        public EnumWareNumGroup numGroup
+        {
+            get
+            {
+                if (this.elementData.Count != 0)
+                {
+                    if (this.elementData.First().numGroup != this.elementData.Last().numGroup)
+                    {
+                        GeneralClass.interactivityData?.printlog(1, "本批次不同构件的仓位分类不一致，请检查");
+                        return EnumWareNumGroup.NONE;
+                    }
+                    else
+                    {
+                        return this.elementData.First().numGroup;
+                    }
+                }
+                else { return EnumWareNumGroup.NONE; }
+            }
+        }
+        /// <summary>
         /// 构件list
         /// </summary>
         public List<ElementDataFB> elementData { get; set; }
@@ -83,39 +148,85 @@ namespace RebarSampling
             get
             {
                 List<ElementChildBatch> _list = new List<ElementChildBatch>();
-                ElementChildBatch _child =new ElementChildBatch();
+                ElementChildBatch _child = new ElementChildBatch();
 
-                List<GroupbyDiaWithLength> _group=new List<GroupbyDiaWithLength>();
+                List<GroupbyDiaWithLength> _group = new List<GroupbyDiaWithLength>();
 
                 foreach (var item in this.elementData)
                 {
-                    foreach(var iii in item.diameterGroup)
+                    foreach (var iii in item.diameterGroup)
                     {
                         _group.Add(iii);//先把所有的diaGroup提取出来
                     }
                 }
 
-                var _newgroup = _group.GroupBy(t=>t._diameter).ToList();
+                var _newgroup = _group.GroupBy(t => t._diameter).ToList();
                 foreach (var eee in _newgroup)
                 {
                     //elementDataBZ.diameterList.Add((EnumRebarBang)System.Enum.Parse(typeof(EnumRebarBang), "BANG_C" + item._diameter.ToString()));//将直径转为enum
                     _child = new ElementChildBatch();
                     _child._diameter = (EnumRebarBang)System.Enum.Parse(typeof(EnumRebarBang), "BANG_C" + eee.Key.ToString());//将直径转为enum
                     var _gg = eee.ToList();
-                    foreach(var g in _gg)
+                    foreach (var g in _gg)
                     {
                         _child._list.AddRange(g._datalist);
                     }
-                    _child.totalChildBatch= _newgroup.Count;//总的子批次
+                    _child.totalChildBatch = _newgroup.Count;//总的子批次
                     _list.Add(_child);
                 }
-                _list= _list.OrderBy(t=>t._diameter).ToList();
+                _list = _list.OrderBy(t => t._diameter).ToList();
                 foreach (var item in _list)
                 {
                     item.curChildBatch = _list.IndexOf(item);//当前子批号
                 }
 
                 return _list;
+            }
+        }
+
+        /// <summary>
+        /// 判断本构件与_diaList汇总的直径种类不超过4个
+        /// </summary>
+        /// <param name="_list"></param>
+        /// <returns></returns>
+        public bool IfIncludeUnderFour(List<EnumRebarBang> _diaList)
+        {
+            if (this.diameterList.Count > 4 || _diaList.Count > 4)//如果本构件批与_diaList所包含的直径种类大于4，则返回false
+            {
+                return false;
+            }
+            if (this.diameterList.Count != 0 && _diaList.Count != 0)//均不为空
+            {
+                List<EnumRebarBang> _list = new List<EnumRebarBang>();
+
+                _list.AddRange(this.diameterList);
+                _list.AddRange(_diaList);//汇总
+
+                var _newlist = _list.Distinct().ToList();//去除重复
+
+                return (_newlist.Count > 4) ? false : true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool IfIncludeby(List<EnumRebarBang> _list)
+        {
+            if (this.diameterList.Count != 0 && _list.Count != 0)//均不为空
+            {
+                foreach (var item in this.diameterList)
+                {
+                    if (!_list.Exists(t => t == item))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

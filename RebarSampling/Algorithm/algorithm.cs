@@ -326,7 +326,7 @@ namespace RebarSampling
                 {
                     _list.Remove(_list.Last());//如果最后一个钢筋原材已经空了，则去掉
 
-                    CutTail(ref _list);//递归
+                    //CutTail(ref _list);//递归，20231123暂不加，太卡了
                 }
             }
         }
@@ -359,9 +359,7 @@ namespace RebarSampling
                         }
                     }
                 }
-
             }
-
             return false;
         }
         /// <summary>

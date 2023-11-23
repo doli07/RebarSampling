@@ -133,135 +133,177 @@ namespace RebarSampling
             _dgv.Columns[3].DefaultCellStyle.Format = "0.0";          //
         }
 
-
-        private List<RebarTaoLiao> m_rebarTaoliaoList = new List<RebarTaoLiao>();
-        private void CreatWorkBillFromElementList(List<ElementBatch>[] _elementlist)
+        /// <summary>
+        /// 将所有的构件批（batch）进行分组排产
+        /// 排产规则：
+        /// 1、不同料仓规格的（8/4/2/1/）可以混批排产；
+        /// 2、优先根据直径种类来排产，相同直径组合的不管8仓还是4仓可以混仓加工；
+        /// 3、前后批的直径种类最多只替换一种，以满足套丝机切换直径的频次尽可能少的原则
+        /// 4、考虑上料便利性，前后批同一种直径的衔接上料
+        /// </summary>
+        private List<ElementBatch> BatchSortAndGroup()
         {
-            WorkBillMsg wbMsg = new WorkBillMsg();      //工单信息
-            //SingleRebarMsg srMsg = new SingleRebarMsg();//单段钢筋信息
-            //List<RebarData> _list = new List<RebarData>();
-            //List<GroupbyDiaWithLength> _group = new List<GroupbyDiaWithLength>();
+            List<ElementBatch> _allBatch = new List<ElementBatch>();
+            List<ElementDadBatch> _dadBatchList = new List<ElementDadBatch>();//大批的定义
 
-            //m_rebarTaoliaoList.Clear(); 
-            RebarTaoLiao _rebarTao = new RebarTaoLiao();
-
-            for (int i = 0; i < (int)EnumWareNumGroup.maxNum; i++)/*仓*/
+            foreach (var item in _fewWorklist)
             {
-                foreach (var item in _elementlist[i])/*批次*/
+                _allBatch.AddRange(item);
+            }
+            //foreach (var item in _multiWorklist)
+            //{
+            //    _allBatch.AddRange(item);
+            //}
+
+            //先按照直径种类的包含关系分组
+            bool bUse = false;
+            foreach (var item in _allBatch)
+            {
+                if (_dadBatchList.Count == 0)//如果大批是空的，则新建一个
                 {
-                    //_group = new List<GroupbyDiaWithLength>();
-
-                    //foreach (var iii in item.elementData)/*构件包*/
-                    //{
-                    //    foreach (var ttt in iii.diameterGroup)/*直径分组*/
-                    //    {
-                    //        _group.Add(ttt);//汇总一起
-                    //    }
-                    //}
-
-                    item.totalBatch = _elementlist[i].Count;
-                    item.curBatch = _elementlist[i].IndexOf(item);
-
-
-                    //var _newgroup = _group.GroupBy(x => x._diameter).ToList();//在一个批次内部，按照直径分类
-                    foreach (var eee in item.childBatchList)       /*子批次，不同直径*/
+                    ElementDadBatch _dadBatch = new ElementDadBatch();
+                    _dadBatch.batchlist.Add(item);
+                    _dadBatchList.Add(_dadBatch);
+                }
+                else
+                {
+                    bUse = false;
+                    foreach (var ttt in _dadBatchList.ToArray())
                     {
-                        _rebarTao = new RebarTaoLiao();//套料后的
-
-                        //var _grouplist = eee.ToList();
-
-                        //_list.Clear();
-                        //foreach (var mmm in _grouplist)
-                        //{
-                        //    _list.AddRange(mmm._datalist);//准备好rebardata的list，准备进行长度套料
-                        //}
-                        //foreach (var kkk in _list)//修改curChildBatch
-                        //{
-                        //    BatchMsg batchmsg = new BatchMsg();
-                        //    batchmsg = kkk.BatchMsg;
-                        //    batchmsg.curChildBatch = _newgroup.IndexOf(eee);//修改完，再存回去
-                        //    kkk.BatchMsg = item.batchMsg;
-                        //}
-
-                        //eee.totalChildBatch=item.childBatchList.Count;
-                        //eee.curChildBatch = item.childBatchList.IndexOf(eee);
-
-                        int totallength = 0;
-                        /*长度套料后生成的钢筋原材list*/
-                        var _newlist = Algorithm.Taoliao(eee._list, out totallength);//套料时顺便算一下总长度
-
-                        //double _yuliao = (double)(_newlist.Count * GeneralClass.OriginalLength2) - (double)totallength;
-                        double _yuliao = 0;
-                        double _feiliao = 0;
-
-                        foreach (var aaa in _newlist)
+                        if (item.IfIncludeUnderFour(ttt.diameterList))//如果当前批的直径种类能够包含进大批，则塞入大批
                         {
-                            wbMsg.shift = 1;
-                            wbMsg.projectName = "光谷国际社区";
-                            wbMsg.block = "A";
-                            wbMsg.building = "06D";
-                            wbMsg.floor = "01F";
-                            wbMsg.level = "C";//钢筋级别
-                            wbMsg.brand = "鄂钢";//厂商
-                            wbMsg.specification = "HRB400";//规格型号
-                            wbMsg.originLength = GeneralClass.OriginalLength2;
-                            wbMsg.totalOriginal = _newlist.Count;//总的原材根数
-                            wbMsg.curOriginal = _newlist.IndexOf(aaa);//当前的原材流水号
-
-                            string jsonstr = GeneralClass.WorkBillOpt.CreateWorkBill(wbMsg, aaa);
-                            GeneralClass.jsonList.Add(jsonstr);
-
-                            _yuliao = GeneralClass.OriginalLength2 - aaa._totalLength;//计算余料
-                            _feiliao += (_yuliao < 300) ? _yuliao : 0;//短于300的余料当作废料
-
-                            _rebarTao._rebarlist.Add(aaa);
+                            ttt.batchlist.Add(item);
+                            bUse = true;
+                            break;
                         }
-                        //更新dgv11
-                        string diameterStr = "";
-                        if (item./*elementData[0].*/diameterList.Count > 4)
-                        {
-                            diameterStr = GeneralClass.m_DiaType[(int)EnumDiameterType.MULTI];
-                            _rebarTao.DiameterType = EnumDiameterType.MULTI;
-                        }
-                        else
-                        {
-                            diameterStr = GeneralClass.m_DiaType[(int)EnumDiameterType.FEW];
-                            _rebarTao.DiameterType = EnumDiameterType.FEW;
-                        }
-                        //else if (item[0].diameterList.Count == 2)
-                        //{
-                        //    diameterStr = "两直径";
-                        //    _rebarTao.DiameterType = EnumDiameterType.TWO;
-                        //}
-                        //else
-                        //{
-                        //    diameterStr = "单直径";
-                        //    _rebarTao.DiameterType = EnumDiameterType.ONE;
-                        //}
-
-                        //直径种类，仓位，批次，直径，总数量，总长度，废料，利用率
-                        dt_wb.Rows.Add(diameterStr,
-                            GeneralClass.wareNum[i],
-                            //_elementlist[i].IndexOf(item),
-                            item.curBatch,
-                            "Φ" + eee._diameter.ToString().Substring(6, 2),
-                            _newlist.Count,
-                            (double)totallength / 1000,
-                            _feiliao / 1000,
-                            (double)totallength / (double)(_newlist.Count * GeneralClass.OriginalLength2));
-
-                        //更新套料后的rebarlist
-                        _rebarTao.WareNumType = (EnumWareNumGroup)i;
-                        _rebarTao.BatchNo = /*_elementlist[i].IndexOf(item)*/item.curBatch;
-                        _rebarTao.Diameter =Convert.ToInt32( eee._diameter.ToString().Substring(6,2));
-
-                        m_rebarTaoliaoList.Add(_rebarTao);
+                    }
+                    if (!bUse)//没有匹配的，则新建一个大批
+                    {
+                        ElementDadBatch _dadBatch = new ElementDadBatch();
+                        _dadBatch.batchlist.Add(item);
+                        _dadBatchList.Add(_dadBatch);
 
                     }
-
-
                 }
             }
+
+            //再对大构件批进行前后批的排列，保证相邻批次间最多只切换一个直径（格雷码排序）
+            for (int i = 0; i < _dadBatchList.Count - 1; i++)
+            {
+                for (int j = i + 1; j < _dadBatchList.Count; j++)
+                {
+                    if (_dadBatchList[i].IfHaveSameDia(_dadBatchList[j], 3))
+                    {
+                        //交换j与i+1的位置
+                        ElementDadBatch temp = _dadBatchList[i + 1];
+                        _dadBatchList[i + 1] = _dadBatchList[j];
+                        _dadBatchList[j] = temp;
+                    }
+                }
+            }
+
+            //重新给_allBatch数据
+            _allBatch.Clear();
+            foreach (var item in _dadBatchList)
+            {
+                _allBatch.AddRange(item.batchlist);
+            }
+
+            //把多直径的补上
+            foreach (var item in _multiWorklist)
+            {
+                _allBatch.AddRange(item);
+            }
+
+            return _allBatch;
+
+        }
+        /// <summary>
+        /// 套料之后的所有原材list
+        /// </summary>
+        private List<RebarTaoLiao> m_rebarTaoliaoList = new List<RebarTaoLiao>();
+        private void CreatWorkBillFromElementList(List<ElementBatch> _elementlist)
+        {
+            WorkBillMsg wbMsg = new WorkBillMsg();      //工单信息
+
+            RebarTaoLiao _rebarTao = new RebarTaoLiao();
+
+            //for (int i = 0; i < (int)EnumWareNumGroup.maxNum; i++)/*仓*/
+            //{
+            foreach (var item in _elementlist)/*批次*/
+            {
+                item.totalBatch = _elementlist.Count;
+                item.curBatch = _elementlist.IndexOf(item);
+
+                foreach (var eee in item.childBatchList)       /*子批次，不同直径*/
+                {
+                    _rebarTao = new RebarTaoLiao();//套料后的
+
+                    int totallength = 0;
+                    /*长度套料后生成的钢筋原材list*/
+                    var _newlist = Algorithm.Taoliao(eee._list, out totallength);//套料时顺便算一下总长度
+
+                    double _yuliao = 0;
+                    double _feiliao = 0;
+
+                    foreach (var aaa in _newlist)
+                    {
+                        wbMsg.shift = 1;
+                        wbMsg.projectName = "光谷国际社区";
+                        wbMsg.block = "A";
+                        wbMsg.building = "06D";
+                        wbMsg.floor = "01F";
+                        wbMsg.level = "C";//钢筋级别
+                        wbMsg.brand = "鄂钢";//厂商
+                        wbMsg.specification = "HRB400";//规格型号
+                        wbMsg.originLength = GeneralClass.OriginalLength2;
+                        wbMsg.totalOriginal = _newlist.Count;//总的原材根数
+                        wbMsg.curOriginal = _newlist.IndexOf(aaa);//当前的原材流水号
+
+                        string jsonstr = GeneralClass.WorkBillOpt.CreateWorkBill(wbMsg, aaa);
+                        GeneralClass.jsonList.Add(jsonstr);
+
+                        _yuliao = aaa._lengthleft;//计算余料
+                        _feiliao += (_yuliao < 300) ? _yuliao : 0;//短于300的余料当作废料
+
+                        _rebarTao._rebarOriList.Add(aaa);
+                    }
+                    //更新dgv11
+                    string diameterStr = "";
+                    if (item./*elementData[0].*/diameterList.Count > 4)
+                    {
+                        diameterStr = GeneralClass.m_DiaType[(int)EnumDiameterType.MULTI];
+                        _rebarTao.DiameterType = EnumDiameterType.MULTI;
+                    }
+                    else
+                    {
+                        diameterStr = GeneralClass.m_DiaType[(int)EnumDiameterType.FEW];
+                        _rebarTao.DiameterType = EnumDiameterType.FEW;
+                    }
+
+                    //直径种类，仓位，批次，直径，总数量，总长度，废料，利用率
+                    dt_wb.Rows.Add(diameterStr,
+                        GeneralClass.wareNum[(int)item.numGroup],
+                        //_elementlist[i].IndexOf(item),
+                        item.curBatch,
+                        "Φ" + eee._diameter.ToString().Substring(6, 2),
+                        _newlist.Count,
+                        (double)totallength / 1000,
+                        _feiliao / 1000,
+                        (double)totallength / (double)(_newlist.Count * GeneralClass.OriginalLength2));
+
+                    //更新套料后的rebarlist
+                    _rebarTao.WareNumType = item.numGroup;
+                    _rebarTao.BatchNo = /*_elementlist[i].IndexOf(item)*/item.curBatch;
+                    _rebarTao.Diameter = Convert.ToInt32(eee._diameter.ToString().Substring(6, 2));
+
+                    m_rebarTaoliaoList.Add(_rebarTao);
+
+                }
+
+
+            }
+            //}
 
         }
 
@@ -294,15 +336,13 @@ namespace RebarSampling
             GeneralClass.jsonList.Clear();
             m_rebarTaoliaoList.Clear();
 
-            //CreatWorkBillFromElementList(_oneWorklist);//单直径worklist
-            //CreatWorkBillFromElementList(_twoWorklist);//双直径worklist
-            //CreatWorkBillFromElementList(_threeWorklist);//多直径worklist
-            //CreatWorkBillFromElementList(_fourWorklist);//多直径worklist
-            CreatWorkBillFromElementList(_fewWorklist);//1~4种直径worklist
-            CreatWorkBillFromElementList(_multiWorklist);//5种以上直径worklist
+            var _allbatch = BatchSortAndGroup();
+
+            //CreatWorkBillFromElementList(_fewWorklist);//1~4种直径worklist
+            //CreatWorkBillFromElementList(_multiWorklist);//5种以上直径worklist
+            CreatWorkBillFromElementList(_allbatch);
 
             GeneralClass.interactivityData?.printlog(1, "创建工单完成");
-
 
             dataGridView11.DataSource = dt_wb;
             //dataGridView11.Columns[1].DefaultCellStyle.Format = "0.000";        //
@@ -431,7 +471,7 @@ namespace RebarSampling
             new List<List<ElementDataFB>>(),
             new List<List<ElementDataFB>>()};//分组后的构件包，按照数量仓位分组
         /// <summary>
-        /// 5种直径及以上的构件包分组后的工单，分三个维度：[]维度代表仓位区间，list(外)维度代表小的批次，List(内)维度代表所包含的构件包list
+        /// 5种直径及以上的构件包分组后的工单，分两个维度：[]维度代表仓位区间，list维度代表构件批的list
         /// </summary>
         //private static List<List<ElementDataFB>>[] _multiWorklist = new List<List<ElementDataFB>>[(int)EnumWareNumGroup.maxNum] {
         //    new List<List<ElementDataFB>>(),
@@ -445,7 +485,7 @@ namespace RebarSampling
             new List<ElementBatch>()};//分组后的构件包，按照数量仓位分组
 
         /// <summary>
-        /// 1~4种直径的构件包分组后的工单，分三个维度：[]维度代表仓位区间，list(外)维度代表小的批次，List(内)维度代表所包含的构件包list
+        /// 1~4种直径的构件包分组后的工单，分两个维度：[]维度代表仓位区间，list维度代表构件批的list
         /// </summary>
         //private static List<List<ElementDataFB>>[] _fewWorklist = new List<List<ElementDataFB>>[(int)EnumWareNumGroup.maxNum] {
         //    new List<List<ElementDataFB>>(),
@@ -459,10 +499,10 @@ namespace RebarSampling
             new List<ElementBatch>()};//分组后的构件包，按照数量仓位分组
 
 
-        private static List<ElementDataFB> _oneShowlist = new List<ElementDataFB>();
-        private static List<ElementDataFB> _twoShowlist = new List<ElementDataFB>();
-        private static List<ElementDataFB> _threeShowlist = new List<ElementDataFB>();
-        private static List<ElementDataFB> _fourShowlist = new List<ElementDataFB>();
+        //private static List<ElementDataFB> _oneShowlist = new List<ElementDataFB>();
+        //private static List<ElementDataFB> _twoShowlist = new List<ElementDataFB>();
+        //private static List<ElementDataFB> _threeShowlist = new List<ElementDataFB>();
+        //private static List<ElementDataFB> _fourShowlist = new List<ElementDataFB>();
         private static List<ElementDataFB> _multiShowlist = new List<ElementDataFB>();
         private static List<ElementDataFB> _fewShowlist = new List<ElementDataFB>();
 
@@ -544,6 +584,7 @@ namespace RebarSampling
                                 {
                                     _multiWorklist[j][m].elementData.Add(fb_diameterGroup[i, j][k]);
                                     bUse = true;
+                                    break;
                                 }
                             }
                             if (!bUse)//如果匹配不了现有的批次，则建立新的小批次
@@ -591,6 +632,7 @@ namespace RebarSampling
                                 {
                                     _fewWorklist[j][m].elementData.Add(fb_diameterGroup[i, j][k]);
                                     bUse = true;
+                                    break;//匹配上了，则break
                                 }
                             }
                             if (!bUse)//如果匹配不了现有的批次，则建立新的小批次
@@ -603,43 +645,6 @@ namespace RebarSampling
                     }
                 }
             }
-
-            //for (int i = 3; i >= 0; i--)//1~4种直径的，采用倒序，先排4种直径的
-            //{
-            //    for (int j = 0; j < (int)EnumWareNumGroup.maxNum; j++)
-            //    {
-            //        if (fb_diameterGroup[i, j].Count == 0) continue;//直径种类太多的一般没有，例如5种以上的
-
-            //        for (int k = 0; k < fb_diameterGroup[i, j].Count; k++)
-            //        {
-            //            if (_fewWorklist[j].Count == 0)//刚开始没有元素
-            //            {
-            //                List<ElementDataFB> temp = new List<ElementDataFB> { fb_diameterGroup[i, j][0] };
-            //                _fewWorklist[j].Add(temp);//将第一个构件包存入，建立第一个小批次
-            //            }
-            //            else
-            //            {
-            //                bool bUse = false;
-            //                for (int m = 0; m < _fewWorklist[j].Count; m++)//是否能够匹配现有的小批次，m为批次
-            //                {
-            //                    //条件一：至少包含一种直径，条件二：螺距类型一致，条件三：仓位未满
-            //                    if (fb_diameterGroup[i, j][k].IfIncludeby(_fewWorklist[j][m][0]) &&
-            //                        _fewWorklist[j][m].Count < GeneralClass.wareNum[j] &&
-            //                      (GeneralClass.m_checkPitchType ? (fb_diameterGroup[i, j][k].diameterPitchType == _fewWorklist[j][m][0].diameterPitchType) : true))//根据直径种类的包含关系分组，同时考虑仓位是否满仓
-            //                    {
-            //                        _fewWorklist[j][m].Add(fb_diameterGroup[i, j][k]);
-            //                        bUse = true;
-            //                    }
-            //                }
-            //                if (!bUse)//如果匹配不了现有的批次，则建立新的小批次
-            //                {
-            //                    List<ElementDataFB> temp = new List<ElementDataFB> { fb_diameterGroup[i, j][k] };
-            //                    _fewWorklist[j].Add(temp);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
             #endregion
 
             #region 再处理单直径的
@@ -1449,9 +1454,9 @@ namespace RebarSampling
                     var item = m_rebarTaoliaoList.Where(t => t.DiameterType == _type && t.WareNumType == _ware && t.BatchNo == _batchNo && t.Diameter == _diameter);
                     foreach (var ttt in item.ToList())
                     {
-                        foreach (var eee in ttt._rebarlist)
+                        foreach (var eee in ttt._rebarOriList)
                         {
-                            int _index = ttt._rebarlist.IndexOf(eee);
+                            int _index = ttt._rebarOriList.IndexOf(eee);
                             dt.Rows.Add(_index, graphics.PaintRebar(eee));
                         }
                     }
