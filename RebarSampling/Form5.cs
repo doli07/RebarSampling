@@ -50,6 +50,20 @@ namespace RebarSampling
                 checkBox1.Text = GeneralClass.CfgData.TypeC12 ? "Φ12-棒材" : "Φ12-线材";
                 checkBox2.Checked = GeneralClass.CfgData.TypeC14;
                 checkBox2.Text = GeneralClass.CfgData.TypeC14 ? "Φ14-棒材" : "Φ14-线材";
+
+                switch(GeneralClass.CfgData.Factory)
+                {
+                    case EnumFactory.GaoXiao:
+                        radioButton4.Checked = true;
+                        break;
+                    case EnumFactory.RouXing:
+                        radioButton5.Checked = true;
+                        break;
+                    default:
+                        break;
+                }
+
+                textBox1.Text = GeneralClass.CfgData.MinLength.ToString();
             }
 
         }
@@ -74,6 +88,19 @@ namespace RebarSampling
             //设置Φ12直径和Φ14直径钢筋归属于线材还是棒材
             GeneralClass.CfgData.TypeC12 = checkBox1.Checked;
             GeneralClass.CfgData.TypeC14 = checkBox2.Checked;
+
+            //切换工厂
+            if(radioButton4.Checked)
+            {
+                GeneralClass.CfgData.Factory = EnumFactory.GaoXiao;
+            }
+            if(radioButton5.Checked)
+            {
+                GeneralClass.CfgData.Factory = EnumFactory.RouXing;
+            }
+
+            //定尺锯切最短长度
+            GeneralClass.CfgData.MinLength = Convert.ToInt32(textBox1.Text);
 
             //存为json
             string _json = NewtonJson.Serializer(GeneralClass.CfgData);

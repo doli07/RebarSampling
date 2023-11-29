@@ -22,9 +22,15 @@ namespace RebarSampling
         /// Φ14直径钢筋归类于线材还是棒材，false为线材，true为棒材
         /// </summary>
         public bool TypeC14 { get; set;}
+        /// <summary>
+        /// 工厂，高效/柔性
+        /// </summary>
+        public EnumFactory Factory { get; set; }
+        /// <summary>
+        /// 可锯切的最短长度
+        /// </summary>
+        public int MinLength { get; set; }
 
-        //private int[] warenum = new int[()]
-        //public int[] wareNum
     }
     public class Config
     {

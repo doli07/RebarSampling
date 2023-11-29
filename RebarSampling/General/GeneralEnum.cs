@@ -882,4 +882,20 @@ namespace RebarSampling
         maxFactoryType
     }
 
+    public enum EnumFactory
+
+    {
+        NONE = -1,
+        /// <summary>
+        /// 高效工厂
+        /// </summary>
+        GaoXiao,
+        /// <summary>
+        /// 柔性工厂
+        /// </summary>
+        RouXing,
+
+        maxFactory
+    }
+
 }

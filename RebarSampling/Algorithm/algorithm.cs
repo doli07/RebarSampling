@@ -24,13 +24,30 @@ namespace RebarSampling
             //List<Rebar> _alllist = ListExpand(_list);//展开
             //List<Rebar> _alllist = ListAscend(_list);//升序展开
 
+            List<Rebar> _part1 = new List<Rebar>();
+            List<Rebar> _part2 = new List<Rebar>();
 
             _totallength = _alllist.Sum(t => t.length);//统计总长度
 
-            //List<RebarOri> _returnlist = Algorithm_FFD(_alllist);//FFD首次适应算法
-            List<RebarOri> _returnlist = Algorithm_FFD_1(_alllist);//FFD首次适应算法，改进版
+            foreach (var item in _alllist)//将_alllist按照长度1500以上和以下的分开套料
+            {
+                if (item.length >= GeneralClass.CfgData.MinLength)
+                {
+                    _part1.Add(item);
+                }
+                else
+                {
+                    _part2.Add(item);
+                }
+            }
 
-            //List<RebarOri> _returnlist = Algorithm_BFD(_alllist);//BFD最佳适应算法
+            List<RebarOri> _returnlist = new List<RebarOri>();
+            // _returnlist = Algorithm_FFD(_alllist);//FFD首次适应算法
+            // _returnlist = Algorithm_BFD(_alllist);//BFD最佳适应算法
+            //_returnlist = Algorithm_FFD_1(_alllist);//FFD首次适应算法，改进版
+            _returnlist.AddRange(Algorithm_FFD_1(_part1));//FFD首次适应算法，改进版
+            _returnlist.AddRange(Algorithm_FFD_1(_part2));//FFD首次适应算法，改进版
+
 
             return _returnlist;
         }
@@ -235,7 +252,7 @@ namespace RebarSampling
             return _returnlist;
         }
         /// <summary>
-        /// 首次适应算法FFD（first fit） 的改进版
+        /// 首次适应算法FFD（first fit） 的改进版,主要是对最后一根余料较长的钢筋做优化
         /// </summary>
         /// <param name="_alllist"></param>
         /// <returns></returns>
@@ -310,7 +327,7 @@ namespace RebarSampling
             //最后一根的尾料做处理
             bool _flag = false;
 
-            if (_list.Last()._lengthleft > 2000)//如果最后一根的尾料超过2000的处理，2000以下的先不管
+            if (_list.Count != 0 && _list.Last()._lengthleft > 3000)//如果最后一根的尾料超过2000的处理，2000以下的先不管
             {
                 foreach (var item in _list.Last()._list.ToArray())//_returnlist.Last()._list可能会修改，所以用toArray
                 {

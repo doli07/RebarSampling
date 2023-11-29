@@ -344,6 +344,7 @@ namespace RebarSampling
             GeneralClass.jsonList.Clear();
             m_rebarTaoliaoList.Clear();
 
+            //构件批分组排程
             var _allbatch = BatchSortAndGroup();
 
             //CreatWorkBillFromElementList(_fewWorklist);//1~4种直径worklist
@@ -1508,7 +1509,25 @@ namespace RebarSampling
                 e.Value = pictureBox1.Image;
             }
         }
+        /// <summary>
+        /// 首列自动编号
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView11_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            //自动编号，与数据无关
+            Rectangle rectangle = new Rectangle(e.RowBounds.Location.X,
+               e.RowBounds.Location.Y,
+               dataGridView11.RowHeadersWidth - 4,
+               e.RowBounds.Height);
 
-
+            TextRenderer.DrawText(e.Graphics,
+                  (e.RowIndex + 1).ToString(),
+                   dataGridView11.RowHeadersDefaultCellStyle.Font,
+                   rectangle,
+                   dataGridView11.RowHeadersDefaultCellStyle.ForeColor,
+                   TextFormatFlags.VerticalCenter | TextFormatFlags.Right);
+        }
     }
 }

@@ -36,8 +36,17 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.radioButton5 = new System.Windows.Forms.RadioButton();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -129,11 +138,83 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.radioButton5);
+            this.groupBox3.Controls.Add(this.radioButton4);
+            this.groupBox3.Location = new System.Drawing.Point(454, 96);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(215, 127);
+            this.groupBox3.TabIndex = 3;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "工厂";
+            // 
+            // radioButton4
+            // 
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.Location = new System.Drawing.Point(30, 32);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(88, 19);
+            this.radioButton4.TabIndex = 0;
+            this.radioButton4.TabStop = true;
+            this.radioButton4.Text = "高效工厂";
+            this.radioButton4.UseVisualStyleBackColor = true;
+            // 
+            // radioButton5
+            // 
+            this.radioButton5.AutoSize = true;
+            this.radioButton5.Location = new System.Drawing.Point(30, 69);
+            this.radioButton5.Name = "radioButton5";
+            this.radioButton5.Size = new System.Drawing.Size(88, 19);
+            this.radioButton5.TabIndex = 1;
+            this.radioButton5.TabStop = true;
+            this.radioButton5.Text = "柔性工厂";
+            this.radioButton5.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.textBox1);
+            this.groupBox4.Controls.Add(this.label2);
+            this.groupBox4.Controls.Add(this.label1);
+            this.groupBox4.Location = new System.Drawing.Point(676, 96);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(215, 127);
+            this.groupBox4.TabIndex = 4;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "定尺锯切参数";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(26, 37);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(120, 15);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "可锯切最短长度:";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(29, 62);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(124, 25);
+            this.textBox1.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(159, 70);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(23, 15);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "mm";
+            // 
             // Form5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1223, 477);
+            this.Controls.Add(this.groupBox4);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button1);
@@ -143,6 +224,10 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -157,5 +242,12 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.RadioButton radioButton5;
+        private System.Windows.Forms.RadioButton radioButton4;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
     }
 }

@@ -348,6 +348,7 @@
             this.dataGridView11.Size = new System.Drawing.Size(666, 375);
             this.dataGridView11.TabIndex = 4;
             this.dataGridView11.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView11_CellClick);
+            this.dataGridView11.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dataGridView11_RowPostPaint);
             // 
             // button2
             // 
