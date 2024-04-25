@@ -32,6 +32,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button15 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -87,6 +88,11 @@
             this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.button14 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button8 = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
@@ -115,7 +121,6 @@
             this.label13 = new System.Windows.Forms.Label();
             this.textBox16 = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -128,9 +133,11 @@
             this.tabControl2.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.tabPage3.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox7.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -165,6 +172,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button15);
             this.groupBox1.Controls.Add(this.button6);
             this.groupBox1.Controls.Add(this.textBox6);
             this.groupBox1.Controls.Add(this.label3);
@@ -181,6 +189,16 @@
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "websocetServer";
+            // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(63, 115);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(113, 29);
+            this.button15.TabIndex = 6;
+            this.button15.Text = "保存参数";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
             // button6
             // 
@@ -647,6 +665,7 @@
             // 
             this.tabControl2.Controls.Add(this.tabPage4);
             this.tabControl2.Controls.Add(this.tabPage3);
+            this.tabControl2.Controls.Add(this.tabPage5);
             this.tabControl2.Location = new System.Drawing.Point(3, 3);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
@@ -659,7 +678,6 @@
             this.tabPage4.Controls.Add(this.button11);
             this.tabPage4.Controls.Add(this.textBox17);
             this.tabPage4.Controls.Add(this.label21);
-            this.tabPage4.Controls.Add(this.button10);
             this.tabPage4.Controls.Add(this.button9);
             this.tabPage4.Controls.Add(this.dataGridView1);
             this.tabPage4.Controls.Add(this.textBox1);
@@ -713,12 +731,13 @@
             // button10
             // 
             this.button10.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button10.Location = new System.Drawing.Point(286, 410);
+            this.button10.Location = new System.Drawing.Point(1485, 652);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(116, 52);
             this.button10.TabIndex = 13;
             this.button10.Text = "发送";
             this.button10.UseVisualStyleBackColor = false;
+            this.button10.Visible = false;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // button9
@@ -743,6 +762,59 @@
             this.dataGridView1.Size = new System.Drawing.Size(518, 366);
             this.dataGridView1.TabIndex = 11;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.tabControl1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(1220, 468);
+            this.tabPage3.TabIndex = 0;
+            this.tabPage3.Text = "通信测试";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.button14);
+            this.tabPage5.Controls.Add(this.button13);
+            this.tabPage5.Controls.Add(this.pictureBox1);
+            this.tabPage5.Location = new System.Drawing.Point(4, 25);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(1220, 468);
+            this.tabPage5.TabIndex = 2;
+            this.tabPage5.Text = "水洗标打印";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // button14
+            // 
+            this.button14.BackColor = System.Drawing.Color.DarkSalmon;
+            this.button14.Location = new System.Drawing.Point(628, 34);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(134, 69);
+            this.button14.TabIndex = 2;
+            this.button14.Text = "打印";
+            this.button14.UseVisualStyleBackColor = false;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
+            // button13
+            // 
+            this.button13.BackColor = System.Drawing.Color.DarkSalmon;
+            this.button13.Location = new System.Drawing.Point(463, 34);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(134, 69);
+            this.button13.TabIndex = 1;
+            this.button13.Text = "生成标签";
+            this.button13.UseVisualStyleBackColor = false;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(5, 14);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(433, 434);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // button8
             // 
@@ -1026,17 +1098,6 @@
             this.label14.TabIndex = 5;
             this.label14.Text = "直径规格：";
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.tabControl1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 25);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1186, 472);
-            this.tabPage3.TabIndex = 0;
-            this.tabPage3.Text = "通信测试";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.button8);
@@ -1044,7 +1105,7 @@
             this.panel1.Controls.Add(this.groupBox6);
             this.panel1.Controls.Add(this.groupBox7);
             this.panel1.Enabled = false;
-            this.panel1.Location = new System.Drawing.Point(1249, 401);
+            this.panel1.Location = new System.Drawing.Point(1233, 371);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(533, 275);
             this.panel1.TabIndex = 8;
@@ -1057,9 +1118,9 @@
             this.ClientSize = new System.Drawing.Size(1765, 741);
             this.Controls.Add(this.tabControl2);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.button10);
             this.Name = "Form4";
             this.Text = "通信";
-            //this.Load += new System.EventHandler(this.Form4_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -1077,11 +1138,13 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -1178,5 +1241,10 @@
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button button15;
     }
 }

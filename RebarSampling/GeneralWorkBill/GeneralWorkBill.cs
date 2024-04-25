@@ -13,7 +13,7 @@ namespace RebarSampling
     {
         public RebarTaoLiao() 
         {
-            DiameterType = EnumDiameterType.NONE;
+            DiameterType = EnumDiaGroupType.NONE;
             WareNumType = EnumWareNumGroup.NONE;
             BatchNo = 0;
             Diameter = 0;
@@ -22,7 +22,7 @@ namespace RebarSampling
         /// <summary>
         /// 直径分组类型，1~4种/5种以上
         /// </summary>
-        public EnumDiameterType DiameterType { get; set; }
+        public EnumDiaGroupType DiameterType { get; set; }
         /// <summary>
         /// 料仓类型，8/4/2/1仓
         /// </summary>
@@ -219,7 +219,21 @@ namespace RebarSampling
         /// 原材长度，一般为9米或12米
         /// </summary>
         public int originLength { get; set; }
+        /// <summary>
+        /// 套丝设置，按照4条套丝线，各自规格直径设置
+        /// </summary>
+        public string taosiSetting { get; set; }
     }
+
+    public class WorkBillRequest
+    {
+        public WorkBillRequest() 
+        { 
+            this.Msgtype = 0;
+        }
+        public int Msgtype { get; set; }
+    }
+
 
     /// <summary>
     /// 生产工单数据格式，以单根原材为数据单元
@@ -297,7 +311,10 @@ namespace RebarSampling
         /// 原材长度，一般9米或12米两种
         /// </summary>
         public int OriginalLength { get; set; }
-
+        /// <summary>
+        /// 套丝机直径设置
+        /// </summary>
+        public string TaosiSettiing { get; set; }
 
         public List<SingleRebarData> SteelbarList { get; set; }
     }

@@ -1,5 +1,6 @@
 ﻿using RebarSampling.GeneralWorkBill;
 using RebarSampling.log;
+using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,14 +88,148 @@ namespace RebarSampling
         /// </summary>
         public static string AllRebarTableName = "allsheet";
 
+        ///// <summary>
+        ///// 二次利用的长度
+        ///// </summary>
+        ////public const int SecondUseLength = 1500;
+
         /// <summary>
         /// 9米原材
         /// </summary>
-        public const int OriginalLength1 = 9000;
+        private const int OriginalLength1 = 9000;
         /// <summary>
         /// 12米原材
         /// </summary>
-        public const int OriginalLength2 = 12000;
+        private const int OriginalLength2 = 12000;
+        /// <summary>
+        /// 原材长度
+        /// </summary>
+        public static int OriginalLength
+        {
+            get
+            {
+                int cuthead = CfgData.IfCutHead ? CfgData.CutHeadLength : 0;
+                return (CfgData.OriginType == EnumOriType.ORI_9) ? OriginalLength1 - cuthead : OriginalLength2 - cuthead;
+            }
+        }
+
+        public static void AddDefaultMaterial()
+        {
+            GeneralMaterial _material = new GeneralMaterial();
+            //m_MaterialPool.Clear();//先清空
+
+            if (GeneralClass.CfgData.OriginType == EnumOriType.ORI_9)
+            {
+                for (int i = (int)EnumDiameterBang.BANG_C12; i <= (int)EnumDiameterBang.BANG_C40; i++)
+                {
+                    if (GeneralClass.CfgData.MatPoolSetType == EnumMatPoolSetType.INTEGER)//整数倍模数
+                    {
+                        _material = new GeneralMaterial((EnumDiameterBang)i, 1800, 999);
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        _material = new GeneralMaterial((EnumDiameterBang)i, 2250, 999);
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        _material = new GeneralMaterial((EnumDiameterBang)i, 3000, 999);
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        _material = new GeneralMaterial((EnumDiameterBang)i, 4500, 999);
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        _material = new GeneralMaterial((EnumDiameterBang)i, 6000, 999);
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        _material = new GeneralMaterial((EnumDiameterBang)i, 7200, 999);
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        _material = new GeneralMaterial((EnumDiameterBang)i, 9000, 999);
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+
+                    }
+                    else//等间距模数
+                    {
+                        //_material = new GeneralMaterial((EnumDiameterBang)i, 1200, 999);            //余料利用1200
+                        //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        //_material = new GeneralMaterial((EnumDiameterBang)i, 1500, 999);            //余料利用1500
+                        //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        _material = new GeneralMaterial((EnumDiameterBang)i, GeneralClass.CfgData.MatPoolYuliao1, 999);            //余料利用1200
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        _material = new GeneralMaterial((EnumDiameterBang)i, GeneralClass.CfgData.MatPoolYuliao2, 999);            //余料利用1500
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+
+                        _material = new GeneralMaterial((EnumDiameterBang)i, 3000, 999);
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        //_material = new GeneralMaterial((EnumDiameterBang)i, 4500, 999);
+                        //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        _material = new GeneralMaterial((EnumDiameterBang)i, 6000, 999);
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        //_material = new GeneralMaterial((EnumDiameterBang)i, 7500, 999);
+                        //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                        _material = new GeneralMaterial((EnumDiameterBang)i, 9000, 999);
+                        if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+
+
+                    }
+
+
+                }
+            }
+            else
+            {
+                for (int i = (int)EnumDiameterBang.BANG_C12; i <= (int)EnumDiameterBang.BANG_C40; i++)
+                {
+                    //_material = new GeneralMaterial((EnumDiameterBang)i, 1200, 999);            //余料利用1200
+                    //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                    //_material = new GeneralMaterial((EnumDiameterBang)i, 1500, 999);            //余料利用1500
+                    //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                    _material = new GeneralMaterial((EnumDiameterBang)i, GeneralClass.CfgData.MatPoolYuliao1, 999);            //余料利用1200
+                    if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                    _material = new GeneralMaterial((EnumDiameterBang)i, GeneralClass.CfgData.MatPoolYuliao2, 999);            //余料利用1500
+                    if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+
+                    _material = new GeneralMaterial((EnumDiameterBang)i, 3000, 999);
+                    if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                    //_material = new GeneralMaterial((EnumDiameterBang)i, 4500, 999);
+                    //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                    _material = new GeneralMaterial((EnumDiameterBang)i, 6000, 999);
+                    if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                    //_material = new GeneralMaterial((EnumDiameterBang)i, 7500, 999);
+                    //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                    //_material = new GeneralMaterial((EnumDiameterBang)i, 9000, 999);
+                    //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                    //_material = new GeneralMaterial((EnumDiameterBang)i, 10000, 999);
+                    //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+                    _material = new GeneralMaterial((EnumDiameterBang)i, 12000, 999);
+                    if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
+
+
+                }
+            }
+            //return m_MaterialPool;
+        }
+        /// <summary>
+        /// 原材库，包含3m、4m、5m、6m、7m等非定尺材，以及9m和12m定尺原材
+        /// 默认的几个长度:
+        /// 9米原材包括：1米、1.8米、2.25米、3米、4.5米、6米、7.2米、8米、9米
+        /// 12米原材包括：2米、3米、4米、5米、6米、7米、8米、9米、10米、12米
+        /// </summary>
+        public static List<GeneralMaterial> m_MaterialPool = new List<GeneralMaterial>();
+
+
+
+
+        /// <summary>
+        /// 直径enum转为int
+        /// </summary>
+        /// <param name="_bang"></param>
+        /// <returns></returns>
+        public static int EnumDiameterToInt(EnumDiameterBang _bang)
+        {
+            return Convert.ToInt16(_bang.ToString().Substring(6, 2));
+        }
+        /// <summary>
+        /// 直径int转为enum
+        /// </summary>
+        /// <param name="_diameter"></param>
+        /// <returns></returns>
+        public static EnumDiameterBang IntToEnumDiameter(int _diameter)
+        {
+            return (EnumDiameterBang)System.Enum.Parse(typeof(EnumDiameterBang), "BANG_C" + _diameter.ToString());//将直径转为enum
+        }
 
         //public static int[] wareNum = new int[(int)EnumWareNumGroup.maxNum] { 48, 12, 6, 3 };
 
@@ -108,17 +243,17 @@ namespace RebarSampling
             {
                 switch (m_factoryType)
                 {
-                    case EnumFactoryType.Standard:
-                        warenum[(int)EnumWareNumGroup.EIGHT] = 48;
-                        warenum[(int)EnumWareNumGroup.FOUR] = 12;
-                        warenum[(int)EnumWareNumGroup.TWO] = 6;
-                        warenum[(int)EnumWareNumGroup.ONE] = 3;
+                    case EnumFactoryType.LowConfig:
+                        warenum[(int)EnumWareNumGroup.EIGHT] = 16;
+                        warenum[(int)EnumWareNumGroup.FOUR] = 8;
+                        warenum[(int)EnumWareNumGroup.TWO] = 4;
+                        warenum[(int)EnumWareNumGroup.ONE] = 2;
                         break;
-                    case EnumFactoryType.Reduction:
-                        warenum[(int)EnumWareNumGroup.EIGHT] = 48;
-                        warenum[(int)EnumWareNumGroup.FOUR] = 24;
-                        warenum[(int)EnumWareNumGroup.TWO] = 12;
-                        warenum[(int)EnumWareNumGroup.ONE] = 6;
+                    case EnumFactoryType.HighConfig:
+                        warenum[(int)EnumWareNumGroup.EIGHT] = 32;
+                        warenum[(int)EnumWareNumGroup.FOUR] = 16;
+                        warenum[(int)EnumWareNumGroup.TWO] = 8;
+                        warenum[(int)EnumWareNumGroup.ONE] = 4;
                         break;
                     case EnumFactoryType.Experiment:
                         warenum[(int)EnumWareNumGroup.EIGHT] = 8;
@@ -133,9 +268,9 @@ namespace RebarSampling
         }
 
         /// <summary>
-        /// 直径种类的中文描述，1~4种直径，5~种直径
+        /// 直径种类的中文描述，"1种直径", "2种直径", "3种直径", "4种直径", "1~4种直径", "5~种直径"
         /// </summary>
-        public static readonly string[] m_DiaType = new string[(int)EnumDiameterType.maxDiameterType] { "1~4种直径", "5~种直径" };
+        public static readonly string[] m_DiaType = new string[(int)EnumDiaGroupType.maxDiameterType] { "1~4种直径", "5~种直径", "1种直径", "2种直径", "3种直径", "4种直径" };
         /// <summary>
         /// 多直径分组包含直径种类数量，0(不考虑包含关系),1，2，100(全包含)
         /// </summary>
@@ -159,12 +294,16 @@ namespace RebarSampling
         /// </summary>
         public static bool m_showNoFindPic = true;
 
+        /// <summary>
+        /// 套料显示图片的尺寸
+        /// </summary>
+        public static  System.Drawing.Size taoPicSize = new System.Drawing.Size(650, 30);
 
         /*************配置文件**************/
         public static ConfigData CfgData { get; set; }
 
         /// <summary>
-        /// 工厂类型，分为标配、低配、实验
+        /// 工厂类型，分为低配、高配、实验
         /// </summary>
         public static EnumFactoryType m_factoryType { get { return CfgData.Factorytype; } set { m_factoryType = value; } }
         /// <summary>
@@ -175,18 +314,23 @@ namespace RebarSampling
         /// Φ14直径钢筋归类于线材还是棒材，false为线材，true为棒材
         /// </summary>
         public static bool m_typeC14 { get { return CfgData.TypeC14; } set { m_typeC14 = value; } }
-
+        /// <summary>
+        /// 棒材线材分隔阈值，取决于Φ12直径钢筋和Φ14直径钢筋归属
+        /// </summary>
+        public static int m_threshold_BX { get { return (GeneralClass.m_typeC12) ? 12 : ((GeneralClass.m_typeC14) ? 14 : 16); } }
         /*************配置文件**************/
 
 
 
         public static string[] sRebarAssemblyTypeName = new string[(int)EnumRebarAssemblyType.maxAssemblyNum]
             {
+                "基础",
                 "墙",
                 "柱",
                 "梁",
                 "板",
                 "梯"
+
             };
 
         /// <summary>

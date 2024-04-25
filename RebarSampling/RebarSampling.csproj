@@ -257,9 +257,20 @@
     <Reference Include="WebSocket4Net, Version=0.15.2.11, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocket4Net.0.15.2\lib\net45\WebSocket4Net.dll</HintPath>
     </Reference>
+    <Reference Include="zxing, Version=0.16.9.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.9\lib\net47\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation, Version=0.16.9.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.9\lib\net47\zxing.presentation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm\algorithm_pi.cs" />
+    <Compile Include="Algorithm\BinaryTree.cs" />
     <Compile Include="chart\chartshow.cs" />
+    <Compile Include="Form3_plus.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="config\config.cs" />
     <Compile Include="Form5.cs">
       <SubType>Form</SubType>
@@ -295,6 +306,7 @@
     </Compile>
     <Compile Include="GeneralElementData\GeneralTest.cs" />
     <Compile Include="GeneralElementData\GeneralElementData.cs" />
+    <Compile Include="GeneralMaterialData\GeneralMaterial.cs" />
     <Compile Include="GeneralWorkBill\GeneralWorkBill.cs" />
     <Compile Include="GeneralWorkBill\WorkBillOpt.cs" />
     <Compile Include="General\GeneralClass.cs" />
@@ -308,6 +320,7 @@
     <Compile Include="graphics\Graphics.cs" />
     <Compile Include="http\http.cs" />
     <Compile Include="json\json.cs" />
+    <Compile Include="labelPrint\labelPrint.cs" />
     <Compile Include="log\logfile.cs" />
     <Compile Include="excel\NpoiExcelReader.cs" />
     <Compile Include="excel\NpoiExcelWriter.cs" />
@@ -323,6 +336,7 @@
     <Compile Include="excel\WorkBookFactory.cs" />
     <Compile Include="websocket\webclient.cs" />
     <Compile Include="websocket\webserver.cs" />
+    <Compile Include="workflow\workflow.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -346,6 +360,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -375,10 +390,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="1564512_burger_catalogue_list_menu_icon.ico" />
+    <None Include="img\other\先进技术研究院横式中英.png" />
+    <None Include="img\other\先进技术研究院横式.png" />
     <Content Include="null.png" />
     <Content Include="rebar.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

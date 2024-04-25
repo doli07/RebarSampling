@@ -389,9 +389,13 @@ namespace RebarSampling
     {
         None = -1,
         /// <summary>
+        /// 基础，地下室
+        /// </summary>
+        ASSEMBLY_BASE=0,
+        /// <summary>
         /// 墙
         /// </summary>
-        ASSEMBLY_WALL = 0,
+        ASSEMBLY_WALL,
         /// <summary>
         /// 柱
         /// </summary>
@@ -408,6 +412,7 @@ namespace RebarSampling
         /// 楼梯
         /// </summary>
         ASSEMBLY_STAIR,
+
 
             maxAssemblyNum
     }
@@ -711,19 +716,27 @@ namespace RebarSampling
 
         maxRowNum
     }
-    public enum EnumRebarXian
+    /// <summary>
+    /// 线材直径规格
+    /// </summary>
+    public enum EnumDiameterXian
     {
         XIAN_A6,
         XIAN_A8,
         XIAN_C6,
         XIAN_C8,
         XIAN_C10,
-        XIAN_C12,
+        //XIAN_C12,
 
         maxRebarXianNum
     }
-    public enum EnumRebarBang
+    /// <summary>
+    /// 棒材直径规格
+    /// </summary>
+    public enum EnumDiameterBang
     {
+        NONE=-1,
+        BANG_C12,
         BANG_C14,
         BANG_C16,
         BANG_C18,
@@ -737,6 +750,8 @@ namespace RebarSampling
 
         maxRebarBangNum
     }
+
+
     /// <summary>
     /// 钢筋螺距区间，Φ16~Φ22用2.5螺距，Φ25~Φ32用3.0螺距，Φ36~Φ40用3.5螺距
     /// </summary>
@@ -780,20 +795,12 @@ namespace RebarSampling
         maxNum
     }
     /// <summary>
-    /// 1~4种直径，多种直径
+    /// 1~4种直径，多种直径,1种直径，2种直径，3种直径，4种直径,
+    /// 注意与tabcontrol2 的tab顺序对应
     /// </summary>
-    public enum EnumDiameterType
+    public enum EnumDiaGroupType
     { 
         NONE=-1,
-        /// <summary>
-        /// 一种直径
-        /// </summary>
-        //ONE,
-        /// <summary>
-        /// 两种直径
-        /// </summary>
-        //TWO,
-
         /// <summary>
         /// 1~4种直径
         /// </summary>
@@ -802,6 +809,23 @@ namespace RebarSampling
         /// 多种直径
         /// </summary>
         MULTI,
+        /// <summary>
+        /// 一种直径
+        /// </summary>
+        ONE,
+        /// <summary>
+        /// 两种直径
+        /// </summary>
+        TWO,
+        /// <summary>
+        /// 三种直径
+        /// </summary>
+        THREE,
+        /// <summary>
+        /// 四种直径
+        /// </summary>
+        FOUR,
+
 
         maxDiameterType
     }
@@ -867,13 +891,15 @@ namespace RebarSampling
     {
         NONE = -1,
         /// <summary>
-        /// 标配工厂，4条套丝线，6个辊道成品仓
+        /// 20240125修改：低配工厂，2条套丝线，2个辊道成品料仓
+        /// **标配工厂，4条套丝线，6个辊道成品仓
         /// </summary>
-        Standard,
+        LowConfig,
         /// <summary>
-        /// 低配工厂，2条套丝线，2个辊道成品仓
+        /// 20240125修改：高配工厂，4条套丝线，4条辊道成品料仓
+        /// **低配工厂，2条套丝线，2个辊道成品仓
         /// </summary>
-        Reduction,
+        HighConfig,
         /// <summary>
         /// 实验线，1条套丝线，1个辊道成品仓
         /// </summary>
@@ -883,7 +909,6 @@ namespace RebarSampling
     }
 
     public enum EnumFactory
-
     {
         NONE = -1,
         /// <summary>
@@ -897,5 +922,79 @@ namespace RebarSampling
 
         maxFactory
     }
+    /// <summary>
+    /// 原材类型，9米还是12米
+    /// </summary>
+    public enum EnumOriType
+    {
+        NONE = -1,
+        /// <summary>
+        /// 9米原材
+        /// </summary>
+        ORI_9,
+        /// <summary>
+        /// 12米原材
+        /// </summary>
+        ORI_12,
+
+        maxOriType
+    }
+    /// <summary>
+    /// 配置文件中的直径种类分组类型，顺序分组(1~4)、混合分组(1/2/3/4)
+    /// </summary>
+    public enum EnumDiaGroupTypeSetting
+    {
+        NONE=-1,
+        /// <summary>
+        /// 顺序分组
+        /// </summary>
+        Sequence,
+        /// <summary>
+        /// 混合分组
+        /// </summary>
+        Mix,
+
+        maxDiaGroupType
+    }
+
+    public enum EnumTaoType
+    {
+        NONE=-1,
+        /// <summary>
+        /// 原材套料
+        /// </summary>
+        ORITAO,
+        /// <summary>
+        /// 批量锯切套料1.0
+        /// </summary>
+        ORIPOOLTAO,
+        /// <summary>
+        /// 批量锯切套料2.0
+        /// </summary>
+        CUTTAO_2,
+        /// <summary>
+        /// 批量锯切套料3.0，二叉树
+        /// </summary>
+        CUTTAO_3,
+
+
+        maxTaoType
+    }
+
+    public enum EnumMatPoolSetType
+    { 
+        NONE = -1,
+        /// <summary>
+        /// 整数倍模数
+        /// </summary>
+        INTEGER,
+        /// <summary>
+        /// 平均等间距模数
+        /// </summary>
+        AVERAGE,
+
+        maxMatPoolSetType
+    }
+
 
 }

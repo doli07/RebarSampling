@@ -62,6 +62,7 @@ namespace RebarSampling.GeneralWorkBill
             _workbill.Brand = _msg.brand;
             _workbill.Specification = _msg.specification;
             _workbill.OriginalLength = _msg.originLength;
+            _workbill.TaosiSettiing = _msg.taosiSetting;
             //_workbill.SteelbarList = _rebarlist;
             foreach (var item in _rebarlist._list)
             {
@@ -145,21 +146,21 @@ namespace RebarSampling.GeneralWorkBill
         }
 
         /// <summary>
-        /// 将10进制转换成31进制
+        /// 将10进制转换成30进制
         /// 1、首字符为项目代号，由大写字母组成。
         ///      大写字母：A ~Z
-        ///      排除可能引起混淆的字母B、D、I、J、O
+        ///      排除可能引起混淆的字母B、D、I、J、O、W
         /// 2、后五位字符代表钢筋编号，由数字和大写字母组成。
         ///      数字：0~9；
         ///      大写字母：A ~Z
-        ///      排除可能引起混淆的字母B、D、I、J、O
-        /// 3、注：        B——易与数字8混淆；D——易与数字0混淆；I——易与数字1混淆；J——易与数字1混淆；O——易与数字0混淆；
+        ///      排除可能引起混淆的字母B、D、I、J、O、W
+        /// 3、注：        B——易与数字8混淆；D——易与数字0混淆；I——易与数字1混淆；J——易与数字1混淆；O——易与数字0混淆；W——字符太宽
         /// 
         /// </summary>
         /// <param name="_value">待转换的十进制数</param>
         /// <param name="_basestr">任意进制的基础字符，其长度即为新的进制数</param>
         /// <returns></returns>
-        private string ConvertCode(int _value, string _basestr = "0123456789ACEFGHKLMNPQRSTUVWXYZ")
+        private string ConvertCode(int _value, string _basestr = "0123456789ACEFGHKLMNPQRSTUVXYZ")
         {
             string sss = "";
             int _jinzhi = _basestr.Length;

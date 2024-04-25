@@ -311,6 +311,7 @@ namespace RebarSampling
             this.checkBox17.Checked = true;
 
             //分子，直径
+            this.checkBox68.Checked = true;
             this.checkBox8.Checked = true;
             this.checkBox9.Checked = true;
             this.checkBox10.Checked = true;
@@ -339,15 +340,16 @@ namespace RebarSampling
             this.checkBox26.Checked = true;
 
             //分母，直径
-            this.checkBox27.Checked = true;
-            this.checkBox28.Checked = true;
-            this.checkBox29.Checked = true;
-            this.checkBox30.Checked = true;
-            this.checkBox31.Checked = true;
-            this.checkBox32.Checked = true;
-            this.checkBox33.Checked = true;
-            this.checkBox34.Checked = true;
+            this.checkBox68.Checked = true;
             this.checkBox35.Checked = true;
+            this.checkBox34.Checked = true;
+            this.checkBox33.Checked = true;
+            this.checkBox32.Checked = true;
+            this.checkBox31.Checked = true;
+            this.checkBox30.Checked = true;
+            this.checkBox29.Checked = true;
+            this.checkBox28.Checked = true;
+            this.checkBox27.Checked = true;
             this.checkBox40.Checked = true;
 
         }
@@ -401,6 +403,13 @@ namespace RebarSampling
 
             checkBox36.Checked = false;
             checkBox36.Text = "Φ14-线材";
+
+            checkBox65.Checked = false;
+            checkBox65.Text = "全不选";
+            checkBox66.Checked = false;
+            checkBox66.Text = "全不选";
+            checkBox67.Checked = true;
+            checkBox67.Text = "全选";
 
         }
 
@@ -517,6 +526,179 @@ namespace RebarSampling
 
         }
         /// <summary>
+        /// 弯曲角度汇总统计
+        /// </summary>
+        /// <param name="_list"></param>
+        /// <param name="_dgv"></param>
+        private void FillDGV_Bend(List<RebarData> _list, ref DataGridView _dgv)
+        {
+            //统计棒材弯曲角度
+            DataTable dt_z = new DataTable();
+            dt_z.Columns.Add("弯曲角度(°)", typeof(int));
+            dt_z.Columns.Add("弯曲次数", typeof(int));
+
+            List<string> xx = new List<string>();
+            List<int> yy = new List<int>();
+
+            List<GeneralMultiData> _MultiData = new List<GeneralMultiData>();
+
+            foreach (var item in _list)
+            {
+                _MultiData.AddRange(GeneralClass.SQLiteOpt.GetMultiData(item.CornerMessage));//拆解corner信息,并汇总
+            }
+
+            var _group = _MultiData.GroupBy(t => t.angle).OrderBy(t => t.Key).ToList();//根据弯曲角度分类，同时从小到大排序一下
+
+            foreach (var item in _group)
+            {
+                if (item.Key != 0)//==0表示不是bend属性的multidata
+                {
+                    dt_z.Rows.Add(item.Key, item.ToList().Count);
+
+                    xx.Add(item.Key.ToString());
+                    yy.Add(item.ToList().Count);
+                }
+            }
+
+            _dgv.DataSource = dt_z;
+
+            chartshow.ChartRectShow("弯曲角度(x)——弯曲次数(y)", xx, yy, chart6);
+            //_dgv.Columns[3].DefaultCellStyle.Format = "P1";         //百分比
+            //_dgv.Columns[4].DefaultCellStyle.Format = "F2";        //double保留两位小数
+            //_dgv.Columns[5].DefaultCellStyle.Format = "P1";         //百分比
+        }
+        private void FillDGV_Taosi(List<RebarData> _list, ref DataGridView _dgv)
+        {
+            try
+            {
+                DataTable dt_z = new DataTable();
+                //dt_z.Columns.Add("图形编号", typeof(string));
+                //dt_z.Columns.Add("钢筋简图", typeof(Image));
+                dt_z.Columns.Add("端头类型", typeof(string));
+                dt_z.Columns.Add("数量", typeof(int));
+
+                List<string> xx = new List<string>();
+                List<int> yy = new List<int>();
+
+                List<GeneralMultiData> _MultiData = new List<GeneralMultiData>();
+
+                List<Rebar> _rebarlist = Algorithm.ListExpand(_list);//将rebardata展开成rebar，以免数量计算有误
+                foreach (var item in _rebarlist)
+                {
+                    _MultiData.AddRange(GeneralClass.SQLiteOpt.GetMultiData(item.CornerMessage));//拆解corner信息,并汇总
+                }
+
+                var _group = _MultiData.GroupBy(t => t.headType).ToList();//根据弯曲角度分类，同时从小到大排序一下
+
+                foreach (var item in _group)
+                {
+                    switch (item.Key)
+                    {
+                        case EnumMultiHeadType.ORG:
+                            break;
+                        case EnumMultiHeadType.BEND:
+                            break;
+                        case EnumMultiHeadType.TAO_P:
+                            dt_z.Rows.Add("正丝套筒", item.ToList().Count);
+                            xx.Add("正丝套筒");
+                            yy.Add(item.ToList().Count);
+                            break;
+                        case EnumMultiHeadType.TAO_V:
+                            dt_z.Rows.Add("变径套筒", item.ToList().Count);
+                            xx.Add("变径套筒");
+                            yy.Add(item.ToList().Count);
+                            break;
+                        case EnumMultiHeadType.TAO_N:
+                            dt_z.Rows.Add("反丝套筒", item.ToList().Count);
+                            xx.Add("反丝套筒");
+                            yy.Add(item.ToList().Count);
+                            break;
+                        case EnumMultiHeadType.SI_P:
+                            dt_z.Rows.Add("正丝", item.ToList().Count);
+                            xx.Add("正丝");
+                            yy.Add(item.ToList().Count);
+                            break;
+                        case EnumMultiHeadType.SI_N:
+                            dt_z.Rows.Add("反丝", item.ToList().Count);
+                            xx.Add("反丝");
+                            yy.Add(item.ToList().Count);
+                            break;
+                        case EnumMultiHeadType.DA:
+                            dt_z.Rows.Add("搭接", item.ToList().Count);
+                            xx.Add("搭接");
+                            yy.Add(item.ToList().Count);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                chartshow.ChartRectShow("端头类型(x)——次数(y)", xx, yy, chart7);
+
+
+                _dgv.DataSource = dt_z;
+
+            }
+            catch (Exception ex) { MessageBox.Show("FillDGV_Taosi error:" + ex.Message); return; }
+
+        }
+        private void FillDGV_Taosi_Pic(List<RebarData> _list, ref DataGridView _dgv)
+        {
+            try
+            {
+                //统计棒材图形
+                DataTable dt_z = new DataTable();
+                dt_z.Columns.Add("图形编号", typeof(string));
+                dt_z.Columns.Add("钢筋简图", typeof(Image));
+                dt_z.Columns.Add("仅左端套丝数量(根)", typeof(int));
+                dt_z.Columns.Add("仅右端套丝数量(根)", typeof(int));
+                dt_z.Columns.Add("两端套丝数量(根)", typeof(int));
+
+
+                var _group = _list.GroupBy(t => t.PicTypeNum).ToList();
+
+
+                foreach (var item in _group)
+                {
+                    var _picNum = item.Key;
+                    var _rebarList = item.ToList();
+
+                    int _left = 0, _right = 0, _both = 0;
+                    //List<GeneralMultiData> _MultiData;
+
+                    foreach (var ttt in _rebarList)
+                    {
+                        List<GeneralMultiData> _MultiData = GeneralClass.SQLiteOpt.GetMultiData(ttt.CornerMessage);//拆解corner信息,并汇总
+
+                        if (_MultiData != null && _MultiData.Count != 0)//存在返回为null的情况，需要跳过
+                        {
+                            if (_MultiData.First().type == 2 && _MultiData.Last().type != 2)
+                            {
+                                _left += _MultiData.First().num * ttt.TotalPieceNum;//multidata的数量*当前rebardata的总根数
+                            }
+                            else if (_MultiData.First().type != 2 && _MultiData.Last().type == 2)
+                            {
+                                _right += _MultiData.Last().num * ttt.TotalPieceNum;//multidata的数量*当前rebardata的总根数
+                            }
+                            else if (_MultiData.First().type == 2 && _MultiData.Last().type == 2)
+                            {
+                                _both += (_MultiData.First().num * ttt.TotalPieceNum + _MultiData.Last().num * ttt.TotalPieceNum);//multidata的数量*当前rebardata的总根数
+                            }
+                        }
+                    }
+
+                    dt_z.Rows.Add(_picNum, GetImageFromList(_picNum), _left, _right, _both);
+                }
+                _dgv.DataSource = dt_z;
+                //_dgv.Columns[3].DefaultCellStyle.Format = "P1";         //百分比
+                //_dgv.Columns[4].DefaultCellStyle.Format = "F2";        //double保留两位小数
+                //_dgv.Columns[5].DefaultCellStyle.Format = "P1";         //百分比
+
+            }
+            catch (Exception ex) { MessageBox.Show("FillDGV_Taosi_Pic error:" + ex.Message); return; }
+
+
+        }
+        /// <summary>
         /// 开始图形汇总,并按照棒材线材分开统计
         /// </summary>
         /// <param name="sender"></param>
@@ -539,7 +721,8 @@ namespace RebarSampling
                 List<RebarData> _bangdata = new List<RebarData>();
                 List<RebarData> _xiandata = new List<RebarData>();
 
-                int _threshold = (GeneralClass.m_typeC14) ? 14 : 16;//如果14为线材，则从16开始统计
+                //int _threshold = (GeneralClass.m_typeC14) ? 14 : 16;//如果14为线材，则从16开始统计
+                int _threshold = (GeneralClass.m_typeC12) ? 12 : ((GeneralClass.m_typeC14) ? 14 : 16);//先看12是否为棒材，再看14是否为棒材
 
                 foreach (RebarData _dd in GeneralClass.AllRebarList)
                 {
@@ -555,143 +738,6 @@ namespace RebarSampling
 
                 FillDGV_Pic(_bangdata, ref dataGridView4);
                 FillDGV_Pic(_xiandata, ref dataGridView5);
-
-                //List<EnumRebarPicType> _bangPicTypeList = new List<EnumRebarPicType>();
-                //List<EnumRebarPicType> _xianPicTypeList = new List<EnumRebarPicType>();
-
-                //_bangPicTypeList = GeneralClass.SQLiteOpt.GetExistedRebarTypeList(_bangdata);
-                //_xianPicTypeList = GeneralClass.SQLiteOpt.GetExistedRebarTypeList(_xiandata);
-
-                //DataGridViewRow dgvRow = new DataGridViewRow();
-                //DataGridViewCell dgvCell = new DataGridViewTextBoxCell();
-                //DataGridViewImageCell dgvImageCell = new DataGridViewImageCell();
-
-                //int _num = 0;
-                //double _weight = 0.0;
-
-
-
-                ////fill dgv4
-                //foreach (EnumRebarPicType _item in _bangPicTypeList)
-                //{
-                //    dgvRow = new DataGridViewRow();
-                //    //图形编号
-                //    dgvCell = new DataGridViewTextBoxCell();
-                //    dgvCell.Value = _item.ToString().Substring(2, 5);
-                //    dgvRow.Cells.Add(dgvCell);
-
-                //    //钢筋简图
-                //    dgvImageCell = new DataGridViewImageCell();
-                //    string sType = _item.ToString().Substring(2, 5);
-                //    int _index = -1;
-                //    if (FindIndexInImagelist(sType, out _index))//按照图形编号查询图片库中的index
-                //    {
-                //        dgvImageCell.Value = imageList1.Images[_index];//按照index，显示图形
-                //    }
-                //    else
-                //    {
-                //        GeneralClass.interactivityData?.printlog(1, "钢筋图片库中找不到编号为:" + sType + "的图片，请手动添加");
-
-                //        if (GeneralClass.m_showNoFindPic)
-                //        {
-                //            FindIndexInImagelist("00000", out _index);//临时用00000.png代替
-                //            dgvImageCell.Value = imageList1.Images[_index];
-                //        }
-                //    }
-                //    dgvRow.Cells.Add(dgvImageCell);
-
-                //    _num = 0;
-                //    _weight = 0;
-                //    //长度、重量
-                //    foreach (RebarData _ddd in _bangdata)
-                //    {
-                //        if (_ddd.PicTypeNum == _item.ToString().Substring(2, 5))
-                //        {
-                //            _num += _ddd.TotalPieceNum;
-                //            _weight += _ddd.TotalWeight;
-                //        }
-                //    }
-                //    //数量
-                //    dgvCell = new DataGridViewTextBoxCell();
-                //    dgvCell.Value = _num;
-                //    dgvRow.Cells.Add(dgvCell);
-
-                //    //重量
-                //    dgvCell = new DataGridViewTextBoxCell();
-                //    dgvCell.Value = _weight;
-                //    dgvRow.Cells.Add(dgvCell);
-
-                //    //备注
-                //    dgvCell = new DataGridViewTextBoxCell();
-                //    dgvCell.Value = "";
-                //    dgvRow.Cells.Add(dgvCell);
-
-                //    dataGridView4.Rows.Add(dgvRow);
-
-                //}
-
-
-                ////fill dgv5
-                //foreach (EnumRebarPicType _item in _xianPicTypeList)
-                //{
-                //    dgvRow = new DataGridViewRow();
-
-                //    //图形编号
-                //    dgvCell = new DataGridViewTextBoxCell();
-                //    dgvCell.Value = _item.ToString().Substring(2, 5);
-                //    dgvRow.Cells.Add(dgvCell);
-
-                //    //钢筋简图
-                //    dgvImageCell = new DataGridViewImageCell();
-                //    string sType = _item.ToString().Substring(2, 5);
-                //    int _index = -1;
-                //    if (FindIndexInImagelist(sType, out _index))//按照图形编号查询图片库中的index
-                //    {
-                //        dgvImageCell.Value = imageList1.Images[_index];//按照index，显示图形
-                //    }
-                //    else
-                //    {
-                //        GeneralClass.interactivityData?.printlog(1, "钢筋图片库中找不到编号为:" + sType + "的图片，请手动添加");
-
-                //        if (GeneralClass.m_showNoFindPic)
-                //        {
-                //            FindIndexInImagelist("00000", out _index);//临时用00000.png代替
-                //            dgvImageCell.Value = imageList1.Images[_index];
-                //        }
-                //    }
-                //    dgvRow.Cells.Add(dgvImageCell);
-
-                //    _num = 0;
-                //    _weight = 0;
-                //    //长度、重量
-                //    foreach (RebarData _ddd in _xiandata)
-                //    {
-                //        if (_ddd.PicTypeNum == _item.ToString().Substring(2, 5))
-                //        {
-                //            _num += _ddd.TotalPieceNum;
-                //            _weight += _ddd.TotalWeight;
-                //        }
-                //    }
-                //    //数量
-                //    dgvCell = new DataGridViewTextBoxCell();
-                //    dgvCell.Value = _num;
-                //    dgvRow.Cells.Add(dgvCell);
-
-                //    //重量
-                //    dgvCell = new DataGridViewTextBoxCell();
-                //    dgvCell.Value = _weight;
-                //    dgvRow.Cells.Add(dgvCell);
-
-                //    //备注
-                //    dgvCell = new DataGridViewTextBoxCell();
-                //    dgvCell.Value = "";
-                //    dgvRow.Cells.Add(dgvCell);
-
-                //    dataGridView5.Rows.Add(dgvRow);
-
-                //}
-
-
 
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -1011,168 +1057,26 @@ namespace RebarSampling
 
                 GeneralClass.AllRebarList = GeneralClass.SQLiteOpt.GetAllRebarList(GeneralClass.AllRebarTableName);//取得所有的钢筋数据list
 
-                List<GroupbyDia> _grouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(GeneralClass.AllRebarList);
+                List<RebarData> _banglist = GeneralClass.AllRebarList.Where(t => t.Diameter >= GeneralClass.m_threshold_BX).ToList();
+                List<RebarData> _xianlist = GeneralClass.AllRebarList.Where(t => t.Diameter < GeneralClass.m_threshold_BX).ToList();
 
-                int[] _num = new int[(int)EnumDiameter.maxDiameterNum];
-                double[] _weight = new double[(int)EnumDiameter.maxDiameterNum];
-
-                int total_num_x = 0;
-                double total_weight_x = 0;
-
-                foreach (var item in _grouplist)
-                {
-                    for (EnumDiameter i = EnumDiameter.DIAMETER_6; i < EnumDiameter.maxDiameterNum; i++)
-                    {
-                        if (item._diameter == Convert.ToInt32(i.ToString().Substring(9)))
-                        {
-                            _num[(int)i] = item._totalnum;
-                            _weight[(int)i] = item._totalweight;
-                        }
-                    }
-                }
-
-                //先统计线材
-                DataTable dt_x = new DataTable();
-                dt_x.Columns.Add("直径(mm)", typeof(string));
-                dt_x.Columns.Add("数量(根)", typeof(int));
-                dt_x.Columns.Add("数量(%)", typeof(double));
-                dt_x.Columns.Add("重量(吨)", typeof(double));
-                dt_x.Columns.Add("重量(%)", typeof(double));
-
-                List<string> x_x = new List<string>();
-                List<int> x_y1 = new List<int>();
-                List<double> x_y2 = new List<double>();
-
-                if (GeneralClass.m_typeC14) //true为Φ14棒材，false为Φ14线材
-                {
-                    for (int i = (int)EnumDiameter.DIAMETER_6; i < (int)EnumDiameter.DIAMETER_14; i++)
-                    {
-                        total_num_x += _num[i];
-                        total_weight_x += _weight[i];
-                    }
-                    dt_x.Rows.Add("Φ6", _num[0], (double)_num[0] / (double)total_num_x, double.Parse((_weight[0] / 1000).ToString("F2")), (_weight[0] / total_weight_x));
-                    dt_x.Rows.Add("Φ8", _num[1], (double)_num[1] / (double)total_num_x, double.Parse((_weight[1] / 1000).ToString("F2")), (_weight[1] / total_weight_x));
-                    dt_x.Rows.Add("Φ10", _num[2], (double)_num[2] / (double)total_num_x, double.Parse((_weight[2] / 1000).ToString("F2")), (_weight[2] / total_weight_x));
-                    dt_x.Rows.Add("Φ12", _num[3], (double)_num[3] / (double)total_num_x, double.Parse((_weight[3] / 1000).ToString("F2")), (_weight[3] / total_weight_x));
-
-                    x_x = new List<string>() { "Φ6", "Φ8", "Φ10", "Φ12" };
-                    x_y1 = new List<int>() { _num[0], _num[1], _num[2], _num[3] };
-                    x_y2 = new List<double>() {
-                        double.Parse((_weight[0] / 1000).ToString("F2")),
-                        double.Parse((_weight[1] / 1000).ToString("F2")),
-                        double.Parse((_weight[2] / 1000).ToString("F2")),
-                        double.Parse((_weight[3] / 1000).ToString("F2")) };
-
-                    //chartshow.ChartRectShow("线材——数量(根)", x_x, x_y1, chart4);
-                    //chartshow.ChartRectShow("线材——重量(吨)", x_x, x_y2, chart6);
-                }
-                else
-                {
-                    for (int i = (int)EnumDiameter.DIAMETER_6; i < (int)EnumDiameter.DIAMETER_16; i++)
-                    {
-                        total_num_x += _num[i];
-                        total_weight_x += _weight[i];
-                    }
-                    dt_x.Rows.Add("Φ6", _num[0], (double)_num[0] / (double)total_num_x, double.Parse((_weight[0] / 1000).ToString("F2")), (_weight[0] / total_weight_x));
-                    dt_x.Rows.Add("Φ8", _num[1], (double)_num[1] / (double)total_num_x, double.Parse((_weight[1] / 1000).ToString("F2")), (_weight[1] / total_weight_x));
-                    dt_x.Rows.Add("Φ10", _num[2], (double)_num[2] / (double)total_num_x, double.Parse((_weight[2] / 1000).ToString("F2")), (_weight[2] / total_weight_x));
-                    dt_x.Rows.Add("Φ12", _num[3], (double)_num[3] / (double)total_num_x, double.Parse((_weight[3] / 1000).ToString("F2")), (_weight[3] / total_weight_x));
-                    dt_x.Rows.Add("Φ14", _num[4], (double)_num[4] / (double)total_num_x, double.Parse((_weight[4] / 1000).ToString("F2")), (_weight[4] / total_weight_x));
-
-                    x_x = new List<string>() { "Φ6", "Φ8", "Φ10", "Φ12", "Φ14" };
-                    x_y1 = new List<int>() { _num[0], _num[1], _num[2], _num[3], _num[4] };
-                    x_y2 = new List<double>() {
-                        double.Parse((_weight[0] / 1000).ToString("F2")),
-                        double.Parse((_weight[1] / 1000).ToString("F2")),
-                        double.Parse((_weight[2] / 1000).ToString("F2")),
-                        double.Parse((_weight[3] / 1000).ToString("F2")),
-                        double.Parse((_weight[4] / 1000).ToString("F2"))};
-
-                    //chartshow.ChartRectShow("线材——数量(根)", x_x, x_y1, chart4);
-                    //chartshow.ChartRectShow("线材——重量(吨)", x_x, x_y2, chart6);
-
-
-                }
-                dataGridView14.DataSource = dt_x;
-                dataGridView14.Columns[2].DefaultCellStyle.Format = "P1";
-                dataGridView14.Columns[3].DefaultCellStyle.Format = "0.0";
-                dataGridView14.Columns[4].DefaultCellStyle.Format = "P1";
-
-
-                //统计棒材
-                DataTable dt_b = new DataTable();//
-                dt_b.Columns.Add("直径(mm)", typeof(string));
-                dt_b.Columns.Add("数量(根)", typeof(int));
-                dt_b.Columns.Add("数量(%)", typeof(double));
-                dt_b.Columns.Add("重量(吨)", typeof(double));
-                dt_b.Columns.Add("重量(%)", typeof(double));
-
-                int total_num_b = 0;
-                double total_weight_b = 0;
-
-                List<string> b_x = new List<string>();
-                List<int> b_y1 = new List<int>();
-                List<double> b_y2 = new List<double>();
-
-                if (GeneralClass.m_typeC14)//true为Φ14棒材，false为Φ14线材
-                {
-                    for (int i = (int)EnumDiameter.DIAMETER_14; i < (int)EnumDiameter.maxDiameterNum; i++)
-                    {
-                        total_num_b += _num[i];
-                        total_weight_b += _weight[i];
-                    }
-                    for (int i = (int)EnumDiameter.DIAMETER_14; i < (int)EnumDiameter.maxDiameterNum; i++)
-                    {
-                        dt_b.Rows.Add("Φ" + ((EnumDiameter)i).ToString().Substring(9, 2), _num[i], (double)_num[i] / (double)total_num_b, double.Parse((_weight[i] / 1000).ToString("F2")), _weight[i] / total_weight_b);
-
-                        b_x.Add("Φ" + ((EnumDiameter)i).ToString().Substring(9, 2));
-                        b_y1.Add(_num[i]);
-                        b_y2.Add(double.Parse((_weight[i] / 1000).ToString("F2")));
-                    }
-
-                    //chartshow.ChartRectShow("棒材——数量(根)", b_x, b_y1, chart5);
-                    //chartshow.ChartRectShow("棒材——重量(吨)", b_x, b_y2, chart7);
-
-                }
-                else
-                {
-                    for (int i = (int)EnumDiameter.DIAMETER_16; i < (int)EnumDiameter.maxDiameterNum; i++)
-                    {
-                        total_num_b += _num[i];
-                        total_weight_b += _weight[i];
-                    }
-                    for (int i = (int)EnumDiameter.DIAMETER_16; i < (int)EnumDiameter.maxDiameterNum; i++)
-                    {
-                        dt_b.Rows.Add("Φ" + ((EnumDiameter)i).ToString().Substring(9, 2), _num[i], (double)_num[i] / (double)total_num_b, double.Parse((_weight[i] / 1000).ToString("F2")), _weight[i] / total_weight_b);
-
-                        b_x.Add("Φ" + ((EnumDiameter)i).ToString().Substring(9, 2));
-                        b_y1.Add(_num[i]);
-                        b_y2.Add(double.Parse((_weight[i] / 1000).ToString("F2")));
-                    }
-
-                    //chartshow.ChartRectShow("棒材——数量(根)", b_x, b_y1, chart5);
-                    //chartshow.ChartRectShow("棒材——重量(吨)", b_x, b_y2, chart7);
-
-                }
-
-                dataGridView13.DataSource = dt_b;
-                dataGridView13.Columns[2].DefaultCellStyle.Format = "P1";
-                dataGridView13.Columns[3].DefaultCellStyle.Format = "0.00";
-                dataGridView13.Columns[4].DefaultCellStyle.Format = "P1";
+                FillDGV_Total(_banglist, ref dataGridView13);
+                FillDGV_Total(_xianlist, ref dataGridView14);
 
                 //汇总一起显示,20231027
-                List<string> add_x = new List<string>();
-                List<int> add_y1 = new List<int>();
-                List<double> add_y2 = new List<double>();
+                List<string> _x = new List<string>();
+                List<int> _y1 = new List<int>();
+                List<double> _y2 = new List<double>();
 
-                add_x.AddRange(x_x);
-                add_x.AddRange(b_x);
-                add_y1.AddRange(x_y1);
-                add_y1.AddRange(b_y1);
-                add_y2.AddRange(x_y2);
-                add_y2.AddRange(b_y2);
-                chartshow.ChartRectShow("数量(根)", add_x, add_y1, chart4);
-                chartshow.ChartRectShow("重量(吨)", add_x, add_y2, chart5);
+                Count_total(GeneralClass.AllRebarList, ref _x, ref _y1, ref _y2);
+
+                for (int i = 0; i < _y2.Count; i++)
+                {
+                    _y2[i] = double.Parse((_y2[i] / 1000).ToString("F2"));//转成吨，两位小数
+                }
+                chartshow.ChartRectShow("数量(根)", _x, _y1, chart4);
+                chartshow.ChartRectShow("重量(吨)", _x, _y2, chart5);
+
 
 
                 //统计合计
@@ -1184,6 +1088,22 @@ namespace RebarSampling
                 dt_z.Columns.Add("重量(吨)", typeof(double));
                 dt_z.Columns.Add("重量(%)", typeof(double));
 
+                int total_num_x, total_num_b;
+                double total_weight_x, total_weight_b;
+                List<string> x_name = new List<string>();
+                List<int> x_num = new List<int>();
+                List<double> x_weight = new List<double>();
+                List<string> b_name = new List<string>();
+                List<int> b_num = new List<int>();
+                List<double> b_weight = new List<double>();
+
+                Count_total(_xianlist, ref x_name, ref x_num, ref x_weight);
+                Count_total(_banglist, ref b_name, ref b_num, ref b_weight);
+
+                total_num_x = x_num.Sum(t => t);
+                total_num_b = b_num.Sum(t => t);
+                total_weight_x = x_weight.Sum(t => t);
+                total_weight_b = b_weight.Sum(t => t);
                 dt_z.Rows.Add("线材", total_num_x, (double)total_num_x / (double)(total_num_x + total_num_b), double.Parse((total_weight_x / 1000).ToString("F2")), total_weight_x / (total_weight_x + total_weight_b));
                 dt_z.Rows.Add("棒材", total_num_b, (double)total_num_b / (double)(total_num_x + total_num_b), double.Parse((total_weight_b / 1000).ToString("F2")), total_weight_b / (total_weight_x + total_weight_b));
 
@@ -1196,8 +1116,6 @@ namespace RebarSampling
                 List<string> x = new List<string>() { "线材", "棒材" };
                 List<int> y1 = new List<int>() { total_num_x, total_num_b };
                 List<double> y2 = new List<double>() { double.Parse((total_weight_x / 1000).ToString("F2")), double.Parse((total_weight_b / 1000).ToString("F2")) };
-                //ChartTotalNum(x, y1);
-                //ChartTotalWeight(x, y2);
                 chartshow.ChartPieShow("总览——数量(根)", x, y1, chart2);
                 chartshow.ChartPieShow("总览——重量(吨)", x, y2, chart3);
 
@@ -1205,6 +1123,98 @@ namespace RebarSampling
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
+        private void Count_total(List<RebarData> _list, ref List<string> _dialist, ref List<int> _numlist, ref List<double> _weightlist)
+        {
+            _dialist.Clear();
+            _numlist.Clear();
+            _weightlist.Clear();
+
+            var _grouplist = _list.GroupBy(t => t.Diameter).Select(
+                y => new
+                {
+                    _diameter = y.Key,
+                    _totalnum = y.Sum(x => x.TotalPieceNum),
+                    _totalweight = y.Sum(x => x.TotalWeight),
+                    _list = y.ToList()
+                }).ToList().OrderBy(t => t._diameter);
+
+            foreach (var item in _grouplist)
+            {
+                _dialist.Add("Φ" + item._diameter.ToString());
+                _numlist.Add(item._totalnum);
+                _weightlist.Add(item._totalweight);
+            }
+        }
+        private void FillDGV_Total(List<RebarData> _list, ref DataGridView _dgv)
+        {
+            List<string> _dialist = new List<string>();
+            List<int> _numlist = new List<int>();
+            List<double> _weightlist = new List<double>();
+
+            //先统计线材
+            DataTable dt_x = new DataTable();
+            dt_x.Columns.Add("直径(mm)", typeof(string));
+            dt_x.Columns.Add("数量(根)", typeof(int));
+            dt_x.Columns.Add("数量(%)", typeof(double));
+            dt_x.Columns.Add("重量(吨)", typeof(double));
+            dt_x.Columns.Add("重量(%)", typeof(double));
+
+            int totalnum = 0;
+            double totalweight = 0;
+
+            Count_total(_list, ref _dialist, ref _numlist, ref _weightlist);
+
+            totalnum = _numlist.Sum(t => t);
+            totalweight = _weightlist.Sum(t => t);
+
+            for (int i = 0; i < _dialist.Count; i++)
+            {
+                dt_x.Rows.Add(_dialist[i], _numlist[i], (double)_numlist[i] / (double)totalnum, double.Parse((_weightlist[i] / 1000).ToString("F2")), (_weightlist[i] / totalweight));
+            }
+
+            _dgv.DataSource = dt_x;
+            _dgv.Columns[2].DefaultCellStyle.Format = "P1";
+            _dgv.Columns[3].DefaultCellStyle.Format = "0.0";
+            _dgv.Columns[4].DefaultCellStyle.Format = "P1";
+        }
+
+
+        private void FillDGV_Xian_detail(List<RebarData> _list, ref DataGridView _dgv)
+        {
+            if (_list.Count == 0)
+            {
+                return;
+            }
+            int _diameter = _list[0].Diameter;
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add("直径", typeof(string));
+            dt.Columns.Add("钢筋简图", typeof(Image));
+            dt.Columns.Add("长度(mm)", typeof(int));
+            dt.Columns.Add("数量(根)", typeof(int));
+            dt.Columns.Add("展开图", typeof(Image));
+            dt.Columns.Add("边角信息", typeof(string));
+
+            var _group = _list.GroupBy(t => new { t.PicTypeNum, t.Length }).Select(
+    y => new
+    {
+        _picNum = y.Key.PicTypeNum,
+        _length = y.Key.Length,
+        _num = y.Sum(x => x.TotalPieceNum),
+        _list = y.ToList()
+    }).ToList();
+
+            foreach (var item in _group)
+            {
+                List<Rebar> temp = Algorithm.ListExpand(item._list);
+                dt.Rows.Add("Φ" + _diameter.ToString(), GetImageFromList(item._picNum), item._length, item._num, graphics.PaintRebarXian(temp[0]), temp[0].CornerMessage);
+            }
+
+            _dgv.DataSource = dt;
+            //_dgv.Columns[2].DefaultCellStyle.Format = "P1";
+            //_dgv.Columns[3].DefaultCellStyle.Format = "0.0";
+            //_dgv.Columns[4].DefaultCellStyle.Format = "P1";
+        }
         /// <summary>
         /// 根据线材的直条、弯曲区分统计，
         /// </summary>
@@ -1241,7 +1251,16 @@ namespace RebarSampling
             dt.Columns.Add("重量(kg)", typeof(double));
             dt.Columns.Add("重量(%)", typeof(double));
 
-            if (GeneralClass.m_typeC14)
+            if (GeneralClass.m_typeC12 && GeneralClass.m_typeC14)//12和14都是棒材
+            {
+                _totalnum = _num[0] + _num[1] + _num[2];
+                _totalweight = _weight[0] + _weight[1] + _weight[2];
+                dt.Rows.Add("Φ6", _num[0], (double)_num[0] / (double)_totalnum, _weight[0], (_weight[0] / _totalweight));
+                dt.Rows.Add("Φ8", _num[1], (double)_num[1] / (double)_totalnum, _weight[1], (_weight[1] / _totalweight));
+                dt.Rows.Add("Φ10", _num[2], (double)_num[2] / (double)_totalnum, _weight[2], (_weight[2] / _totalweight));
+
+            }
+            else if (!GeneralClass.m_typeC12 && GeneralClass.m_typeC14)//12线材，14棒材
             {
                 _totalnum = _num[0] + _num[1] + _num[2] + _num[3];
                 _totalweight = _weight[0] + _weight[1] + _weight[2] + _weight[3];
@@ -1277,29 +1296,11 @@ namespace RebarSampling
                 List<RebarData> _xiandata_z = new List<RebarData>();//直条
                 List<RebarData> _xiandata_w = new List<RebarData>();//弯曲
 
-                foreach (RebarData _dd in GeneralClass.AllRebarList)
-                {
-                    if (GeneralClass.m_typeC14)//
-                    {
-                        if (_dd.Diameter <= 12)
-                        {
-                            if (_dd.PicTypeNum == "10000")
-                                _xiandata_z.Add(_dd);
-                            else
-                                _xiandata_w.Add(_dd);
-                        }
-                    }
-                    else
-                    {
-                        if (_dd.Diameter <= 14)
-                        {
-                            if (_dd.PicTypeNum == "10000")
-                                _xiandata_z.Add(_dd);
-                            else
-                                _xiandata_w.Add(_dd);
-                        }
-                    }
-                }
+
+                int _threshold = (GeneralClass.m_typeC12) ? 12 : ((GeneralClass.m_typeC14) ? 14 : 16);//先看12是否为棒材，再看14是否为棒材
+                _xiandata_z = GeneralClass.AllRebarList.Where(t => t.Diameter < _threshold && t.PicTypeNum == "10000").ToList();
+                _xiandata_w = GeneralClass.AllRebarList.Where(t => t.Diameter < _threshold && t.PicTypeNum != "10000").ToList();
+
                 int total_num_z, total_num_w = 0;
                 double total_weight_z, total_weight_w = 0;
                 FillDGV_Xian_type(_xiandata_z, ref dataGridView9, out total_num_z, out total_weight_z);
@@ -1322,145 +1323,6 @@ namespace RebarSampling
                 dataGridView23.Columns[3].DefaultCellStyle.Format = "0.00";
                 dataGridView23.Columns[4].DefaultCellStyle.Format = "P1";
 
-                #region 备份
-
-                //GeneralClass.interactivityData?.printlog(1, "开始统计所有线材");
-
-                //GeneralClass.AllRebarList = GeneralClass.SQLiteOpt.GetAllRebarList(GeneralClass.AllRebarTableName);//取得所有的钢筋数据list
-
-                //List<RebarData> _xiandata = new List<RebarData>();
-                //foreach (RebarData _dd in GeneralClass.AllRebarList)
-                //{
-                //    if (_dd.Diameter <= 12)
-                //    {
-                //        _xiandata.Add(_dd);
-                //    }
-                //}
-
-                //int[] _num = new int[4];                //按照6，8，10，12四种直径来统计
-                //double[] _weight = new double[4];
-                ////int total_num;
-                ////double total_weight;
-                ////先统计直条的线材
-                //DataTable dt_z = new DataTable();
-                //dt_z.Columns.Add("直径", typeof(string));
-                //dt_z.Columns.Add("数量", typeof(int));
-                //dt_z.Columns.Add("数量百分比", typeof(double));
-                //dt_z.Columns.Add("重量(kg)", typeof(double));
-                //dt_z.Columns.Add("重量百分比", typeof(double));
-
-                //foreach (RebarData _ddd in _xiandata)
-                //{
-                //    if (_ddd.TypeNum == "10000")
-                //    {
-                //        if (_ddd.Diameter == 6)
-                //        {
-                //            _num[0] += _ddd.TotalPieceNum;
-                //            _weight[0] += _ddd.TotalWeight;
-                //        }
-                //        else if (_ddd.Diameter == 8)
-                //        {
-                //            _num[1] += _ddd.TotalPieceNum;
-                //            _weight[1] += _ddd.TotalWeight;
-                //        }
-                //        else if (_ddd.Diameter == 10)
-                //        {
-                //            _num[2] += _ddd.TotalPieceNum;
-                //            _weight[2] += _ddd.TotalWeight;
-                //        }
-                //        else
-                //        {
-                //            _num[3] += _ddd.TotalPieceNum;
-                //            _weight[3] += _ddd.TotalWeight;
-                //        }
-                //    }
-                //}
-                //int total_num_z = _num[0] + _num[1] + _num[2] + _num[3];
-                //double total_weight_z = _weight[0] + _weight[1] + _weight[2] + _weight[3];
-                //dt_z.Rows.Add("Φ6", _num[0], (double)_num[0] / (double)total_num_z, _weight[0], (_weight[0] / total_weight_z));
-                //dt_z.Rows.Add("Φ8", _num[1], (double)_num[1] / (double)total_num_z, _weight[1], (_weight[1] / total_weight_z));
-                //dt_z.Rows.Add("Φ10", _num[2], (double)_num[2] / (double)total_num_z, _weight[2], (_weight[2] / total_weight_z));
-                //dt_z.Rows.Add("Φ12", _num[3], (double)_num[3] / (double)total_num_z, _weight[3], (_weight[3] / total_weight_z));
-
-                //dataGridView9.DataSource = dt_z;
-                //dataGridView9.Columns[2].DefaultCellStyle.Format = "P1";
-                //dataGridView9.Columns[3].DefaultCellStyle.Format = "0.0";
-                //dataGridView9.Columns[4].DefaultCellStyle.Format = "P1";
-
-
-                ////统计弯曲的线材
-                //DataTable dt_w = new DataTable();//弯曲线材
-                //_num = new int[4];      //清空
-                //_weight = new double[4];
-
-                //dt_w.Columns.Add("直径", typeof(string));
-                //dt_w.Columns.Add("数量", typeof(int));
-                //dt_w.Columns.Add("数量百分比", typeof(double));
-                //dt_w.Columns.Add("重量(kg)", typeof(double));
-                //dt_w.Columns.Add("重量百分比", typeof(double));
-
-                //foreach (RebarData _ddd in _xiandata)
-                //{
-                //    if (_ddd.TypeNum != "10000")
-                //    {
-                //        if (_ddd.Diameter == 6)
-                //        {
-                //            _num[0] += _ddd.TotalPieceNum;
-                //            _weight[0] += _ddd.TotalWeight;
-                //        }
-                //        else if (_ddd.Diameter == 8)
-                //        {
-                //            _num[1] += _ddd.TotalPieceNum;
-                //            _weight[1] += _ddd.TotalWeight;
-                //        }
-                //        else if (_ddd.Diameter == 10)
-                //        {
-                //            _num[2] += _ddd.TotalPieceNum;
-                //            _weight[2] += _ddd.TotalWeight;
-                //        }
-                //        else
-                //        {
-                //            _num[3] += _ddd.TotalPieceNum;
-                //            _weight[3] += _ddd.TotalWeight;
-                //        }
-                //    }
-                //}
-                //int total_num_w = _num[0] + _num[1] + _num[2] + _num[3];
-                //double total_weight_w = _weight[0] + _weight[1] + _weight[2] + _weight[3];
-                //dt_w.Rows.Add("Φ6", _num[0], (double)_num[0] / (double)total_num_w, _weight[0], (_weight[0] / total_weight_w));
-                //dt_w.Rows.Add("Φ8", _num[1], (double)_num[1] / (double)total_num_w, _weight[1], (_weight[1] / total_weight_w));
-                //dt_w.Rows.Add("Φ10", _num[2], (double)_num[2] / (double)total_num_w, _weight[2], (_weight[2] / total_weight_w));
-                //dt_w.Rows.Add("Φ12", _num[3], (double)_num[3] / (double)total_num_w, _weight[3], (_weight[3] / total_weight_w));
-                ////dt_w.Columns[2].ExtendedProperties["Format"] = "P1";//指定列属性为百分比，保留一位小数
-                ////dt_w.Columns[4].ExtendedProperties["Format"] = "P1";//指定列属性为百分比，保留一位小数
-
-                //dataGridView12.DataSource = dt_w;
-                //dataGridView12.Columns[2].DefaultCellStyle.Format = "P1";
-                //dataGridView12.Columns[3].DefaultCellStyle.Format = "0.00";
-                //dataGridView12.Columns[4].DefaultCellStyle.Format = "P1";
-
-                ////FillDGVWithRebarList(_xiandata, dataGridView9);
-
-                ////汇总统计
-                //DataTable dt_hz = new DataTable();
-                //_num = new int[2];      //按照
-                //_weight = new double[2];
-                //dt_hz.Columns.Add("类型", typeof(string));
-                //dt_hz.Columns.Add("数量(根)", typeof(int));
-                //dt_hz.Columns.Add("数量百分比", typeof(double));
-                //dt_hz.Columns.Add("重量(kg)", typeof(double));
-                //dt_hz.Columns.Add("重量百分比", typeof(double));
-
-                ////dt_x.Rows.Add("Φ6", _num[0], (double)_num[0] / (double)total_num_x, _weight[0], (_weight[0] / total_weight_x));
-                //dt_hz.Rows.Add("直条", total_num_z, (double)total_num_z / (double)(total_num_z + total_num_w), total_weight_z, total_weight_z / (total_weight_z + total_weight_w));
-                //dt_hz.Rows.Add("弯曲", total_num_w, (double)total_num_w / (double)(total_num_z + total_num_w), total_weight_w, total_weight_w / (total_weight_z + total_weight_w));
-
-                //dataGridView23.DataSource = dt_hz;
-                //dataGridView23.Columns[2].DefaultCellStyle.Format = "P1";
-                //dataGridView23.Columns[3].DefaultCellStyle.Format = "0.00";
-                //dataGridView23.Columns[4].DefaultCellStyle.Format = "P1";
-
-                #endregion
 
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -1552,8 +1414,8 @@ namespace RebarSampling
                 dgv_no = 0;
             }
 
-            int[] _num = new int[(int)EnumRebarBang.maxRebarBangNum];                //按照14,16,18,20,22,25,28,32,36,40十种直径来统计
-            double[] _weight = new double[(int)EnumRebarBang.maxRebarBangNum];
+            int[] _num = new int[(int)EnumDiameterBang.maxRebarBangNum];                //按照14,16,18,20,22,25,28,32,36,40十种直径来统计
+            double[] _weight = new double[(int)EnumDiameterBang.maxRebarBangNum];
             total_num = 0;
             total_weight = 0;
 
@@ -1573,9 +1435,9 @@ namespace RebarSampling
                         {
                             if (!_ddd.IfBend && !_ddd.IfTao)   //不弯不套
                             {
-                                for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+                                for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
                                 {
-                                    if (_ddd.Diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))//BANG_C14
+                                    if (_ddd.Diameter == Convert.ToInt32(((EnumDiameterBang)i).ToString().Substring(6, 2)))//BANG_C14
                                     {
                                         _num[i] += _ddd.TotalPieceNum;
                                         _weight[i] += _ddd.TotalWeight;
@@ -1588,9 +1450,9 @@ namespace RebarSampling
                         {
                             if (!_ddd.IfBend && _ddd.IfTao)   //不弯仅套
                             {
-                                for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+                                for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
                                 {
-                                    if (_ddd.Diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))//BANG_C14
+                                    if (_ddd.Diameter == Convert.ToInt32(((EnumDiameterBang)i).ToString().Substring(6, 2)))//BANG_C14
                                     {
                                         _num[i] += _ddd.TotalPieceNum;
                                         _weight[i] += _ddd.TotalWeight;
@@ -1603,9 +1465,9 @@ namespace RebarSampling
                         {
                             if (_ddd.IfBend && !_ddd.IfTao)   //不套仅弯
                             {
-                                for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+                                for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
                                 {
-                                    if (_ddd.Diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))//BANG_C14
+                                    if (_ddd.Diameter == Convert.ToInt32(((EnumDiameterBang)i).ToString().Substring(6, 2)))//BANG_C14
                                     {
                                         _num[i] += _ddd.TotalPieceNum;
                                         _weight[i] += _ddd.TotalWeight;
@@ -1618,9 +1480,9 @@ namespace RebarSampling
                         {
                             if (_ddd.IfBend && _ddd.IfTao)   //又套又弯
                             {
-                                for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+                                for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
                                 {
-                                    if (_ddd.Diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))//BANG_C14
+                                    if (_ddd.Diameter == Convert.ToInt32(((EnumDiameterBang)i).ToString().Substring(6, 2)))//BANG_C14
                                     {
                                         _num[i] += _ddd.TotalPieceNum;
                                         _weight[i] += _ddd.TotalWeight;
@@ -1634,14 +1496,14 @@ namespace RebarSampling
 
                 }
             }
-            for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+            for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
             {
                 total_num += _num[i];
                 total_weight += _weight[i];
             }
-            for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+            for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
             {
-                dt_z.Rows.Add("Φ" + ((EnumRebarBang)i).ToString().Substring(6, 2), _num[i], (double)_num[i] / (double)total_num, _weight[i], _weight[i] / total_weight);
+                dt_z.Rows.Add("Φ" + ((EnumDiameterBang)i).ToString().Substring(6, 2), _num[i], (double)_num[i] / (double)total_num, _weight[i], _weight[i] / total_weight);
             }
 
             _dgv.DataSource = dt_z;
@@ -1763,11 +1625,17 @@ namespace RebarSampling
             }
 
         }
+        /// <summary>
+        /// 按照棒材的不同加工工艺分类汇总
+        /// </summary>
+        /// <param name="_list"></param>
+        /// <param name="_worktype"></param>
+        /// <param name="_dgv"></param>
         private void FillDGV_Bang_type(List<RebarData> _list, EnumWorkType _worktype, ref DataGridView _dgv/*, out int total_num, out double total_weight*/)
         {
 
-            int[] _num = new int[(int)EnumRebarBang.maxRebarBangNum];                //按照14,16,18,20,22,25,28,32,36,40十种直径来统计
-            double[] _weight = new double[(int)EnumRebarBang.maxRebarBangNum];
+            int[] _num = new int[(int)EnumDiameterBang.maxRebarBangNum];                //按照14,16,18,20,22,25,28,32,36,40十种直径来统计
+            double[] _weight = new double[(int)EnumDiameterBang.maxRebarBangNum];
             int total_num = 0;
             double total_weight = 0;
 
@@ -1787,9 +1655,9 @@ namespace RebarSampling
                         {
                             if (!_ddd.IfBend && !_ddd.IfTao)   //不弯不套
                             {
-                                for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+                                for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
                                 {
-                                    if (_ddd.Diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))//BANG_C14
+                                    if (_ddd.Diameter == Convert.ToInt32(((EnumDiameterBang)i).ToString().Substring(6, 2)))//BANG_C14
                                     {
                                         _num[i] += _ddd.TotalPieceNum;
                                         _weight[i] += _ddd.TotalWeight;
@@ -1802,9 +1670,9 @@ namespace RebarSampling
                         {
                             if (!_ddd.IfBend && _ddd.IfTao)   //不弯仅套
                             {
-                                for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+                                for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
                                 {
-                                    if (_ddd.Diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))//BANG_C14
+                                    if (_ddd.Diameter == Convert.ToInt32(((EnumDiameterBang)i).ToString().Substring(6, 2)))//BANG_C14
                                     {
                                         _num[i] += _ddd.TotalPieceNum;
                                         _weight[i] += _ddd.TotalWeight;
@@ -1817,9 +1685,9 @@ namespace RebarSampling
                         {
                             if (_ddd.IfBend && !_ddd.IfTao)   //不套仅弯
                             {
-                                for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+                                for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
                                 {
-                                    if (_ddd.Diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))//BANG_C14
+                                    if (_ddd.Diameter == Convert.ToInt32(((EnumDiameterBang)i).ToString().Substring(6, 2)))//BANG_C14
                                     {
                                         _num[i] += _ddd.TotalPieceNum;
                                         _weight[i] += _ddd.TotalWeight;
@@ -1832,9 +1700,9 @@ namespace RebarSampling
                         {
                             if (_ddd.IfBend && _ddd.IfTao)   //又套又弯
                             {
-                                for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+                                for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
                                 {
-                                    if (_ddd.Diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))//BANG_C14
+                                    if (_ddd.Diameter == Convert.ToInt32(((EnumDiameterBang)i).ToString().Substring(6, 2)))//BANG_C14
                                     {
                                         _num[i] += _ddd.TotalPieceNum;
                                         _weight[i] += _ddd.TotalWeight;
@@ -1848,14 +1716,14 @@ namespace RebarSampling
 
                 }
             }
-            for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+            for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
             {
                 total_num += _num[i];
                 total_weight += _weight[i];
             }
-            for (int i = (int)EnumRebarBang.BANG_C14; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+            for (int i = (int)EnumDiameterBang.BANG_C14; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
             {
-                dt_z.Rows.Add("Φ" + ((EnumRebarBang)i).ToString().Substring(6, 2), _num[i], (double)_num[i] / (double)total_num, _weight[i], _weight[i] / total_weight);
+                dt_z.Rows.Add("Φ" + ((EnumDiameterBang)i).ToString().Substring(6, 2), _num[i], (double)_num[i] / (double)total_num, _weight[i], _weight[i] / total_weight);
             }
 
             _dgv.DataSource = dt_z;
@@ -1947,12 +1815,62 @@ namespace RebarSampling
             return _rt;
 
         }
+        /// <summary>
+        /// 判断直径选择是否处于单选中状态，只考虑分子
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckDiameterSinglePick()
+        {
+            int _count = 0;
+            if (checkBox68.Checked) { _count++; }
+            if (checkBox8.Checked) { _count++; }
+            if (checkBox9.Checked) { _count++; }
+            if (checkBox10.Checked) { _count++; }
+            if (checkBox11.Checked) { _count++; }
+            if (checkBox12.Checked) { _count++; }
+            if (checkBox13.Checked) { _count++; }
+            if (checkBox14.Checked) { _count++; }
+            if (checkBox15.Checked) { _count++; }
+            if (checkBox18.Checked) { _count++; }
+            if (checkBox39.Checked) { _count++; }
+
+            if (_count == 1)
+                return true;
+            else
+                return false;
+
+        }
+        /// <summary>
+        /// 获取直径选择中处于选中的是哪种直径，前提必须只选中一种直径
+        /// </summary>
+        /// <returns></returns>
+        private EnumDiameterBang CheckDiameterWhichPick()
+        {
+            if (!CheckDiameterSinglePick())
+            {
+                return EnumDiameterBang.NONE;
+            }
+            if (checkBox68.Checked) { return EnumDiameterBang.BANG_C12; }
+            if (checkBox8.Checked) { return EnumDiameterBang.BANG_C14; }
+            if (checkBox9.Checked) { return EnumDiameterBang.BANG_C16; }
+            if (checkBox10.Checked) { return EnumDiameterBang.BANG_C18; }
+            if (checkBox11.Checked) { return EnumDiameterBang.BANG_C20; }
+            if (checkBox12.Checked) { return EnumDiameterBang.BANG_C22; }
+            if (checkBox13.Checked) { return EnumDiameterBang.BANG_C25; }
+            if (checkBox14.Checked) { return EnumDiameterBang.BANG_C28; }
+            if (checkBox15.Checked) { return EnumDiameterBang.BANG_C32; }
+            if (checkBox18.Checked) { return EnumDiameterBang.BANG_C36; }
+            if (checkBox39.Checked) { return EnumDiameterBang.BANG_C40; }
+
+            return EnumDiameterBang.NONE;
+        }
         private bool CheckDiameter(RebarData _data, bool _sonORmum)
         {
             bool _rt;
             if (!_sonORmum)
             {
-                _rt = ((checkBox8.Checked && GeneralClass.m_typeC14) ? (_data.Diameter == 14) : false) ||
+                _rt = ((checkBox68.Checked && GeneralClass.m_typeC12) ? (_data.Diameter == 12) : false) ||
+                    ((checkBox8.Checked && GeneralClass.m_typeC14) ? (_data.Diameter == 14) : false) ||
                                 (checkBox9.Checked ? (_data.Diameter == 16) : false) ||
                                 (checkBox10.Checked ? (_data.Diameter == 18) : false) ||
                                 (checkBox11.Checked ? (_data.Diameter == 20) : false) ||
@@ -1965,7 +1883,8 @@ namespace RebarSampling
             }
             else
             {
-                _rt = ((checkBox35.Checked && GeneralClass.m_typeC14) ? (_data.Diameter == 14) : false) ||
+                _rt = ((checkBox69.Checked && GeneralClass.m_typeC12) ? (_data.Diameter == 12) : false) ||
+                     ((checkBox35.Checked && GeneralClass.m_typeC14) ? (_data.Diameter == 14) : false) ||
                                 (checkBox34.Checked ? (_data.Diameter == 16) : false) ||
                                 (checkBox33.Checked ? (_data.Diameter == 18) : false) ||
                                 (checkBox32.Checked ? (_data.Diameter == 20) : false) ||
@@ -1984,14 +1903,21 @@ namespace RebarSampling
             {
                 GeneralClass.interactivityData?.printlog(1, "开始统计所有棒材");
 
+                GeneralClass.m_MaterialPool.Clear();//清空原材库
+                GeneralClass.AddDefaultMaterial();//添加默认的原材库
+
                 GeneralClass.AllRebarList = GeneralClass.SQLiteOpt.GetAllRebarList(GeneralClass.AllRebarTableName);//取得所有的钢筋数据list
 
                 List<RebarData> _sonData = new List<RebarData>();//分子
                 List<RebarData> _mumData = new List<RebarData>();   //分母
 
+                //int _threshold = (GeneralClass.m_typeC14) ? 14 : 16;//如果14为线材，则从16开始统计
+                // _threshold = (GeneralClass.m_typeC12) ? 12 : 14;//如果12为线材，则从14开始统计
+                int _threshold = (GeneralClass.m_typeC12) ? 12 : ((GeneralClass.m_typeC14) ? 14 : 16);//先看12是否为棒材，再看14是否为棒材
+
                 foreach (RebarData _dd in GeneralClass.AllRebarList)
                 {
-                    int _threshold = (GeneralClass.m_typeC14) ? 14 : 16;//如果14为线材，则从16开始统计
+                    //int _threshold = (GeneralClass.m_typeC14) ? 14 : 16;//如果14为线材，则从16开始统计
                     if (_dd.Diameter >= _threshold && _dd.TotalPieceNum != 0
                             && CheckLengthType(_dd, false)
                             && CheckWorkType(_dd, false)
@@ -2003,7 +1929,7 @@ namespace RebarSampling
 
                 foreach (RebarData _dd in GeneralClass.AllRebarList)
                 {
-                    int _threshold = (GeneralClass.m_typeC14) ? 14 : 16;//如果14为线材，则从16开始统计
+                    //int _threshold = (GeneralClass.m_typeC14) ? 14 : 16;//如果14为线材，则从16开始统计
                     if (_dd.Diameter >= _threshold && _dd.TotalPieceNum != 0
                             && CheckLengthType(_dd, true)
                             && CheckWorkType(_dd, true)
@@ -2013,20 +1939,38 @@ namespace RebarSampling
                     }
                 }
 
+                //工艺类型统计
                 FillDGV_Bang_Worktype(_sonData, _mumData);
-                FillDGV_PiliangCut(_sonData, _mumData);
+                //长度
+                FillDGV_Length(_sonData, _mumData);
+                //长度区间
                 FillDGV_LengthArea(_sonData, _mumData);
+                //直径规格
                 FillDGV_Bang_Diameter(_sonData, _mumData);
 
+                //不同工艺统计
                 FillDGV_Bang_type(_sonData, EnumWorkType.NO_BEND_NO_TAO, ref dataGridView19);
                 FillDGV_Bang_type(_sonData, EnumWorkType.NO_BEND_YES_TAO, ref dataGridView20);
                 FillDGV_Bang_type(_sonData, EnumWorkType.YES_BEND_NO_TAO, ref dataGridView21);
                 FillDGV_Bang_type(_sonData, EnumWorkType.YES_BEND_YES_TAO, ref dataGridView22);
 
+                //弯曲角度统计
+                FillDGV_Bend(_sonData, ref dataGridView30);
+
+                //套丝图形统计
+                FillDGV_Taosi_Pic(_sonData, ref dataGridView31);
+                //套丝类型统计
+                FillDGV_Taosi(_sonData, ref dataGridView32);
+
+
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
-
+        /// <summary>
+        /// 按照直径规格汇总
+        /// </summary>
+        /// <param name="_sonlist"></param>
+        /// <param name="_mumlist"></param>
         private void FillDGV_Bang_Diameter(List<RebarData> _sonlist, List<RebarData> _mumlist)
         {
             List<GroupbyDia> _songrouplist = GeneralClass.SQLiteOpt.QueryAllListByDiameter(_sonlist);
@@ -2040,25 +1984,19 @@ namespace RebarSampling
             dt_z.Columns.Add("重量(%)", typeof(double));
 
             //_list已经过滤过，棒材、非原材、非多段
-            EnumRebarBang _start;
-            if (GeneralClass.m_typeC14)
-            {
-                _start = EnumRebarBang.BANG_C14;
-            }
-            else
-            {
-                _start = EnumRebarBang.BANG_C16;
-            }
-            int[] _num = new int[(int)EnumRebarBang.maxRebarBangNum];
-            double[] _weight = new double[(int)EnumRebarBang.maxRebarBangNum];
+            EnumDiameterBang _start = (GeneralClass.m_typeC12) ? EnumDiameterBang.BANG_C12 :
+                ((GeneralClass.m_typeC14) ? EnumDiameterBang.BANG_C14 : EnumDiameterBang.BANG_C16);//先看12是否为棒材，再看14是否为棒材
+
+            int[] _num = new int[(int)EnumDiameterBang.maxRebarBangNum];
+            double[] _weight = new double[(int)EnumDiameterBang.maxRebarBangNum];
             int total_num = 0;
             double total_weight = 0;
 
-            for (int i = (int)_start; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+            for (int i = (int)_start; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
             {
                 foreach (var item in _songrouplist)
                 {
-                    if (item._diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))
+                    if (item._diameter == Convert.ToInt32(((EnumDiameterBang)i).ToString().Substring(6, 2)))
                     {
                         _num[i] = item._totalnum;
                         _weight[i] = item._totalweight;
@@ -2067,16 +2005,16 @@ namespace RebarSampling
                 }
                 foreach (var item in _mumgrouplist)
                 {
-                    if (item._diameter == Convert.ToInt32(((EnumRebarBang)i).ToString().Substring(6, 2)))
+                    if (item._diameter == Convert.ToInt32(((EnumDiameterBang)i).ToString().Substring(6, 2)))
                     {
                         total_num += item._totalnum;
                         total_weight += item._totalweight;
                     }
                 }
             }
-            for (int i = (int)_start; i < (int)EnumRebarBang.maxRebarBangNum; i++)
+            for (int i = (int)_start; i < (int)EnumDiameterBang.maxRebarBangNum; i++)
             {
-                dt_z.Rows.Add("Φ" + ((EnumRebarBang)i).ToString().Substring(6, 2), _num[i], (double)_num[i] / (double)total_num, _weight[i], _weight[i] / total_weight);
+                dt_z.Rows.Add("Φ" + ((EnumDiameterBang)i).ToString().Substring(6, 2), _num[i], (double)_num[i] / (double)total_num, _weight[i], _weight[i] / total_weight);
             }
 
             dataGridView8.DataSource = dt_z;
@@ -2469,15 +2407,35 @@ namespace RebarSampling
         //}
 
         /// <summary>
+        /// 批量锯切，按照单一直径的挑选长度进入原材库
+        /// </summary>
+        private void FillDGV_MaterialPoolSingleDia(DataTable dt)
+        {
+            dataGridView33.DataSource = dt;
+            dataGridView33.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView33.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+        }
+        /// <summary>
+        /// 批量锯切，汇总所有直径的已挑选长度形成原材库
+        /// </summary>
+        private void FillDGV_MaterialPoolAllDia(DataTable dt)
+        {
+            dataGridView34.DataSource = dt;
+            dataGridView34.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView34.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+
+        }
+
+        /// <summary>
         /// 棒材的批量锯切统计，主要是按照长度统计
         /// </summary>
         /// <param name="_sonlist"></param>
-        private void FillDGV_PiliangCut(List<RebarData> _sonlist, List<RebarData> _mumlist)
+        private void FillDGV_Length(List<RebarData> _sonlist, List<RebarData> _mumlist)
         {
-
             DataTable dt = new DataTable();
 
-            //dt.Columns.Add("长度(mm)", typeof(string));
+            //dt.Columns.Add("", System.Type.GetType("System.Boolean"));
+            dt.Columns.Add(" ", typeof(bool));
             dt.Columns.Add("长度(mm)", typeof(int));
             dt.Columns.Add("数量(根)", typeof(int));
             dt.Columns.Add("数量(%)", typeof(double));
@@ -2503,30 +2461,48 @@ namespace RebarSampling
             int ilength = 0;
             foreach (var item in _sonalllist)
             {
-                if (!int.TryParse(item._length, out ilength))
+                if (!int.TryParse(item._length, out ilength))//针对缩尺~
                 {
                     string[] tt = item._length.Split('~');
                     ilength = (Convert.ToInt32(tt[0]) + Convert.ToInt32(tt[1])) / 2;
                 }
 
-                dt.Rows.Add(ilength, item._totalnum, (double)item._totalnum / total_num, item._totalweight, item._totalweight / total_weight);
+                dt.Rows.Add(false, ilength, item._totalnum, (double)item._totalnum / total_num, item._totalweight, item._totalweight / total_weight);
             }
 
             dataGridView2.DataSource = dt;
-            dataGridView2.Columns[2].DefaultCellStyle.Format = "P2";
-            dataGridView2.Columns[3].DefaultCellStyle.Format = "0.00";
-            dataGridView2.Columns[4].DefaultCellStyle.Format = "P2";
+            //dataGridView2.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView2.Columns[3].DefaultCellStyle.Format = "P2";
+            dataGridView2.Columns[4].DefaultCellStyle.Format = "0.00";
+            dataGridView2.Columns[5].DefaultCellStyle.Format = "P2";
 
         }
+
         /// <summary>
-        /// 棒材的长度区间分类，按照1米~12米共计12个长度区间
+        /// 显示批量锯切套料效果图
+        /// </summary>
+        private void FillDGV_Pi_Tao_show(List<RebarOri> _list)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("序号", typeof(int));
+            dt.Columns.Add("钢筋原材分段", typeof(Image));
+
+            foreach (var item in _list)
+            {
+                int _index = _list.IndexOf(item);
+                dt.Rows.Add(_index, graphics.PaintRebar(item));
+            }
+            dataGridView37.DataSource = dt;
+        }
+        /// <summary>
+        /// 棒材的长度区间分类，0米~12米按照500一个区间共计25个长度区间，
         /// </summary>
         /// <param name="_sonlist"></param>
         private void FillDGV_LengthArea(List<RebarData> _sonlist, List<RebarData> _mumlist)
         {
             //按照长度12个区间进行统计
             DataTable dt = new DataTable();
-
+            dt.Columns.Add(" ", typeof(bool));
             dt.Columns.Add("长度区间(m)", typeof(string));
             dt.Columns.Add("数量(根)", typeof(int));
             dt.Columns.Add("数量(%)", typeof(double));
@@ -2536,10 +2512,66 @@ namespace RebarSampling
             List<GroupbyLengthDatalist> _sonalllist = GeneralClass.SQLiteOpt.QueryAllListByLength(_sonlist);
             List<GroupbyLengthDatalist> _mumalllist = GeneralClass.SQLiteOpt.QueryAllListByLength(_mumlist);
 
+
+            #region 按照原材库的长度区间来分
+
+            //List<Rebar> _sonRebarlist = Algorithm.ListExpand(_sonlist);//先把所有的rebardata拆开，成为单根rebar
+
+            //List<string> x = new List<string>();
+            //List<int> y1 = new List<int>();
+            //List<double> y2 = new List<double>();
+
+            //int total_num_bend = _mumlist.Sum(t => t.TotalPieceNum);
+            //double total_weight_bend = _mumlist.Sum(t => t.TotalWeight);
+
+            //List<int> area_totalnum = new List<int>();
+            //List<double> area_totalweight = new List<double>();
+
+            ////添加默认原材库时，所有直径都已添加，随便选一个直径即可
+            //List<GeneralMaterial> _material = GeneralClass.m_MaterialPool.Where(t => t._diameter == EnumDiameterBang.BANG_C16).ToList().OrderBy(k => k._length).ToList();
+
+            //for (int i = 0; i < _material.Count; i++)
+            //{
+            //    //筛选在原材区间的
+            //    var temp = _sonRebarlist.Where(t => t.length > ((i != 0) ? (_material[i - 1]._length) : 0) && t.length <= _material[i]._length).ToList();
+            //    area_totalnum .Add(temp.Count);
+            //    area_totalweight .Add(temp.Sum(t=>t.weight));
+
+            //    double t0 =(double)( (i != 0) ? (_material[i - 1]._length) : 0)/1000;
+            //    double t1 = (double)(_material[i]._length) / 1000;
+
+            //    dt.Rows.Add(false, t0.ToString() + "~" + t1.ToString(), area_totalnum[i], (double)area_totalnum[i] / (double)total_num_bend, Convert.ToDouble((area_totalweight[i] / 1000).ToString("F1")), area_totalweight[i] / total_weight_bend);
+
+            //    x.Add(t0.ToString() + "~" + t1.ToString());
+            //    y1.Add(area_totalnum[i]);
+            //    y2.Add(Convert.ToDouble((area_totalweight[i] / 1000).ToString("F1")));
+
+            //}
+
+            //var ttt = _sonRebarlist.Where(t => t.length >  _material.Last()._length).ToList();//还有大于最大原材的一个范围区间，
+            //area_totalnum.Add(ttt.Count);
+            //area_totalweight.Add(ttt.Sum(t => t.weight));
+
+            //double t2 = (double)(_material.Last()._length) / 1000;
+            //dt.Rows.Add(false, t2.ToString() + "~", area_totalnum.Last(), (double)area_totalnum.Last() / (double)total_num_bend, Convert.ToDouble((area_totalweight.Last() / 1000).ToString("F1")), area_totalweight.Last() / total_weight_bend);
+
+            //x.Add(t2.ToString() + "~");
+            //y1.Add(area_totalnum.Last());
+            //y2.Add(Convert.ToDouble((area_totalweight.Last() / 1000).ToString("F1")));
+
+
+
+
+
+            #endregion
+
+            #region 按照1500一个区间
+
             int total_num_bend = 0;
             double total_weight_bend = 0;
-            int[] area_totalnum = new int[13];              //添加大于12000的长度区间
-            double[] area_totalweight = new double[13];
+            int[] area_totalnum = new int[9];              //添加大于12000的长度区间
+            double[] area_totalweight = new double[9];
+            int _interval = 1500;//1500一个区间
 
             foreach (var item in _mumalllist)
             {
@@ -2553,43 +2585,118 @@ namespace RebarSampling
 
                 if (temp <= 0) continue;
 
-                if (temp / 1000 < 12)
+                if (temp / _interval < 8)    //按照500一个区间分隔
                 {
-                    area_totalnum[temp / 1000] += item._totalnum;
-                    area_totalweight[temp / 1000] += item._totalweight;
+                    if (temp % _interval == 0) //如果没有余数，完全整除，则累加到数组前一个元素，比如1.5~2米，钢筋是按照右边长度来切，此处很重要***
+                    {
+                        area_totalnum[temp / _interval - 1] += item._totalnum;
+                        area_totalweight[temp / _interval - 1] += item._totalweight;
+                    }
+                    else
+                    {
+                        area_totalnum[temp / _interval] += item._totalnum;
+                        area_totalweight[temp / _interval] += item._totalweight;
+                    }
                 }
                 else
                 {
-                    area_totalnum[12] += item._totalnum;
-                    area_totalweight[12] += item._totalweight;
+                    area_totalnum[8] += item._totalnum;
+                    area_totalweight[8] += item._totalweight;
                 }
             }
             List<string> x = new List<string>();
             List<int> y1 = new List<int>();
             List<double> y2 = new List<double>();
 
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 8; i++)
             {
-                //dt.Rows.Add((i * 1000).ToString() + "~" + ((i + 1) * 1000 - 1).ToString(), area_totalnum[i], (double)area_totalnum[i] / (double)total_num_bend, Convert.ToDouble((area_totalweight[i] / 1000).ToString("F1")), area_totalweight[i] / total_weight_bend);
-                dt.Rows.Add(i.ToString() + "~" + (i + 1).ToString(), area_totalnum[i], (double)area_totalnum[i] / (double)total_num_bend, Convert.ToDouble((area_totalweight[i] / 1000).ToString("F1")), area_totalweight[i] / total_weight_bend);
+                double t0 = i * (double)_interval / 1000;
+                double t1 = (i + 1) * (double)_interval / 1000;
+                dt.Rows.Add(false, t0.ToString() + "~" + t1.ToString(), area_totalnum[i], (double)area_totalnum[i] / (double)total_num_bend, Convert.ToDouble((area_totalweight[i] / 1000).ToString("F1")), area_totalweight[i] / total_weight_bend);
 
-                //x.Add((i * 1000).ToString() + "~\n" + ((i + 1) * 1000 - 1).ToString());
-                x.Add(i.ToString() + "~" + (i + 1).ToString());
+                x.Add(t0.ToString() + "~" + t1.ToString());
                 y1.Add(area_totalnum[i]);
                 y2.Add(Convert.ToDouble((area_totalweight[i] / 1000).ToString("F1")));
             }
-            //dt.Rows.Add((12 * 1000).ToString() + "~", area_totalnum[12], (double)area_totalnum[12] / (double)total_num_bend, Convert.ToDouble((area_totalweight[12] / 1000).ToString("F1")), area_totalweight[12] / total_weight_bend);
-            dt.Rows.Add((12).ToString() + "~", area_totalnum[12], (double)area_totalnum[12] / (double)total_num_bend, Convert.ToDouble((area_totalweight[12] / 1000).ToString("F1")), area_totalweight[12] / total_weight_bend);
 
-            //x.Add((12 * 1000).ToString() + "~");
+            dt.Rows.Add(false, (12).ToString() + "~", area_totalnum[8], (double)area_totalnum[8] / (double)total_num_bend, Convert.ToDouble((area_totalweight[8] / 1000).ToString("F1")), area_totalweight[8] / total_weight_bend);
+
             x.Add((12).ToString() + "~");
-            y1.Add(area_totalnum[12]);
-            y2.Add(Convert.ToDouble((area_totalweight[12] / 1000).ToString("F1")));
+            y1.Add(area_totalnum[8]);
+            y2.Add(Convert.ToDouble((area_totalweight[8] / 1000).ToString("F1")));
+            #endregion
+
+            #region 按照500一个区间
+            //int total_num_bend = 0;
+            //double total_weight_bend = 0;
+            //int[] area_totalnum = new int[25];              //添加大于12000的长度区间
+            //double[] area_totalweight = new double[25];
+            //int _interval = 500;//500一个区间
+
+            //foreach (var item in _mumalllist)
+            //{
+            //    total_num_bend += item._totalnum;
+            //    total_weight_bend += item._totalweight;
+            //}
+            //foreach (var item in _sonalllist)
+            //{
+            //    int temp = 0;
+            //    int.TryParse(item._length, out temp);
+
+            //    if (temp <= 0) continue;
+
+            //    if (temp / _interval < 24)    //按照500一个区间分隔
+            //    {
+            //        if (temp % _interval == 0) //如果没有余数，完全整除，则累加到数组前一个元素，比如1.5~2米，钢筋是按照右边长度来切，此处很重要***
+            //        {
+            //            area_totalnum[temp / _interval - 1] += item._totalnum;
+            //            area_totalweight[temp / _interval - 1] += item._totalweight;
+            //        }
+            //        else
+            //        {
+            //            area_totalnum[temp / _interval] += item._totalnum;
+            //            area_totalweight[temp / _interval] += item._totalweight;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        area_totalnum[24] += item._totalnum;
+            //        area_totalweight[24] += item._totalweight;
+            //    }
+            //}
+            //List<string> x = new List<string>();
+            //List<int> y1 = new List<int>();
+            //List<double> y2 = new List<double>();
+
+            //for (int i = 0; i < 24; i++)
+            //{
+            //    double t0 = i * 0.5;
+            //    double t1 = (i + 1) * 0.5;
+            //    dt.Rows.Add(false, t0.ToString() + "~" + t1.ToString(), area_totalnum[i], (double)area_totalnum[i] / (double)total_num_bend, Convert.ToDouble((area_totalweight[i] / 1000).ToString("F1")), area_totalweight[i] / total_weight_bend);
+
+            //    x.Add(t0.ToString() + "~" + t1.ToString());
+            //    y1.Add(area_totalnum[i]);
+            //    y2.Add(Convert.ToDouble((area_totalweight[i] / 1000).ToString("F1")));
+            //}
+
+            //dt.Rows.Add(false, (12).ToString() + "~", area_totalnum[24], (double)area_totalnum[24] / (double)total_num_bend, Convert.ToDouble((area_totalweight[24] / 1000).ToString("F1")), area_totalweight[24] / total_weight_bend);
+
+            //x.Add((12).ToString() + "~");
+            //y1.Add(area_totalnum[24]);
+            //y2.Add(Convert.ToDouble((area_totalweight[24] / 1000).ToString("F1")));
+
+            #endregion
+
+
+
+
+
+
 
             dataGridView3.DataSource = dt;
-            dataGridView3.Columns[2].DefaultCellStyle.Format = "P1";
-            dataGridView3.Columns[3].DefaultCellStyle.Format = "0.00";
-            dataGridView3.Columns[4].DefaultCellStyle.Format = "P1";
+            dataGridView3.Columns[3].DefaultCellStyle.Format = "P1";
+            dataGridView3.Columns[4].DefaultCellStyle.Format = "0.00";
+            dataGridView3.Columns[5].DefaultCellStyle.Format = "P1";
 
             chartshow.ChartRectShow("长度区间(m)——数量(根)", x, y1, chart10);
             chartshow.ChartRectShow("长度区间(m)——重量(吨)", x, y2, chart11);
@@ -2849,7 +2956,8 @@ namespace RebarSampling
         {
             List<RebarData> _newlist = new List<RebarData>();
 
-            int _bangThreshold = GeneralClass.m_typeC14 ? 14 : 16;
+            //int _bangThreshold = GeneralClass.m_typeC14 ? 14 : 16;
+            int _bangThreshold = (GeneralClass.m_typeC12) ? 12 : ((GeneralClass.m_typeC14) ? 14 : 16);//先看12是否为棒材，再看14是否为棒材
 
             _newlist = _list.Where(t =>
            ((checkBox49.Checked) ? (t.Diameter > 0) : (t.Diameter >= _bangThreshold)) &&
@@ -2908,8 +3016,8 @@ namespace RebarSampling
             int _maxlength, _minlength = 0;
             int _index = 0;
 
-            List<string> x1 = new List<string>() { "1种", "2种", "3种", "4种", "5种", "6种", "7种", "8种", "9种" ,"10种"};
-            List<int> y1 = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0,0 };
+            List<string> x1 = new List<string>() { "1种", "2种", "3种", "4种", "5种", "6种", "7种", "8种", "9种", "10种" };
+            List<int> y1 = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
             List<string> x2 = new List<string>() { "0~" + GeneralClass.wareArea[0].ToString(),
                                                  GeneralClass.wareArea[0].ToString()+"~"+ GeneralClass.wareArea[1].ToString(),
@@ -3051,7 +3159,20 @@ namespace RebarSampling
 
                                 var newlist = PickNewList(item.rebarlist);
 
+                                //显示构件详细
+                                int _threshold = (GeneralClass.m_typeC12) ? 12 : ((GeneralClass.m_typeC14) ? 14 : 16);//先看12是否为棒材，再看14是否为棒材
+                                if (checkBox50.Checked && !checkBox49.Checked)//仅棒材
+                                {
+                                    newlist = newlist.Where(t => t.Diameter >= _threshold).ToList();
+                                }
+                                else if (!checkBox50.Checked && checkBox49.Checked)//仅线材
+                                {
+                                    newlist = newlist.Where(t => t.Diameter < _threshold).ToList();
+                                }
+
                                 FillDGVWithRebarList(newlist, dataGridView27);
+
+
 
                                 //ShowElementAddData(item.rebarlist);
                                 ShowElementAddData(newlist);
@@ -3115,11 +3236,13 @@ namespace RebarSampling
 
             foreach (var item in _grouplist)
             {
-                if (checkBox50.Checked ? (item._diameter >= 16) : false)
+                int _threshold = (GeneralClass.m_typeC12) ? 12 : ((GeneralClass.m_typeC14) ? 14 : 16);//先看12是否为棒材，再看14是否为棒材
+
+                if (checkBox50.Checked ? (item._diameter >= _threshold) : false)//棒材
                 {
                     dt_z.Rows.Add("Φ" + item._diameter.ToString(), item._totallength / 1000, item._totalnum, item._totalweight);
                 }
-                if (checkBox49.Checked ? (item._diameter <= 14) : false)
+                if (checkBox49.Checked ? (item._diameter < _threshold) : false)//线材
                 {
                     dt_z.Rows.Add("Φ" + item._diameter.ToString(), item._totallength / 1000, item._totalnum, item._totalweight);
                 }
@@ -3225,6 +3348,285 @@ namespace RebarSampling
         private void dataGridView28_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (dataGridView28.Rows[e.RowIndex].IsNewRow && e.ColumnIndex == 4)//消除默认的红叉叉
+            {
+                e.Value = pictureBox1.Image;
+            }
+        }
+
+        private void dataGridView31_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dataGridView31.Rows[e.RowIndex].IsNewRow && e.ColumnIndex == 1)//消除默认的红叉叉
+            {
+                e.Value = pictureBox1.Image;
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (!CheckDiameterSinglePick())
+            {
+                MessageBox.Show("操作无效，请先确保只选择一种直径规格的钢筋！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            GeneralClass.m_MaterialPool.Clear();//清空原材库
+            GeneralClass.AddDefaultMaterial();//添加默认的原材库
+
+            DataTable dt_ori = new DataTable();
+            dt_ori.Columns.Add(" ", typeof(bool));
+            dt_ori.Columns.Add("直径", typeof(string));
+            dt_ori.Columns.Add("长度", typeof(int));
+            dt_ori.Columns.Add("数量", typeof(int));
+
+            EnumDiameterBang _dia = CheckDiameterWhichPick();//获取选中哪种直径
+            string s_dia = "Φ" + _dia.ToString().Substring(6, 2);
+
+            if (tabControl4.SelectedIndex == 0)
+            {
+                //从长度列表里面挑选进入单一直径原材库
+                DataTable dt = (DataTable)dataGridView2.DataSource;//获取更新的数据
+                foreach (DataRow item in dt.Rows)
+                {
+                    if ((bool)item[0])
+                    {
+                        dt_ori.Rows.Add(true, s_dia, (int)item[1], (int)item[2]);
+                    }
+                }
+            }
+            else
+            {
+                //从长度区间列表里面挑选进入单一直径原材库
+                DataTable dt = (DataTable)dataGridView3.DataSource;//获取更新的数据
+                foreach (DataRow item in dt.Rows)
+                {
+                    if ((bool)item[0])
+                    {
+                        dt_ori.Rows.Add(true, s_dia, Convert.ToDouble(item[1].ToString().Split('~')[1]) * 1000, (int)item[2]);
+                    }
+                }
+
+
+            }
+
+            //添加默认原材库
+            List<GeneralMaterial> _material = GeneralClass.m_MaterialPool.Where(t => t._diameter == _dia).ToList().OrderBy(k => k._length).ToList();
+            foreach (var item in _material)
+            {
+                dt_ori.Rows.Add(true, s_dia, item._length, 999);
+            }
+
+            ////获取已经加入的
+            //List<int> _exist = new List<int>();
+            //foreach (DataRow item in dt_ori.Rows)
+            //{
+            //    _exist.Add((int)item[2]);
+            //}
+
+            ////添加默认的几个长度，
+            ////9米原材包括：1.8米、2.25米、3米、4.5米、6米、7.2米、9米
+            ////12米原材包括：2米、3米、4米、5米、6米、7米、8米、9米、10米、12米
+            //if (GeneralClass.CfgData.OriginType == EnumOriType.ORI_9)
+            //{
+            //    //if (!_exist.Contains(1800)) dt_ori.Rows.Add(true, s_dia, 1000, 999);
+            //    if (!_exist.Contains(1800)) dt_ori.Rows.Add(true, s_dia, 1800, 999);
+            //    if (!_exist.Contains(2250)) dt_ori.Rows.Add(true, s_dia, 2250, 999);
+            //    if (!_exist.Contains(3000)) dt_ori.Rows.Add(true, s_dia, 3000, 999);
+            //    if (!_exist.Contains(4500)) dt_ori.Rows.Add(true, s_dia, 4500, 999);
+            //    if (!_exist.Contains(6000)) dt_ori.Rows.Add(true, s_dia, 6000, 999);
+            //    if (!_exist.Contains(7200)) dt_ori.Rows.Add(true, s_dia, 7200, 999);
+            //    //if (!_exist.Contains(9000)) dt_ori.Rows.Add(true, s_dia, 8000, 999);
+            //    if (!_exist.Contains(9000)) dt_ori.Rows.Add(true, s_dia, 9000, 999);
+            //}
+            //else
+            //{
+            //    if (!_exist.Contains(2000)) dt_ori.Rows.Add(true, s_dia, 2000, 999);
+            //    if (!_exist.Contains(3000)) dt_ori.Rows.Add(true, s_dia, 3000, 999);
+            //    if (!_exist.Contains(4000)) dt_ori.Rows.Add(true, s_dia, 4000, 999);
+            //    if (!_exist.Contains(5000)) dt_ori.Rows.Add(true, s_dia, 5000, 999);
+            //    if (!_exist.Contains(6000)) dt_ori.Rows.Add(true, s_dia, 6000, 999);
+            //    if (!_exist.Contains(7000)) dt_ori.Rows.Add(true, s_dia, 7000, 999);
+            //    if (!_exist.Contains(8000)) dt_ori.Rows.Add(true, s_dia, 8000, 999);
+            //    if (!_exist.Contains(9000)) dt_ori.Rows.Add(true, s_dia, 9000, 999);
+            //    if (!_exist.Contains(10000)) dt_ori.Rows.Add(true, s_dia, 10000, 999);
+            //    if (!_exist.Contains(12000)) dt_ori.Rows.Add(true, s_dia, 12000, 999);
+            //}
+
+            FillDGV_MaterialPoolSingleDia(dt_ori);
+
+            checkBox65.Checked = true;//默认全选
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            //清除勾选
+            DataTable dt = (DataTable)dataGridView33.DataSource;
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if ((bool)dt.Rows[i][0])//删掉勾选行
+                {
+                    dt.Rows[i].Delete();
+                }
+            }
+            dt.AcceptChanges();//注意用delete后，需要acceptchange，才会生效
+
+            FillDGV_MaterialPoolSingleDia(dt);
+
+        }
+        private void button15_Click(object sender, EventArgs e)
+        {
+            //清除勾选
+            DataTable dt = (DataTable)dataGridView34.DataSource;
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if ((bool)dt.Rows[i][0])//删掉勾选行
+                {
+                    dt.Rows[i].Delete();
+                }
+            }
+            dt.AcceptChanges();//注意用delete后，需要acceptchange，才会生效
+
+            FillDGV_MaterialPoolAllDia(dt);
+        }
+        private void button11_Click(object sender, EventArgs e)
+        {
+            //从单一直径原材库挑选进入总原材库
+
+            DataTable dt_all = (DataTable)dataGridView34.DataSource;//获取更新的数据
+            if (dt_all == null || dt_all.Rows.Count == 0)//空的
+            {
+                dt_all = new DataTable();
+                dt_all.Columns.Add(" ", typeof(bool));
+                dt_all.Columns.Add("直径", typeof(string));
+                dt_all.Columns.Add("长度", typeof(int));
+                dt_all.Columns.Add("数量", typeof(int));
+            }
+
+            DataTable dt_single = (DataTable)dataGridView33.DataSource;//获取更新的数据
+            foreach (DataRow item in dt_single.Rows)
+            {
+                if ((bool)item[0])
+                {
+                    dt_all.Rows.Add(true, (string)item[1], (int)item[2], (int)item[3]);
+                }
+            }
+            FillDGV_MaterialPoolAllDia(dt_all);
+            checkBox66.Checked = true;
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            DataTable dt = new DataTable();
+            //dt.Columns.Add(" ", typeof(bool));
+            //dt.Columns.Add("直径", typeof(string));
+            //dt.Columns.Add("长度", typeof(int));
+            //dt.Columns.Add("数量", typeof(int));
+            FillDGV_MaterialPoolAllDia(dt);//清空
+        }
+
+        private void checkBox65_CheckedChanged(object sender, EventArgs e)
+        {
+            DataTable dt = (DataTable)dataGridView33.DataSource;
+            foreach (DataRow item in dt.Rows)
+            {
+                item[0] = checkBox65.Checked ? true : false;
+            }
+            checkBox65.Text = checkBox65.Checked ? "全选" : "全不选";
+        }
+
+        private void checkBox66_CheckedChanged(object sender, EventArgs e)
+        {
+            DataTable dt = (DataTable)dataGridView34.DataSource;
+            foreach (DataRow item in dt.Rows)
+            {
+                item[0] = checkBox66.Checked ? true : false;
+            }
+            checkBox66.Text = checkBox66.Checked ? "全选" : "全不选";
+
+        }
+
+        private void checkBox67_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBox68.Checked = checkBox67.Checked ? true : false;
+            checkBox8.Checked = checkBox67.Checked ? true : false;
+            checkBox9.Checked = checkBox67.Checked ? true : false;
+            checkBox10.Checked = checkBox67.Checked ? true : false;
+            checkBox11.Checked = checkBox67.Checked ? true : false;
+            checkBox12.Checked = checkBox67.Checked ? true : false;
+            checkBox13.Checked = checkBox67.Checked ? true : false;
+            checkBox14.Checked = checkBox67.Checked ? true : false;
+            checkBox15.Checked = checkBox67.Checked ? true : false;
+            checkBox18.Checked = checkBox67.Checked ? true : false;
+            checkBox39.Checked = checkBox67.Checked ? true : false;
+
+            checkBox69.Checked = checkBox67.Checked ? true : false;
+            checkBox35.Checked = checkBox67.Checked ? true : false;
+            checkBox34.Checked = checkBox67.Checked ? true : false;
+            checkBox33.Checked = checkBox67.Checked ? true : false;
+            checkBox32.Checked = checkBox67.Checked ? true : false;
+            checkBox31.Checked = checkBox67.Checked ? true : false;
+            checkBox30.Checked = checkBox67.Checked ? true : false;
+            checkBox29.Checked = checkBox67.Checked ? true : false;
+            checkBox28.Checked = checkBox67.Checked ? true : false;
+            checkBox27.Checked = checkBox67.Checked ? true : false;
+            checkBox40.Checked = checkBox67.Checked ? true : false;
+
+            checkBox67.Text = checkBox67.Checked ? "全选" : "全不选";
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            GeneralMaterial _material = new GeneralMaterial();
+            GeneralClass.m_MaterialPool.Clear();//清空原材库
+            GeneralClass.AddDefaultMaterial();//添加默认的原材库
+
+            List<GeneralMaterial> _list = new List<GeneralMaterial>();//临时存原材库
+
+            DataTable dt = (DataTable)dataGridView34.DataSource;
+            if (dt != null)
+            {
+                foreach (DataRow item in dt.Rows)
+                {
+                    if ((bool)item[0])
+                    {
+                        _material = new GeneralMaterial();
+                        _material._diameter = GeneralClass.IntToEnumDiameter(Convert.ToInt16(item[1].ToString().Substring(1, 2)));//取直径
+                        _material._length = (int)item[2];
+                        _material._num = (int)item[3];
+
+                        //_list.Add(_material);
+                        GeneralClass.m_MaterialPool.Add(_material);
+                    }
+                }
+            }
+
+            GeneralClass.interactivityData?.printlog(1, "生成原材库成功！");
+            MessageBox.Show("生成原材库成功！");
+        }
+
+        private void dataGridView12_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                //点击线材，显示其不同规格统计信息
+                if (e.RowIndex > -1)
+                {
+                    int _diameter = Convert.ToInt32(dataGridView12.Rows[e.RowIndex].Cells[0].Value.ToString().Substring(1));//取直径
+
+                    List<RebarData> _xiandata_w = new List<RebarData>();//弯曲
+                    _xiandata_w = GeneralClass.AllRebarList.Where(t => t.Diameter == _diameter && t.PicTypeNum != "10000").ToList();
+
+                    FillDGV_Xian_detail(_xiandata_w, ref dataGridView36);
+
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("dataGridView12_CellClick error:" + ex.Message); }
+        }
+
+        private void dataGridView36_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dataGridView36.Rows[e.RowIndex].IsNewRow && (e.ColumnIndex == 1 || e.ColumnIndex == 4))//消除默认的红叉叉
             {
                 e.Value = pictureBox1.Image;
             }

@@ -18,11 +18,11 @@ namespace RebarSampling
         {
             this.batchlist = new List<ElementBatch>();
         }
-        public List<EnumRebarBang> diameterList
+        public List<EnumDiameterBang> diameterList
         {
             get
             {
-                List<EnumRebarBang> _list = new List<EnumRebarBang>();
+                List<EnumDiameterBang> _list = new List<EnumDiameterBang>();
 
                 if (this.batchlist.Count != 0)
                 {
@@ -63,7 +63,7 @@ namespace RebarSampling
         /// <summary>
         /// 直径
         /// </summary>
-        public EnumRebarBang _diameter { get; set; }
+        public EnumDiameterBang _diameter { get; set; }
 
         public List<RebarData> _list { get; set; }
 
@@ -83,13 +83,13 @@ namespace RebarSampling
             //this.batchMsg = new BatchMsg();
             this.totalBatch = 0;
             this.curBatch = 0;
-            this.elementData = new List<ElementDataFB>();
+            this.elementData = new List<ElementRebarFB>();
         }
-        public List<EnumRebarBang> diameterList
+        public List<EnumDiameterBang> diameterList
         {
             get
             {
-                List<EnumRebarBang> _list = new List<EnumRebarBang>();
+                List<EnumDiameterBang> _list = new List<EnumDiameterBang>();
 
                 if (this.elementData.Count != 0)
                 {
@@ -139,7 +139,7 @@ namespace RebarSampling
         /// <summary>
         /// 构件list
         /// </summary>
-        public List<ElementDataFB> elementData { get; set; }
+        public List<ElementRebarFB> elementData { get; set; }
         /// <summary>
         /// 子批list，从解析构件list而来
         /// </summary>
@@ -165,7 +165,7 @@ namespace RebarSampling
                 {
                     //elementDataBZ.diameterList.Add((EnumRebarBang)System.Enum.Parse(typeof(EnumRebarBang), "BANG_C" + item._diameter.ToString()));//将直径转为enum
                     _child = new ElementChildBatch();
-                    _child._diameter = (EnumRebarBang)System.Enum.Parse(typeof(EnumRebarBang), "BANG_C" + eee.Key.ToString());//将直径转为enum
+                    _child._diameter = (EnumDiameterBang)System.Enum.Parse(typeof(EnumDiameterBang), "BANG_C" + eee.Key.ToString());//将直径转为enum
                     var _gg = eee.ToList();
                     foreach (var g in _gg)
                     {
@@ -189,7 +189,7 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_list"></param>
         /// <returns></returns>
-        public bool IfIncludeUnderFour(List<EnumRebarBang> _diaList)
+        public bool IfIncludeUnderFour(List<EnumDiameterBang> _diaList)
         {
             if (this.diameterList.Count > 4 || _diaList.Count > 4)//如果本构件批与_diaList所包含的直径种类大于4，则返回false
             {
@@ -197,7 +197,7 @@ namespace RebarSampling
             }
             if (this.diameterList.Count != 0 && _diaList.Count != 0)//均不为空
             {
-                List<EnumRebarBang> _list = new List<EnumRebarBang>();
+                List<EnumDiameterBang> _list = new List<EnumDiameterBang>();
 
                 _list.AddRange(this.diameterList);
                 _list.AddRange(_diaList);//汇总
@@ -211,7 +211,7 @@ namespace RebarSampling
                 return false;
             }
         }
-        public bool IfIncludeby(List<EnumRebarBang> _list)
+        public bool IfIncludeby(List<EnumDiameterBang> _list)
         {
             if (this.diameterList.Count != 0 && _list.Count != 0)//均不为空
             {
@@ -232,63 +232,63 @@ namespace RebarSampling
     }
     #endregion
 
-    #region ElementDataBZ
+    #region ElementRebarBZ
 
     /// <summary>
     /// 构件包中标准化加工的钢筋，主要为9米或12米原材，以及3米、4米、5米、6米、7米等整数长度的非原材
     /// </summary>
-    public class ElementDataBZ
-    {
-        public ElementDataBZ()
-        {
-            this.projectName = "";
-            this.assemblyName = "";
-            this.elementIndex = 0;
-            this.elementName = "";
-            this.diameterType = 0;
-            this.diameterList = new List<EnumRebarBang>();
-            this.diameterGroup = new List<GroupbyDiaWithLength>();
-        }
+    //public class ElementRebarBZ
+    //{
+    //    public ElementRebarBZ()
+    //    {
+    //        this.projectName = "";
+    //        this.assemblyName = "";
+    //        this.elementIndex = 0;
+    //        this.elementName = "";
+    //        this.diameterType = 0;
+    //        this.diameterList = new List<EnumRebarBang>();
+    //        this.diameterGroup = new List<GroupbyDiaWithLength>();
+    //    }
 
-        /// <summary>
-        /// 项目名称
-        /// </summary>
-        public string projectName { get; set; }
-        /// <summary>
-        /// 主构件名称
-        /// </summary>
-        public string assemblyName { get; set; }
-        /// <summary>
-        /// 因为elementname并非唯一，所以需要elementindex来索引，指示在主构件中的索引位置
-        /// </summary>
-        public int elementIndex { get; set; }
-        /// <summary>
-        /// 构件名称
-        /// </summary>
-        public string elementName { get; set; }
-        /// <summary>
-        /// 直径种类数量
-        /// </summary>
-        public int diameterType { get; set; }
-        /// <summary>
-        /// 所包含的直径规格，Φ16，Φ18，Φ20，Φ22，Φ25，Φ28，Φ32，Φ36，Φ40，
-        /// </summary>
-        public List<EnumRebarBang> diameterList { get; set; }
-        /// <summary>
-        /// 根据直径分类的钢筋list
-        /// </summary>
-        public List<GroupbyDiaWithLength> diameterGroup { get; set; }
+    //    /// <summary>
+    //    /// 项目名称
+    //    /// </summary>
+    //    public string projectName { get; set; }
+    //    /// <summary>
+    //    /// 主构件名称
+    //    /// </summary>
+    //    public string assemblyName { get; set; }
+    //    /// <summary>
+    //    /// 因为elementname并非唯一，所以需要elementindex来索引，指示在主构件中的索引位置
+    //    /// </summary>
+    //    public int elementIndex { get; set; }
+    //    /// <summary>
+    //    /// 构件名称
+    //    /// </summary>
+    //    public string elementName { get; set; }
+    //    /// <summary>
+    //    /// 直径种类数量
+    //    /// </summary>
+    //    public int diameterType { get; set; }
+    //    /// <summary>
+    //    /// 所包含的直径规格，Φ16，Φ18，Φ20，Φ22，Φ25，Φ28，Φ32，Φ36，Φ40，
+    //    /// </summary>
+    //    public List<EnumRebarBang> diameterList { get; set; }
+    //    /// <summary>
+    //    /// 根据直径分类的钢筋list
+    //    /// </summary>
+    //    public List<GroupbyDiaWithLength> diameterGroup { get; set; }
 
-    }
+    //}
     #endregion
 
-    #region ElementDataFB
+    #region ElementRebarFB
     /// <summary>
     /// 构件包中非标准化加工的钢筋
     /// </summary>
-    public class ElementDataFB
+    public class ElementRebarFB
     {
-        public ElementDataFB()
+        public ElementRebarFB()
         {
             this.projectName = "";
             this.assemblyName = "";
@@ -296,7 +296,7 @@ namespace RebarSampling
             this.elementName = "";
 
             this.diameterType = 0;
-            this.diameterList = new List<EnumRebarBang>();
+            this.diameterList = new List<EnumDiameterBang>();
             this.diameterGroup = new List<GroupbyDiaWithLength>();
             //this.totalNum = 0;
             //this.numGroup = EnumRebarNumGroup.NONE;
@@ -330,7 +330,7 @@ namespace RebarSampling
         /// 所包含的直径规格，Φ16，Φ18，Φ20，Φ22，Φ25，Φ28，Φ32，Φ36，Φ40，
         /// </summary>
         //public List<EnumRebarBang> diameterList { get { return this.diameterlist.OrderBy(t => t).ToList(); } set { this.diameterlist = value; } }
-        public List<EnumRebarBang> diameterList { get; set; }
+        public List<EnumDiameterBang> diameterList { get; set; }
         /// <summary>
         /// 由diameterlist拼接出来的string，已经过升序排序
         /// </summary>
@@ -358,15 +358,15 @@ namespace RebarSampling
                 bool ifpitch1 = false, ifpitch2 = false, ifpitch3 = false;
                 foreach (var item in this.diameterList)
                 {
-                    if (item == EnumRebarBang.BANG_C16 || item == EnumRebarBang.BANG_C18 || item == EnumRebarBang.BANG_C20 || item == EnumRebarBang.BANG_C22)
+                    if (item == EnumDiameterBang.BANG_C16 || item == EnumDiameterBang.BANG_C18 || item == EnumDiameterBang.BANG_C20 || item == EnumDiameterBang.BANG_C22)
                     {
                         ifpitch1 = true;
                     }
-                    else if (item == EnumRebarBang.BANG_C25 || item == EnumRebarBang.BANG_C28 || item == EnumRebarBang.BANG_C32)
+                    else if (item == EnumDiameterBang.BANG_C25 || item == EnumDiameterBang.BANG_C28 || item == EnumDiameterBang.BANG_C32)
                     {
                         ifpitch2 = true;
                     }
-                    else if (item == EnumRebarBang.BANG_C36 || item == EnumRebarBang.BANG_C40)
+                    else if (item == EnumDiameterBang.BANG_C36 || item == EnumDiameterBang.BANG_C40)
                     {
                         ifpitch3 = true;
                     }
@@ -444,7 +444,7 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_elementFB"></param>
         /// <returns></returns>
-        public bool IfIncludeUnderFour(ElementDataFB _elementFB)
+        public bool IfIncludeUnderFour(ElementRebarFB _elementFB)
         {
 
             if (this.diameterType > 4 || _elementFB.diameterType > 4)//如果本构件与_elementFB所包含的直径种类大于4，则返回false
@@ -453,7 +453,7 @@ namespace RebarSampling
             }
             if (this.diameterList.Count != 0 && _elementFB.diameterList.Count != 0)//均不为空
             {
-                List<EnumRebarBang> _list = new List<EnumRebarBang>();
+                List<EnumDiameterBang> _list = new List<EnumDiameterBang>();
 
                 _list.AddRange(this.diameterList);
                 _list.AddRange(_elementFB.diameterList);//汇总
@@ -473,7 +473,7 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_list"></param>
         /// <returns></returns>
-        public bool IfIncludeUnderFour(List<EnumRebarBang> _diaList)
+        public bool IfIncludeUnderFour(List<EnumDiameterBang> _diaList)
         {
             if (this.diameterType > 4 || _diaList.Count > 4)//如果本构件与_elementFB所包含的直径种类大于4，则返回false
             {
@@ -481,7 +481,7 @@ namespace RebarSampling
             }
             if (this.diameterList.Count != 0 && _diaList.Count != 0)//均不为空
             {
-                List<EnumRebarBang> _list = new List<EnumRebarBang>();
+                List<EnumDiameterBang> _list = new List<EnumDiameterBang>();
 
                 _list.AddRange(this.diameterList);
                 _list.AddRange(_diaList);//汇总
@@ -495,7 +495,7 @@ namespace RebarSampling
                 return false;
             }
         }
-        public bool IfIncludeby(List<EnumRebarBang> _list)
+        public bool IfIncludeby(List<EnumDiameterBang> _list)
         {
             if (this.diameterList.Count != 0 && _list.Count != 0)//均不为空
             {
@@ -519,7 +519,7 @@ namespace RebarSampling
         /// <param name="_elementFB"></param>
         /// <param name="_includeNum"></param>
         /// <returns></returns>
-        public bool IfIncludeby(ElementDataFB _elementFB, int _includeNum = 100)
+        public bool IfIncludeby(ElementRebarFB _elementFB, int _includeNum = 100)
         {
             int num = 0;
 
@@ -556,7 +556,7 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_elementFB"></param>
         /// <returns></returns>
-        public bool IfInclude(ElementDataFB _elementFB)
+        public bool IfInclude(ElementRebarFB _elementFB)
         {
             if (this.diameterList.Count != 0 && _elementFB.diameterList.Count != 0)//均不为空
             {
@@ -586,14 +586,15 @@ namespace RebarSampling
             this.assemblyName = "";
             this.elementIndex = 0;
             this.elementName = "";
-            this.rebarlist = new List<RebarData>();
-            this.rebarlist_bc = new List<RebarData>();
-            this.rebarlist_xc = new List<RebarData>();
-            this.rebarlist_bc_bz = new List<RebarData>();
-            this.rebarlist_bc_fb = new List<RebarData>();
 
-            this.elementDataBZ = new ElementDataBZ();
-            this.elementDataFB = new ElementDataFB();
+            this.rebarlist = new List<RebarData>();
+            //this.rebarlist_bc = new List<RebarData>();
+            //this.rebarlist_xc = new List<RebarData>();
+            //this.rebarlist_bc_bz = new List<RebarData>();
+            //this.rebarlist_bc_fb = new List<RebarData>();
+
+            //this.elementDataBZ = new ElementDataBZ();
+            //this.elementDataFB = new ElementRebarFB();
         }
         /// <summary>
         /// 项目名称
@@ -623,152 +624,206 @@ namespace RebarSampling
         /// <summary>
         /// 线材list
         /// </summary>
-        public List<RebarData> rebarlist_xc { get; private set; }
+        public List<RebarData> rebarlist_xc
+        {
+            get
+            {
+                List<RebarData> _xc = new List<RebarData>();
+                if (this.rebarlist.Count != 0)//不为空
+                {
+                    _xc.Clear();
+
+                    int _bangThreshold = GeneralClass.m_typeC12 ? 12 : (GeneralClass.m_typeC14 ? 14 : 16);//区分线材棒材的阈值
+
+                    foreach (var item in this.rebarlist)
+                    {
+                        if (item.Diameter < _bangThreshold)
+                        {
+                            _xc.Add(item);
+                        }
+                    }
+                }
+                return _xc;
+            }
+        }
         /// <summary>
         /// 棒材list
         /// </summary>
-        public List<RebarData> rebarlist_bc { get; private set; }
+        public List<RebarData> rebarlist_bc
+        {
+            get
+            {
+                List<RebarData> _bc = new List<RebarData>();
+                if (this.rebarlist.Count != 0)//不为空
+                {
+                    _bc.Clear();
 
-        /// <summary>
-        /// 标化棒材list
-        /// </summary>
-        public List<RebarData> rebarlist_bc_bz { get; private set; }
-        /// <summary>
-        /// 非标化棒材list
-        /// </summary>
-        public List<RebarData> rebarlist_bc_fb { get; private set; }
+                    int _bangThreshold =GeneralClass.m_typeC12 ? 12 : (GeneralClass.m_typeC14 ? 14 : 16) ;//区分线材棒材的阈值
+
+                    foreach (var item in this.rebarlist)
+                    {
+                        if (item.Diameter >= _bangThreshold)
+                        {
+                            _bc.Add(item);
+                        }
+                    }
+                }
+                return _bc;
+            }
+        }
+
+        ///// <summary>
+        ///// 标化棒材list
+        ///// </summary>
+        //public List<RebarData> rebarlist_bc_bz { get; private set; }
+        ///// <summary>
+        ///// 非标化棒材list
+        ///// </summary>
+        //public List<RebarData> rebarlist_bc_fb { get; private set; }
 
         /// <summary>
         /// 标准化加工的钢筋
         /// </summary>
-        public ElementDataBZ elementDataBZ { get; private set; }
+        //public ElementRebarBZ elementDataBZ { get; private set; }
+
         /// <summary>
         /// 非标加工的钢筋
         /// </summary>
-        public ElementDataFB elementDataFB { get; private set; }
-
-        public void Group()
+        public ElementRebarFB elementDataFB
         {
-            GroupbyXB();
-            //GroupbyBiao_bc();//20231116，暂取消区分标准化加工和非标化加工
-            GroupbyDiameter_bc();
+            get
+            {
+                ElementRebarFB _fb = new ElementRebarFB();
+                //非标加工的棒材
+                //if (this.rebarlist_bc_fb.Count != 0)//不为空
+                if (this.rebarlist_bc.Count != 0)//不为空
+                {
+                    //找一个构件包中直径种类
+                    //var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameterWithLength(this.rebarlist_bc_fb);
+                    var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameterWithLength(this.rebarlist_bc);
+
+                    _fb.projectName = this.projectName;
+                    _fb.assemblyName = this.assemblyName;
+                    _fb.elementIndex = this.elementIndex;
+                    _fb.elementName = this.elementName;
+
+                    _fb.diameterType = _group.Count;//直径种类数量
+
+                    var _newgroup = _group.OrderBy(t => t._diameter).ToList();//按照直径升序排列
+
+                    _fb.diameterList.Clear();
+                    _fb.diameterGroup.Clear();
+
+                    //int _bangThreshold = GeneralClass.m_typeC14 ? 14 : 16;//区分棒材线材的阈值
+
+                    foreach (var item in _newgroup)
+                    {
+                        //if (item._diameter >= _bangThreshold)
+                        //{
+                        _fb.diameterList.Add((EnumDiameterBang)System.Enum.Parse(typeof(EnumDiameterBang), "BANG_C" + item._diameter.ToString()));//将直径转为enum
+                        _fb.diameterGroup.Add(item);//注意：此处为浅拷贝，改变原list，会同步改变当前list
+                        //}
+                    }
+                }
+                return _fb;
+            }
         }
+
+        //public void Group()
+        //{
+        //    //GroupbyXB();
+        //    //GroupbyBiao_bc();//20231116，暂取消区分标准化加工和非标化加工
+        //    //GroupbyDiameter_bc();
+        //}
+
         /// <summary>
         /// 区分棒材、线材
         /// </summary>
-        private void GroupbyXB()
-        {
-            if (this.rebarlist.Count != 0)//不为空
-            {
-                this.rebarlist_bc.Clear();
-                this.rebarlist_xc.Clear();
+        //private void GroupbyXB()
+        //{
+        //    if (this.rebarlist.Count != 0)//不为空
+        //    {
+        //        this.rebarlist_bc.Clear();
+        //        this.rebarlist_xc.Clear();
 
-                int _bangThreshold = GeneralClass.m_typeC14 ? 14 : 16;//区分线材棒材的阈值
+        //        int _bangThreshold = GeneralClass.m_typeC14 ? 14 : 16;//区分线材棒材的阈值
 
-                foreach (var item in this.rebarlist)
-                {
-                    if (item.Diameter < _bangThreshold)
-                    {
-                        this.rebarlist_xc.Add(item);
-                    }
-                    else { this.rebarlist_bc.Add(item); }
-                }
-            }
-        }
+        //        foreach (var item in this.rebarlist)
+        //        {
+        //            if (item.Diameter < _bangThreshold)
+        //            {
+        //                this.rebarlist_xc.Add(item);
+        //            }
+        //            else { this.rebarlist_bc.Add(item); }
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 将棒材按照标化、非标化区分开，标化钢筋包括：9米/12米原材、3米、4米、5米、6米、7米的非原材
         /// </summary>
-        private void GroupbyBiao_bc()
-        {
-            if (this.rebarlist_bc.Count != 0)//棒材list不为空
-            {
-                this.rebarlist_bc_bz.Clear();
-                this.rebarlist_bc_fb.Clear();
+        //private void GroupbyBiao_bc()
+        //{
+        //    if (this.rebarlist_bc.Count != 0)//棒材list不为空
+        //    {
+        //        this.rebarlist_bc_bz.Clear();
+        //        this.rebarlist_bc_fb.Clear();
 
-                foreach (var item in this.rebarlist_bc)
-                {
-                    if (item.Length == "9000" || item.Length == "12000" || item.Length == "3000" || item.Length == "4000" || item.Length == "5000" || item.Length == "7000")
-                    {
-                        this.rebarlist_bc_bz.Add(item);
-                    }
-                    else
-                    {
-                        this.rebarlist_bc_fb.Add(item);
-                    }
-                }
-            }
-        }
+        //        foreach (var item in this.rebarlist_bc)
+        //        {
+        //            if (item.Length == "9000" || item.Length == "12000" || item.Length == "3000" || item.Length == "4000" || item.Length == "5000" || item.Length == "7000")
+        //            {
+        //                this.rebarlist_bc_bz.Add(item);
+        //            }
+        //            else
+        //            {
+        //                this.rebarlist_bc_fb.Add(item);
+        //            }
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 将棒材根据直径进行分组
         /// </summary>
         /// <param name="_list"></param>
-        private void GroupbyDiameter_bc()
-        {
-            ////标化加工的棒材
-            //if (this.rebarlist_bc_bz.Count != 0)//不为空
-            //{
-            //    //找一个构件包中直径种类
-            //    //var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameter(this.rebarlist_bc_bz);
-            //    var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameterWithLength(this.rebarlist_bc_bz);
+        //private void GroupbyDiameter_bc()
+        //{
+        //    //非标加工的棒材
+        //    //if (this.rebarlist_bc_fb.Count != 0)//不为空
+        //    if (this.rebarlist_bc.Count != 0)//不为空
+        //    {
+        //        //找一个构件包中直径种类
+        //        //var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameterWithLength(this.rebarlist_bc_fb);
+        //        var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameterWithLength(this.rebarlist_bc);
 
-            //    elementDataBZ.projectName = this.projectName;
-            //    elementDataBZ.assemblyName = this.assemblyName;
-            //    elementDataBZ.elementIndex = this.elementIndex;
-            //    elementDataBZ.elementName = this.elementName;
+        //        elementDataFB.projectName = this.projectName;
+        //        elementDataFB.assemblyName = this.assemblyName;
+        //        elementDataFB.elementIndex = this.elementIndex;
+        //        elementDataFB.elementName = this.elementName;
 
-            //    elementDataBZ.diameterType = _group.Count;//直径种类数量
+        //        elementDataFB.diameterType = _group.Count;//直径种类数量
 
-            //    var _newgroup = _group.OrderBy(t => t._diameter).ToList();//按照直径升序排列
+        //        var _newgroup = _group.OrderBy(t => t._diameter).ToList();//按照直径升序排列
 
-            //    elementDataBZ.diameterList.Clear();
-            //    elementDataBZ.diameterGroup.Clear();
-            //    foreach (var item in _newgroup)
-            //    {
-            //        if (item._diameter >= 16)
-            //        {
-            //            elementDataBZ.diameterList.Add((EnumRebarBang)System.Enum.Parse(typeof(EnumRebarBang), "BANG_C" + item._diameter.ToString()));//将直径转为enum
-            //            elementDataBZ.diameterGroup.Add(item);//注意：此处为浅拷贝，改变原list，会同步改变当前list
-            //        }
-            //    }
-            //}
+        //        elementDataFB.diameterList.Clear();
+        //        elementDataFB.diameterGroup.Clear();
 
-            //非标加工的棒材
-            //if (this.rebarlist_bc_fb.Count != 0)//不为空
-            if (this.rebarlist_bc.Count != 0)//不为空
-            {
-                //找一个构件包中直径种类
-                //var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameterWithLength(this.rebarlist_bc_fb);
-                var _group = GeneralClass.SQLiteOpt.QueryAllListByDiameterWithLength(this.rebarlist_bc);
+        //        int _bangThreshold = GeneralClass.m_typeC14 ? 14 : 16;//区分棒材线材的阈值
 
-                elementDataFB.projectName = this.projectName;
-                elementDataFB.assemblyName = this.assemblyName;
-                elementDataFB.elementIndex = this.elementIndex;
-                elementDataFB.elementName = this.elementName;
-
-                elementDataFB.diameterType = _group.Count;//直径种类数量
-
-                var _newgroup = _group.OrderBy(t => t._diameter).ToList();//按照直径升序排列
-
-                elementDataFB.diameterList.Clear();
-                elementDataFB.diameterGroup.Clear();
-
-                int _bangThreshold = GeneralClass.m_typeC14 ? 14 : 16;//区分棒材线材的阈值
-
-                foreach (var item in _newgroup)
-                {
-                    if (item._diameter >= _bangThreshold)
-                    {
-                        elementDataFB.diameterList.Add((EnumRebarBang)System.Enum.Parse(typeof(EnumRebarBang), "BANG_C" + item._diameter.ToString()));//将直径转为enum
-                        elementDataFB.diameterGroup.Add(item);//注意：此处为浅拷贝，改变原list，会同步改变当前list
-                    }
-                }
-            }
+        //        foreach (var item in _newgroup)
+        //        {
+        //            if (item._diameter >= _bangThreshold)
+        //            {
+        //                elementDataFB.diameterList.Add((EnumRebarBang)System.Enum.Parse(typeof(EnumRebarBang), "BANG_C" + item._diameter.ToString()));//将直径转为enum
+        //                elementDataFB.diameterGroup.Add(item);//注意：此处为浅拷贝，改变原list，会同步改变当前list
+        //            }
+        //        }
+        //    }
 
 
 
-        }
+        //}
     }
 
     #endregion

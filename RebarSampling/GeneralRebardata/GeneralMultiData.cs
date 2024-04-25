@@ -19,17 +19,46 @@ namespace RebarSampling
     /// </summary>
     public class GeneralMultiData
     {
-        public GeneralMultiData() 
+        public GeneralMultiData()
         {
             this.length = "";
+            this.diameter = 1;
             this.num = 0;
             this.cornerMsg = "";
             this.headType = EnumMultiHeadType.NONE;
         }
+
         /// <summary>
         /// 长度,考虑缩尺通用，此处用string，而不是int
         /// </summary>
         public string length { get; set; }
+        /// <summary>
+        /// 长度，int型的
+        /// </summary>
+        public int ilength
+        {
+            get 
+            { 
+                if(this.length.IndexOf('~')>-1)         //特殊：缩尺
+                {
+                    string[] ss = this.length.Split('~');
+                    return (Convert.ToInt32(ss[0]) + Convert.ToInt32(ss[1]))/2;
+                }
+                else if(this.length.IndexOf('d')>-1)//"10d,90"
+                {
+                    string[] ss = this.length.Split('d');
+                    return Convert.ToInt32(ss[0]) *this.diameter;//10d即为10倍直径
+                }
+                else
+                {
+                    return Convert.ToInt32(this.length);
+                }
+            }
+        }
+        /// <summary>
+        /// 直径，因为长度中可能会关联上（如："10d,90"代表10倍直径），所以要带上直径
+        /// </summary>
+        public int diameter { get; set; }
         /// <summary>
         /// 数量
         /// </summary>
@@ -44,11 +73,52 @@ namespace RebarSampling
         /// 端头接头类型，接头包含:"原头、弯、套、变径套、反套、丝、反丝、搭、单、双、对、竖",
         /// </summary>
         public EnumMultiHeadType headType { get; set; }
+        /// <summary>
+        /// 如果是弯曲类型，则获取其弯曲角度
+        /// </summary>
+        public int angle
+        {
+            get
+            {
+                return (this.headType == EnumMultiHeadType.BEND) ? Convert.ToInt32(this.cornerMsg.Split(',')[1]) : 0;//获取弯曲角度
+            }
+        }
+        /// <summary>
+        /// 较为粗略的类型分类，0:原始端头，1:弯曲，2:套丝，3：其他
+        /// </summary>
+        public int type
+        {
+            get
+            {
+
+                if (this.headType == EnumMultiHeadType.ORG || this.headType == EnumMultiHeadType.DA)
+                {
+                    return 0;
+                }
+                else if (this.headType == EnumMultiHeadType.BEND)
+                {
+                    return 1;
+                }
+                else if (this.headType == EnumMultiHeadType.TAO_P ||
+                    this.headType == EnumMultiHeadType.TAO_V ||
+                    this.headType == EnumMultiHeadType.TAO_N ||
+                    this.headType == EnumMultiHeadType.SI_P ||
+                    this.headType == EnumMultiHeadType.SI_N)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return 3;
+                }
+            }
+        }
+
     }
 
 
-    public class GeneralMultiLength 
-    { 
+    public class GeneralMultiLength
+    {
         public GeneralMultiLength()
         {
             this.length = "";

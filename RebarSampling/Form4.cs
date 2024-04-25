@@ -1,8 +1,11 @@
 ﻿//using Etable;
+using SuperSocket.SocketEngine.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -24,11 +27,16 @@ namespace RebarSampling
 
             InitControl();
             //InitDGV();
+
+            //textBox2.Text = GeneralClass.CfgData.webserverIP;
+            //textBox3.Text = GeneralClass.CfgData.webserverPort;
+
         }
 
         ~Form4()
         {
             this.dispose();
+            workflow.Instance.StopWorkBill();
         }
         private async void dispose()
         {
@@ -183,6 +191,7 @@ namespace RebarSampling
             }
         }
 
+
         private void ShowClientMsg(string msg)
         {
             if (this != null)
@@ -199,6 +208,11 @@ namespace RebarSampling
         }
         private Random _random = new Random();//随机数生成器
 
+        /// <summary>
+        /// 虚拟造一个单根钢筋数据
+        /// </summary>
+        /// <param name="_index"></param>
+        /// <returns></returns>
         private SingleRebarData CreateSingleRebarData(int _index)
         {
             string _length = "";
@@ -389,8 +403,23 @@ namespace RebarSampling
 
         }
 
+        private void button15_Click(object sender, EventArgs e)
+        {
+            GeneralClass.CfgData.webserverIP = textBox2.Text;
+            GeneralClass.CfgData.webserverPort = textBox3.Text;
+
+            //存为json
+            string _json = NewtonJson.Serializer(GeneralClass.CfgData);
+            Config.SaveConfig(_json);
+
+            GeneralClass.interactivityData?.printlog(1, "系统配置已修改");
+        }
         private void button2_Click(object sender, EventArgs e)
         {
+            //先加载ip和port
+            textBox2.Text = GeneralClass.CfgData.webserverIP;
+            textBox3.Text = GeneralClass.CfgData.webserverPort;
+
             button2.BackColor = Color.LightGreen;
             button2.Enabled = false;
 
@@ -528,19 +557,63 @@ namespace RebarSampling
         }
 
 
+        /// <summary>
+        /// 发送工单数据
+        /// </summary>
+        /// <param name="_jsonlist">工单json</param>
+        /// <param name="timestep">间隔时间，ms</param>
         private void SendWorkBill(List<string> _jsonlist, int timestep)
         {
-            Thread thread = new Thread(() =>
-            {
-                foreach (string item in _jsonlist)
-                {
-                    GeneralClass.webServer.SendMsg(item);
-                    Thread.Sleep(timestep);
-                }
-            }
-                );
-            thread.IsBackground = true;
-            thread.Start();
+
+
+            workflow.Instance.SendWorkBill(_jsonlist,timestep);
+
+
+            //Thread sendthread = new Thread(() =>
+            //{
+            //    bool _flag = true;
+            //    int _step = 0;
+
+            //    while (_flag)
+            //    {
+
+            //        switch (_step)
+            //        {
+            //            case 0://先开启webserver
+            //                {
+            //                    if(GeneralClass.webServer.Start(GeneralClass.CfgData.webserverIP, GeneralClass.CfgData.webserverPort)==0)
+            //                    {
+            //                        _step++;
+            //                    }                                
+            //                }
+            //                break;
+            //            case 1://等待工单发送信号
+            //                {
+            //                    if(_sendflag)
+            //                    {
+            //                        _step++;
+            //                    }                                
+            //                }
+            //                break;
+            //            case 2://发送json工单
+            //                {
+            //                    foreach (string item in _jsonlist)
+            //                    {
+            //                        GeneralClass.webServer.SendMsg(item);
+            //                        Thread.Sleep(timestep);
+            //                    }
+            //                    _step = 1;//回到step1，继续等待发送信号
+            //                    _sendflag = false;//flag复位
+            //                }
+            //                break;
+            //        }
+            //        Thread.Sleep(1);
+            //    }
+
+            //}
+            //    );
+            //sendthread.IsBackground = true;
+            //sendthread.Start();
 
         }
 
@@ -551,16 +624,18 @@ namespace RebarSampling
                 int _timestep = Convert.ToInt32(textBox17.Text);
                 //GeneralClass.interactivityData?.sendworkbill(GeneralClass.jsonList, _timestep);
 
-                Thread thread = new Thread(() =>
-                {
-                    foreach (string item in GeneralClass.jsonList)
-                    {
-                        GeneralClass.webServer.SendMsg(item);
-                        Thread.Sleep(_timestep);
-                    }
-                });
-                thread.IsBackground = true;
-                thread.Start();
+                SendWorkBill(GeneralClass.jsonList, _timestep);
+
+                //Thread thread = new Thread(() =>
+                //{
+                //    foreach (string item in GeneralClass.jsonList)
+                //    {
+                //        GeneralClass.webServer.SendMsg(item);
+                //        Thread.Sleep(_timestep);
+                //    }
+                //});
+                //thread.IsBackground = true;
+                //thread.Start();
             }
         }
 
@@ -582,7 +657,7 @@ namespace RebarSampling
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
 
-            if(e.RowIndex >= 0)
+            if (e.RowIndex >= 0)
             {
                 string sss = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
 
@@ -592,6 +667,26 @@ namespace RebarSampling
                 var jsonobj = NewtonJson.Deserializer<WorkBill>(sss);// 将JSON字符串转换为对象
                 textBox1.Text = NewtonJson.Serializer(jsonobj);// 在textBox.Text中显示格式化的JSON内容
             }
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            ElementRebarFB _fb = new ElementRebarFB();
+
+            pictureBox1.Image = graphics.PaintElementLabel(_fb);
+
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            ElementRebarFB _fb = new ElementRebarFB();
+
+            Image img = graphics.PaintElementLabel(_fb);
+
+            img.Save(@"D:\\test.bmp",System.Drawing.Imaging.ImageFormat.Bmp);
+            
+            LabelPrint.print(img);
+
         }
 
 
