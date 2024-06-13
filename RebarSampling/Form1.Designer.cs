@@ -198,7 +198,7 @@
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(163, 56);
             this.button12.TabIndex = 22;
-            this.button12.Text = "工单套料";
+            this.button12.Text = "套料排程";
             this.button12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button12.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.button12.UseVisualStyleBackColor = false;

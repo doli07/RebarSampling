@@ -128,9 +128,10 @@ namespace RebarSampling
                     rebar = new Rebar();
                     rebar.Copy(data);//先复制
                     rebar.seriNo = i;    //序号
-                    rebar.TaoUsed = false;//是否纳入套料
-                    rebar.PickUsed = false;//未选中
-                    //rebar.TotalPieceNum = 1;
+                    //rebar.TaoUsed = false;//是否纳入套料
+                    //rebar.PickUsed = false;//未选中
+                    rebar.TotalPieceNum = 1;//拆分开后，数量置为1
+                    rebar.TotalWeight = data.TotalWeight / data.TotalPieceNum;//重量需要除一下
                     _alllist.Add(rebar);
                 }
             }
@@ -156,9 +157,10 @@ namespace RebarSampling
                     rebar = new Rebar();
                     rebar.Copy(data);//先复制
                     rebar.seriNo = i;    //序号
-                    rebar.TaoUsed = false;//是否纳入套料
-                    rebar.PickUsed = false;//未选中
-                    //rebar.TotalPieceNum = 1;
+                    //rebar.TaoUsed = false;//是否纳入套料
+                    //rebar.PickUsed = false;//未选中
+                    rebar.TotalPieceNum = 1;//拆分开后，数量置为1
+                    rebar.TotalWeight = data.TotalWeight / data.TotalPieceNum;//重量需要除一下
                     _alllist.Add(rebar);
                 }
             }
@@ -182,9 +184,10 @@ namespace RebarSampling
                     rebar = new Rebar();
                     rebar.Copy(data);//先复制
                     rebar.seriNo = i;    //序号
-                    rebar.TaoUsed = false;//是否纳入套料
-                    rebar.PickUsed = false;//未选中
-                    //rebar.TotalPieceNum = 1;
+                    //rebar.TaoUsed = false;//是否纳入套料
+                    //rebar.PickUsed = false;//未选中
+                    rebar.TotalPieceNum = 1;//拆分开后，数量置为1
+                    rebar.TotalWeight = data.TotalWeight / data.TotalPieceNum;//重量需要除一下
                     _alllist.Add(rebar);
                 }
             }

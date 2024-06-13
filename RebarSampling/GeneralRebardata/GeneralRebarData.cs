@@ -87,7 +87,90 @@ namespace RebarSampling
 
         public List<RebarData> _datalist { get; set; }
     }
+    /// <summary>
+    /// 加工组合方案完全一致的rebarOri放在一起的数据结构，包含其组合方案和数量，
+    /// 注意：
+    /// 1、与rebarPiOri区分开
+    /// 2、加工组合方案一致不代表来自同一个构件，构件属性信息可能不一致
+    /// </summary>
+    public class RebarOriPi
+    {
+        /// <summary>
+        /// 按顺序各根原材的list的cornerMsg串联所成，可以认为是一种组合方案，考虑各段钢筋的边角信息，即使同样长度的rebar也会属于不同的组合方案
+        /// </summary>
+        public string CornerMsgSolution
+        {
+            get
+            {
+                string str = "";
+                foreach (var item in this._list[0]._list)
+                {
+                    str += item.CornerMessage;//组合边角信息
+                }
+                return str;
+            }
 
+        }
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int num { get; set; }
+        /// <summary>
+        /// rebarOri的集合
+        /// </summary>
+        public List<RebarOri> _list { get; set; }
+    }
+
+    /// <summary>
+    /// 可以理解为包含了长度和数量二维数据的rebarOri，用于二维套料
+    /// </summary>
+    public class RebarPiOri
+    {
+        /// <summary>
+        /// 构造函数，定尺原材
+        /// </summary>
+        public RebarPiOri()
+        {
+            this._totalLength = GeneralClass.OriginalLength;
+            this._list = new List<RebarPi>();
+
+        }
+        /// <summary>
+        /// 重载构造函数，考虑某些加工原材不一定是用的9m或12m定尺原材，也有非定尺原材
+        /// </summary>
+        /// <param name="_materialLength"></param>
+        public RebarPiOri(int _materialLength)
+        {
+            this._totalLength = _materialLength;
+            this._list = new List<RebarPi>();
+        }
+        /// <summary>
+        /// 当前加工原材的总长度，如果是定尺原材，即为9m或12m，如果是非定尺原材，则在构造时指定长度
+        /// </summary>
+        public int _totalLength { get; set; }
+
+        /// <summary>
+        /// 一次利用的剩余长度
+        /// </summary>
+        public int _lengthFirstLeft
+        {
+            get
+            {
+                return this._totalLength - this._lengthListUsed;
+            }
+        }
+        /// <summary>
+        /// 当前已使用的小段总长
+        /// </summary>
+        public int _lengthListUsed
+        {
+            get
+            {
+                return this._list.Sum(t => t.length);
+            }
+        }
+        public List<RebarPi> _list { get; set; }
+    }
     /// <summary>
     /// 用来加工的钢筋原材，由多个小段rebar组成，其原材长度可以是9m或12m的定尺原材，也可以是3m、4m、5m、6m、7m等非定尺原材，20240224
     /// </summary>
@@ -96,7 +179,7 @@ namespace RebarSampling
         /// <summary>
         /// 构造函数，定尺原材
         /// </summary>
-        public RebarOri() 
+        public RebarOri()
         {
             this._totalLength = GeneralClass.OriginalLength;
             this._list = new List<Rebar>();
@@ -113,13 +196,13 @@ namespace RebarSampling
         /// <summary>
         /// 当前加工原材的总长度，如果是定尺原材，即为9m或12m，如果是非定尺原材，则在构造时指定长度
         /// </summary>
-        public int _totalLength { get;set; }
+        public int _totalLength { get; set; }
 
         /// <summary>
         /// 一次利用的剩余长度
         /// </summary>
-        public int _lengthFirstLeft 
-        { 
+        public int _lengthFirstLeft
+        {
             get
             {
                 return this._totalLength - this._lengthListUsed;
@@ -131,7 +214,7 @@ namespace RebarSampling
             }
         }
         /// <summary>
-        /// 当前已使用的小段总长
+        /// 一次利用的长度，即当前已使用的所有list小段总长
         /// </summary>
         public int _lengthListUsed
         {
@@ -152,7 +235,7 @@ namespace RebarSampling
                 _temp.Add(GeneralClass.CfgData.MatPoolYuliao1);
                 _temp.Add(GeneralClass.CfgData.MatPoolYuliao2);
 
-                List<int> _yuliao =new List<int>();
+                List<int> _yuliao = new List<int>();
                 if (this._lengthFirstLeft >= _temp.Sum())//取两个值
                 {
                     _yuliao.AddRange(_temp);
@@ -163,7 +246,7 @@ namespace RebarSampling
                     _yuliao.Add(_temp.Max());
                     return _yuliao;
                 }
-                else if(this._lengthFirstLeft >= _temp.Min() && this._lengthFirstLeft < _temp.Max())//取较小值
+                else if (this._lengthFirstLeft >= _temp.Min() && this._lengthFirstLeft < _temp.Max())//取较小值
                 {
                     _yuliao.Add(_temp.Min());
                     return _yuliao;
@@ -183,7 +266,7 @@ namespace RebarSampling
         {
             get
             {
-                if(this._secondUsedList!=null&&this._secondUsedList.Count!=0)
+                if (this._secondUsedList != null && this._secondUsedList.Count != 0)
                 {
                     return this._secondUsedList.Sum();
                 }
@@ -198,7 +281,7 @@ namespace RebarSampling
         {
             get
             {
-                return this._totalLength-this._lengthListUsed-this._lengthSecondUsed;
+                return this._totalLength - this._lengthListUsed - this._lengthSecondUsed;
             }
         }
         /// <summary>
@@ -208,7 +291,7 @@ namespace RebarSampling
         {
             get
             {
-                if(_list!=null&&_list.Count!=0)
+                if (_list != null && _list.Count != 0)
                 {
                     return this._list[0].Diameter;
                 }
@@ -221,12 +304,52 @@ namespace RebarSampling
         public List<Rebar> _list { get; set; }
     }
 
+    /// <summary>
+    /// 定义批量加工的rebarPi的概念，用来包含长度一致的rebar序列
+    /// </summary>
+    public class RebarPi
+    {
+        /// <summary>
+        /// 长度
+        /// </summary>
+        public int length { get; set; }
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int num
+        {
+            get
+            {
+                return this._rebarList.Count;
+            }
+        }
+
+        public List<Rebar> _rebarList { get; set; }
+    }
 
     /// <summary>
     /// 一根钢筋,在原材上排布的一小段钢筋
     /// </summary>
     public class Rebar : RebarData
     {
+        public Rebar()
+        {
+            this.TaoUsed = false;
+            this.PickUsed = false;
+            this.seriNo = 0;
+            this.length = 0;
+        }
+        /// <summary>
+        /// 构造一个指定长度的虚拟rebar
+        /// </summary>
+        /// <param name="_length"></param>
+        public Rebar(int _length)
+        {
+            this.TaoUsed = false;
+            this.PickUsed = false;
+            this.seriNo = 0;
+            this.length = _length;
+        }
         /// <summary>
         /// 标识钢筋在套料时是否被使用，20240314
         /// </summary>
@@ -256,16 +379,27 @@ namespace RebarSampling
         {
             get
             {
-                //if (!int.TryParse(item._length, out ilength))//处理缩尺xx~xx
-                //{
-                //    string[] tt = item._length.Split('~');
-                //    ilength = (Convert.ToInt32(tt[0]) + Convert.ToInt32(tt[1])) / 2;
-                //}
-
                 int _length = 0;
-                int.TryParse(this.Length, out _length);
-                return _length;
+                if (!int.TryParse(this.Length, out _length))//处理缩尺xx~xx
+                {
+                    string[] tt = this.Length.Split('~');
+                    _length = (Convert.ToInt32(tt[0]) + Convert.ToInt32(tt[1])) / 2;
+                    return _length;
+                }
+                else
+                {
+                    return _length;
+                }
+
+                //int _length = 0;
+                //int.TryParse(this.Length, out _length);
+                //return _length;
             }
+            set
+            {
+                this.Length = value.ToString();
+            }
+
         }
 
     }
@@ -295,11 +429,11 @@ namespace RebarSampling
             this.TotalWeight = 0;
             this.Description = "";
             this.SerialNum = 0;
-            this.IsOriginal = false;
-            this.IfTao = false;
-            this.IfBend = false;
-            this.IfCut = false;
-            this.IfBendTwice = false;
+            //this.IsOriginal = false;
+            //this.IfTao = false;
+            //this.IfBend = false;
+            //this.IfCut = false;
+            //this.IfBendTwice = false;
             this.WareMsg = new WareMsg();
             this.BatchMsg = new BatchMsg();
         }
@@ -324,11 +458,11 @@ namespace RebarSampling
             this.TotalWeight = 0;
             this.Description = "";
             this.SerialNum = 0;
-            this.IsOriginal = false;
-            this.IfTao = false;
-            this.IfBend = false;
-            this.IfCut = false;
-            this.IfBendTwice = false;
+            //this.IsOriginal = false;
+            //this.IfTao = false;
+            //this.IfBend = false;
+            //this.IfCut = false;
+            //this.IfBendTwice = false;
             this.WareMsg = new WareMsg();
             this.BatchMsg = new BatchMsg();
         }
@@ -353,11 +487,11 @@ namespace RebarSampling
             this.TotalWeight = _data.TotalWeight;
             this.Description = _data.Description;
             this.SerialNum = _data.SerialNum;
-            this.IsOriginal = _data.IsOriginal;
-            this.IfTao = _data.IfTao;
-            this.IfBend = _data.IfBend;
-            this.IfCut = _data.IfCut;
-            this.IfBendTwice = _data.IfBendTwice;
+            //this.IsOriginal = _data.IsOriginal;
+            //this.IfTao = _data.IfTao;
+            //this.IfBend = _data.IfBend;
+            //this.IfCut = _data.IfCut;
+            //this.IfBendTwice = _data.IfBendTwice;
             this.WareMsg = _data.WareMsg;
             this.BatchMsg = _data.BatchMsg;
         }
@@ -414,6 +548,25 @@ namespace RebarSampling
         /// </summary>
         public string Length { get; set; }
         /// <summary>
+        /// 转成int的length，
+        /// </summary>
+        public int iLength
+        {
+            get
+            {
+                //if (!int.TryParse(item._length, out ilength))//处理缩尺xx~xx
+                //{
+                //    string[] tt = item._length.Split('~');
+                //    ilength = (Convert.ToInt32(tt[0]) + Convert.ToInt32(tt[1])) / 2;
+                //}
+                int _length = 0;
+                int.TryParse(this.Length, out _length);
+                return _length;
+            }
+            set { }
+
+        }
+        /// <summary>
         /// 是否多段
         /// </summary>
         public bool IsMulti { get; set; }
@@ -441,23 +594,88 @@ namespace RebarSampling
         /// <summary>
         /// 是否原材，长度为9000或者12000，即为原材
         /// </summary>
-        public bool IsOriginal { get; set; }
+        public bool IsOriginal
+        {
+            get
+            {
+                return (this.Length == "9000" || this.Length == "12000") ? true : false;//标注是否为原材，长度为9000或者12000，为原材
+            }
+        }
         /// <summary>
         /// 是否需要套丝
         /// </summary>
-        public bool IfTao { get; set; }
+        public bool IfTao
+        {
+            get
+            {
+                //如果边角结构信息中含有“套”或者“丝”或者“反”，则认为其需要套丝
+                return (this.CornerMessage.IndexOf("套") > -1 || this.CornerMessage.IndexOf("丝") > -1 || this.CornerMessage.IndexOf("反") > -1) ? true : false;
+            }
+        }
+        /// <summary>
+        /// 反丝
+        /// </summary>
+        public bool IfTaoFan
+        {
+            get
+            {
+                //如果边角结构信息中含有“反”，则认为其需要反丝
+                return (this.CornerMessage.IndexOf("反") > -1) ? true : false;
+            }
+        }
+        /// <summary>
+        /// 正丝
+        /// </summary>
+        public bool IfTaoZheng
+        {
+            get
+            {
+                //如果边角结构信息中含有“反”，则认为其需要反丝
+                return (this.CornerMessage.IndexOf("套") > -1 || this.CornerMessage.IndexOf("丝") > -1) ? true : false;
+            }
+        }
         /// <summary>
         /// 是否需要弯曲
         /// </summary>
-        public bool IfBend { get; set; }
+        public bool IfBend
+        {
+            get
+            {
+                //拆解cornerMsg,如果存在bend类型的multidata，则需要弯曲,20230907修改bug
+                bool _ifbend = false;
+                List<GeneralMultiData> _MultiData = SQLiteOpt.GetMultiData(this.CornerMessage);
+                if (_MultiData != null)
+                {
+                    foreach (var item in _MultiData)
+                    {
+                        if (item.headType == EnumMultiHeadType.BEND) _ifbend = true;
+                    }
+                }
+                return _ifbend;
+            }
+        }
         /// <summary>
         /// 是否需要切断
         /// </summary>
-        public bool IfCut { get; set; }
+        public bool IfCut
+        {
+            get
+            {
+                //标注是否需要切断，原材以外的都需要切断
+                return (this.Length == "9000" || this.Length == "12000") ? false : true;
+            }
+        }
         /// <summary>
         /// 是否需要弯曲两次以上
         /// </summary>
-        public bool IfBendTwice { get; set; }
+        public bool IfBendTwice
+        {
+            get
+            {
+                //1、2、3开头的图形编号为需要弯折两次以下的，其他的需要弯折2次以上
+                return (this.PicTypeNum.Substring(0, 1) == "1" || this.PicTypeNum.Substring(0, 1) == "2" || this.PicTypeNum.Substring(0, 1) == "3") ? false : true;
+            }
+        }
         /// <summary>
         /// 单段钢筋的成品仓位信息
         /// </summary>
@@ -467,6 +685,7 @@ namespace RebarSampling
         /// </summary>
         public BatchMsg BatchMsg { get; set; }
     }
+
 
 
 

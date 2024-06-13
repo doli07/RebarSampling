@@ -32,7 +32,7 @@ namespace RebarSampling
             int colIndex = dataGridView12.HitTest(e.X, e.Y).ColumnIndex;
 
             // 检查是否确实点击在了一个单元格上  
-            if (rowIndex >= 0 && colIndex >= 1)//确保鼠标点击在图片列
+            if (rowIndex >= 0 && colIndex >= 0)//确保鼠标点击在图片列
             {
                 Rectangle rectCurCell = dataGridView12.GetCellDisplayRectangle(colIndex, rowIndex, true);//获取当前单元格相对dgv控件的坐标
 
@@ -63,7 +63,7 @@ namespace RebarSampling
 
             bool _haveSelect = false;
             // 检查是否确实点击在了一个单元格上  
-            if (rowIndex >= 0 && colIndex >= 1)//确保鼠标点击在图片列
+            if (rowIndex >= 0 && colIndex >= 0)//确保鼠标点击在图片列
             {
                 foreach (var item in _SelectedRebarOriList[rowIndex]._list)
                 {

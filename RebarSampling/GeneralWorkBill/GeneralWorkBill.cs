@@ -11,13 +11,13 @@ namespace RebarSampling
     /// </summary>
     public class RebarTaoLiao
     {
-        public RebarTaoLiao() 
+        public RebarTaoLiao()
         {
             DiameterType = EnumDiaGroupType.NONE;
-            WareNumType = EnumWareNumGroup.NONE;
+            WareNumType = EnumWareNumSet.NONE;
             BatchNo = 0;
             Diameter = 0;
-            _rebarOriList=new List<RebarOri>();
+            _rebarOriList = new List<RebarOri>();
         }
         /// <summary>
         /// 直径分组类型，1~4种/5种以上
@@ -26,11 +26,11 @@ namespace RebarSampling
         /// <summary>
         /// 料仓类型，8/4/2/1仓
         /// </summary>
-        public EnumWareNumGroup WareNumType { get; set; }
+        public EnumWareNumSet WareNumType { get; set; }
         /// <summary>
         /// 批次
         /// </summary>
-        public int BatchNo { get; set; } 
+        public int BatchNo { get; set; }
         /// <summary>
         /// 直径
         /// </summary>
@@ -73,7 +73,7 @@ namespace RebarSampling
         /// <summary>
         /// 仓位总数,原则：EIGHT:1~15(8仓)，FOUR:16~50(4仓)，TWO:51~100(2仓)，ONE:100~(1仓)
         /// </summary>
-        public EnumWareNumGroup totalware { get; set; }
+        public EnumWareNumSet totalware { get; set; }
         /// <summary>
         /// 仓位编号
         /// </summary>
@@ -110,7 +110,7 @@ namespace RebarSampling
     /// <summary>
     /// 单段钢筋的信息数据格式，一根原材上可能有几段钢筋
     /// </summary>
-    public class SingleRebarData
+    public class WorkBill_SingleRebar
     {
         /// <summary>
         /// 20230628_1_098_003_123_065_01
@@ -178,7 +178,7 @@ namespace RebarSampling
         /// </summary>
         public int shift { get; set; }
 
-        public BatchMsg BatchMsg { get; set; }  
+        public BatchMsg BatchMsg { get; set; }
         /// <summary>
         /// 总的原材根数
         /// </summary>
@@ -227,8 +227,8 @@ namespace RebarSampling
 
     public class WorkBillRequest
     {
-        public WorkBillRequest() 
-        { 
+        public WorkBillRequest()
+        {
             this.Msgtype = 0;
         }
         public int Msgtype { get; set; }
@@ -236,11 +236,11 @@ namespace RebarSampling
 
 
     /// <summary>
-    /// 生产工单数据格式，以单根原材为数据单元
+    /// 梁板线的生产工单数据格式，以单根原材为数据单元
     /// </summary>
-    public class WorkBill
+    public class WorkBill_LB
     {
-        public WorkBill()
+        public WorkBill_LB()
         {
             this.Msgtype = 1;
             this.BillNo = "";
@@ -254,7 +254,7 @@ namespace RebarSampling
             this.Brand = "";
             this.Specification = "";
             this.OriginalLength = 0;
-            this.SteelbarList = new List<SingleRebarData>();
+            this.SteelbarList = new List<WorkBill_SingleRebar>();
         }
         /// <summary>
         /// 数据类型：
@@ -316,6 +316,118 @@ namespace RebarSampling
         /// </summary>
         public string TaosiSettiing { get; set; }
 
-        public List<SingleRebarData> SteelbarList { get; set; }
+        public List<WorkBill_SingleRebar> SteelbarList { get; set; }
     }
+    /// <summary>
+    /// 墙柱线批量锯切的工单数据格式
+    /// </summary>
+    public class WorkBill_QZ
+    {
+        public WorkBill_QZ()
+        {
+            this.Msgtype = 1;
+            this.BillNo = "";
+            this.ProjectName = "";
+            this.Block = "";
+            this.Building = "";
+            this.Floor = "";
+            this.Level = "";
+            this.Brand = "";
+            this.Specification = "";
+            this.OriginalLength = 0;
+            this.CuttingList = new List<WorkBill_PiCutRebar>();
+        }
+        /// <summary>
+        /// 数据类型：
+        /// 1:请求工单
+        /// 3:墙柱线下发工单;
+        /// </summary>
+        public int Msgtype { get; set; }
+        /// <summary>
+        /// B_20230628_1_008_003
+        ///         字段代表含义：
+        ///         工单类型_日期_班次_批次总数_批次流水号
+        ///         **** 注意：工单类型的定义如下：
+        ///         A ——梁板线；
+        ///         B ——墙柱线；
+        ///         C1——弯曲线；
+        ///         C2——五机头；
+        ///         C3——弯箍机；
+        /// </summary>
+        public string BillNo { get; set; }
+        /// <summary>
+        /// 项目名称
+        /// </summary>
+        public string ProjectName { get; set; }
+        /// <summary>
+        /// 分区，A区，B区等等
+        /// </summary>
+        public string Block { get; set; }
+        /// <summary>
+        /// 楼栋号
+        /// </summary>
+        public string Building { get; set; }
+        /// <summary>
+        /// 楼层号
+        /// </summary>
+        public string Floor { get; set; }
+        /// <summary>
+        /// 钢筋级别
+        /// </summary>
+        public string Level { get; set; }
+        /// <summary>
+        /// 钢筋厂商
+        /// </summary>
+        public string Brand { get; set; }
+        /// <summary>
+        /// 钢筋规格
+        /// </summary>
+        public string Specification { get; set; }
+        /// <summary>
+        /// 原材长度，一般9米或12米两种
+        /// </summary>
+        public int OriginalLength { get; set; }
+
+        public List<WorkBill_PiCutRebar> CuttingList { get; set; }
+
+    }
+    /// <summary>
+    /// 批量锯切的钢筋数据格式
+    /// </summary>
+    public class WorkBill_PiCutRebar
+    {
+        /// <summary>
+        /// 20230628_1_098_003_123_065_01
+        /// 字段代表含义：
+        /// 日期_班次_批次总数_批次流水号_当前批钢筋原材总数_钢筋原材流水号_当前小段的流水号
+        /// </summary>
+        public string SeriNo { get; set; }
+        /// <summary>
+        /// 边角结构,
+        /// </summary>
+        public string CornerMsg { get; set; }
+        /// <summary>
+        /// 直径
+        /// </summary>
+        public int Diameter { get; set; }
+        /// <summary>
+        /// 下料长度
+        /// </summary>
+        public int Length { get; set; }
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int Num { get; set; }
+        /// <summary>
+        /// 重量
+        /// </summary>
+        public double Weight { get; set; }
+        /// <summary>
+        /// 套丝类型，0：不套丝；1：单头套丝；2：双头套丝
+        /// </summary>
+        public int TaosiType { get; set; }
+
+
+    }
+
 }

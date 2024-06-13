@@ -9,29 +9,15 @@ namespace RebarSampling.GeneralWorkBill
     public class WorkBillOpt
     {
         /// <summary>
-        /// 根据rebarlist，创建以一根原材的工单json数据
+        /// 根据梁板线rebarlist，创建以一根原材的工单json数据
         /// </summary>
         /// <param name="_rebarlist">排布在一根原材上的钢筋信息</param>
         /// <returns>json格式数据</returns>
-        public string CreateWorkBill(WorkBillMsg _msg, RebarOri _rebarlist)
+        public string CreateWorkBill_LB(WorkBillMsg _msg, RebarOri _rebarlist)
         {
-            //int shift = 1;//班次
-            //int totalBatch = 100;//总批次
-            //int curBatch = 15;//当前批次
-            //int totalOriginal = 100;//总的原材根数
-            //int curOriginal = 40;//当前的原材流水号
-            //string projectName = "光谷国际社区";//项目名称
-            //string block = "A";//区域
-            //string building = "06D";//楼栋
-            //string floor = "01F";//楼层
-            //string level = "C";//钢筋级别
-            //string brand = "鄂钢";//厂商
-            //string specification = "HRB400";//规格型号
-            //int originLength = 12000;
-
             string returnstr = "";
 
-            WorkBill _workbill = new WorkBill();
+            WorkBill_LB _workbill = new WorkBill_LB();
 
             _workbill.Msgtype = 2;
             string _Date = DateTime.Now.ToString("yyyyMMdd");
@@ -92,20 +78,74 @@ namespace RebarSampling.GeneralWorkBill
             return returnstr;
         }
 
-
-        public SingleRebarData CreateSingleRebarData(SingleRebarMsg _msg, Rebar _data)
+        public string CreateWorkBill_QZ(WorkBillMsg _msg, RebarOri _rebarlist)
         {
-            //int shift = 1;//班次
-            //int totalBatch = 100;//总批次
-            //int curBatch = 15;//当前批次
-            //int totalOriginal = 100;//总的原材根数
-            //int curOriginal = 40;//当前的原材流水号
-            //int curSingle = 1;//当前的小段的编号
-            //int channel = 2;//成品仓通道编号
-            //int totalware = 8;//仓位总数
-            //int wareno = 3;//仓位编号
+            string returnstr = "";
 
-            SingleRebarData _singleRebar = new SingleRebarData();
+            WorkBill_LB _workbill = new WorkBill_LB();
+
+            _workbill.Msgtype = 2;
+            string _Date = DateTime.Now.ToString("yyyyMMdd");
+            _workbill.BillNo = _Date + "_"
+                                + _msg.shift.ToString() + "_"
+                                //+ _msg.BatchMsg.totalBatch.ToString() + "_"
+                                //+ _msg.BatchMsg.curBatch.ToString();
+                                + _rebarlist._list[0].BatchMsg.totalBatch.ToString().PadLeft(3, '0') + "_"
+                                + _rebarlist._list[0].BatchMsg.curBatch.ToString().PadLeft(3, '0') + "-"
+                                + _rebarlist._list[0].BatchMsg.totalchildBatch.ToString().PadLeft(3, '0') + "_"
+                                + (_rebarlist._list[0].BatchMsg.curChildBatch + 1).ToString().PadLeft(3, '0');
+            _workbill.SteelbarNo = _Date + "_"
+                                + _msg.shift.ToString() + "_"
+                                //+ _msg.BatchMsg.totalBatch.ToString() + "_"
+                                //+ _msg.BatchMsg.curBatch.ToString() + "_"
+                                + _rebarlist._list[0].BatchMsg.totalBatch.ToString().PadLeft(3, '0') + "_"
+                                + _rebarlist._list[0].BatchMsg.curBatch.ToString().PadLeft(3, '0') + "-"
+                                + _rebarlist._list[0].BatchMsg.totalchildBatch.ToString().PadLeft(3, '0') + "_"
+                                + (_rebarlist._list[0].BatchMsg.curChildBatch + 1).ToString().PadLeft(3, '0') + "-"
+                                + _msg.totalOriginal.ToString().PadLeft(3, '0') + "_"
+                                + (_msg.curOriginal + 1).ToString().PadLeft(3, '0');
+            _workbill.ProjectName = _msg.projectName;
+            _workbill.Block = _msg.block;
+            _workbill.Building = _msg.building;
+            _workbill.Floor = _msg.floor;
+            _workbill.Level = _msg.level;
+            _workbill.Diameter = _rebarlist._list[0].Diameter;
+            _workbill.Brand = _msg.brand;
+            _workbill.Specification = _msg.specification;
+            _workbill.OriginalLength = _msg.originLength;
+            _workbill.TaosiSettiing = _msg.taosiSetting;
+            //_workbill.SteelbarList = _rebarlist;
+            foreach (var item in _rebarlist._list)
+            {
+                SingleRebarMsg msg = new SingleRebarMsg();
+                msg.shift = _msg.shift;
+                //msg.BatchMsg.totalBatch = _msg.BatchMsg.totalBatch;
+                //msg.BatchMsg.curBatch = _msg.BatchMsg.curBatch;
+                msg.BatchMsg = item.BatchMsg;
+                msg.totalOriginal = _msg.totalOriginal;
+                msg.curOriginal = _msg.curOriginal;
+                msg.curSingle = /*item.seriNo;*/ _rebarlist._list.IndexOf(item);
+                msg.wareMsg = item.WareMsg;
+
+                var temp = CreateSingleRebarData(msg, item);
+                if (GeneralClass.CfgData.Factory == EnumFactory.RouXing && !item.IfBend)//如果是柔性工厂里面的不弯的，则不用生成json工单
+                {
+                    continue;
+                }
+                else
+                {
+                    _workbill.SteelbarList.Add(temp);
+                }
+            }
+
+            returnstr = NewtonJson.Serializer(_workbill);//json序列化
+
+            return returnstr;
+        }
+
+        public WorkBill_SingleRebar CreateSingleRebarData(SingleRebarMsg _msg, Rebar _data)
+        {
+            WorkBill_SingleRebar _singleRebar = new WorkBill_SingleRebar();
 
             string _Date = DateTime.Now.ToString("yyyyMMdd");
             _singleRebar.SeriNo = _Date + "_"

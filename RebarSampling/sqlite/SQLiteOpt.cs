@@ -327,7 +327,7 @@ namespace RebarSampling
                     //rebarData.SerialNum = tt_i;
 
 
-                    ModifyRebarData(ref rebarData);
+                    //ModifyRebarData(ref rebarData);
 
                     //InsertRowData(tablename, rebarData);
                     sqls.Add(InsertRowData(tablename, rebarData));
@@ -414,44 +414,44 @@ namespace RebarSampling
 
         }
 
-        /// <summary>
-        /// 详细处理
-        /// </summary>
-        /// <param name="_data"></param>
-        private void ModifyRebarData(ref RebarData _data)
-        {
-            try
-            {
-                //详细处理
-                _data.IsOriginal = (_data.Length == "9000" || _data.Length == "12000") ? true : false;//标注是否为原材，长度为9000或者12000，为原材
+        ///// <summary>
+        ///// 详细处理
+        ///// </summary>
+        ///// <param name="_data"></param>
+        //private void ModifyRebarData(ref RebarData _data)
+        //{
+        //    try
+        //    {
+        //        //详细处理
+        //        _data.IsOriginal = (_data.Length == "9000" || _data.Length == "12000") ? true : false;//标注是否为原材，长度为9000或者12000，为原材
 
-                _data.IfTao = (_data.CornerMessage.IndexOf("套") > -1
-                    || _data.CornerMessage.IndexOf("丝") > -1
-                    || _data.CornerMessage.IndexOf("反") > -1) ? true : false;//如果边角结构信息中含有“套”或者“丝”或者“反”，则认为其需要套丝
+        //        _data.IfTao = (_data.CornerMessage.IndexOf("套") > -1
+        //            || _data.CornerMessage.IndexOf("丝") > -1
+        //            || _data.CornerMessage.IndexOf("反") > -1) ? true : false;//如果边角结构信息中含有“套”或者“丝”或者“反”，则认为其需要套丝
 
 
-                //_data.IfBend = (_data.TypeNum.Substring(0, 1) == "1") ? false : true;//如果图形编号是1开头的，则不用弯，其他都需要弯
-                bool _ifbend = false;
-                List<GeneralMultiData> _MultiData = GetMultiData(_data.CornerMessage);//拆解corner信息,如果存在bend类型的multidata，则需要弯曲,20230907修改bug
-                if (_MultiData != null)
-                {
-                    foreach (var item in _MultiData)
-                    {
-                        if (item.headType == EnumMultiHeadType.BEND) _ifbend = true;
-                    }
-                }
-                _data.IfBend = _ifbend;
+        //        //_data.IfBend = (_data.TypeNum.Substring(0, 1) == "1") ? false : true;//如果图形编号是1开头的，则不用弯，其他都需要弯
+        //        bool _ifbend = false;
+        //        List<GeneralMultiData> _MultiData = GetMultiData(_data.CornerMessage);//拆解corner信息,如果存在bend类型的multidata，则需要弯曲,20230907修改bug
+        //        if (_MultiData != null)
+        //        {
+        //            foreach (var item in _MultiData)
+        //            {
+        //                if (item.headType == EnumMultiHeadType.BEND) _ifbend = true;
+        //            }
+        //        }
+        //        _data.IfBend = _ifbend;
 
-                _data.IfCut = (_data.Length == "9000" || _data.Length == "12000") ? false : true;//标注是否需要切断，原材以外的都需要切断
+        //        _data.IfCut = (_data.Length == "9000" || _data.Length == "12000") ? false : true;//标注是否需要切断，原材以外的都需要切断
 
-                _data.IfBendTwice = (_data.PicTypeNum.Substring(0, 1) == "1"
-                    || _data.PicTypeNum.Substring(0, 1) == "2"
-                    || _data.PicTypeNum.Substring(0, 1) == "3") ? false : true;//1、2、3开头的图形编号为需要弯折两次以下的，其他的需要弯折2次以上
+        //        _data.IfBendTwice = (_data.PicTypeNum.Substring(0, 1) == "1"
+        //            || _data.PicTypeNum.Substring(0, 1) == "2"
+        //            || _data.PicTypeNum.Substring(0, 1) == "3") ? false : true;//1、2、3开头的图形编号为需要弯折两次以下的，其他的需要弯折2次以上
 
-            }
-            catch (Exception ex) { MessageBox.Show("ModifyRebarData error:" + ex.Message); return; }
+        //    }
+        //    catch (Exception ex) { MessageBox.Show("ModifyRebarData error:" + ex.Message); return; }
 
-        }
+        //}
         /// <summary>
         /// 判断字符串中是否含有中文
         /// </summary>
@@ -1003,13 +1003,16 @@ namespace RebarSampling
 
                 if (i != 0 && _rebarlist[i].ElementName != "" && _rebarlist[i].ElementName != _rebarlist[i - 1].ElementName)//构件名不为空，且跟上一个元素的构件名不一样，则新建构件
                 {
-                    if (_rebarlist[i - 1].ElementName.IndexOf('#') > -1 && _rebarlist[i].ElementName.IndexOf('#') == -1)//前一行含有“#”，本行不含“#”，则表示本行为注释
+                    //if (_rebarlist[i - 1].ElementName.IndexOf('#') > -1 && _rebarlist[i].ElementName.IndexOf('#') == -1)//前一行含有“#”，本行不含“#”，则表示本行为注释
+                    if ( _rebarlist[i].ElementName.IndexOf('#') == -1)//本行不含“#”，则表示本行为注释，20240517修改
                     {
                         _element.rebarlist.Add(_rebarlist[i]);//本行为注释的，纳入同一个构件包
-                        _element.elementName += _rebarlist[i].ElementName;  //合并两行的子构件名为一个名称
-                        _rebarlist[i - 1].ElementName += _rebarlist[i].ElementName;//修改前一行的子构件名
-                        _rebarlist[i].ElementName = _rebarlist[i - 1].ElementName;//更新当前行的子构件名
-
+                        if (_rebarlist[i].ElementName != _rebarlist[i-1].ElementName)
+                        {
+                            _element.elementName += _rebarlist[i].ElementName;  //将本行的注释也加入到构件名
+                        }
+                        //_rebarlist[i - 1].ElementName += _rebarlist[i].ElementName;//修改前一行的子构件名
+                        //_rebarlist[i].ElementName = _rebarlist[i - 1].ElementName;//更新当前行的子构件名
                     }
                     else
                     {
@@ -1088,11 +1091,11 @@ namespace RebarSampling
                         rebarData.TotalWeight = Convert.ToDouble(row[(int)EnumAllRebarTableColName.TOTAL_WEIGHT + 1].ToString());
                         rebarData.Description = row[(int)EnumAllRebarTableColName.DESCRIPTION + 1].ToString();
                         rebarData.SerialNum = Convert.ToInt32(row[(int)EnumAllRebarTableColName.SERIALNUM + 1].ToString());
-                        rebarData.IsOriginal = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.ISORIGINAL + 1].ToString());
-                        rebarData.IfTao = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFTAO + 1].ToString());
-                        rebarData.IfBend = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFBEND + 1].ToString());
-                        rebarData.IfCut = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFCUT + 1].ToString());
-                        rebarData.IfBendTwice = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFBENDTWICE + 1].ToString());
+                        //rebarData.IsOriginal = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.ISORIGINAL + 1].ToString());
+                        //rebarData.IfTao = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFTAO + 1].ToString());
+                        //rebarData.IfBend = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFBEND + 1].ToString());
+                        //rebarData.IfCut = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFCUT + 1].ToString());
+                        //rebarData.IfBendTwice = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFBENDTWICE + 1].ToString());
 
                         if (rebarData.TotalPieceNum != 0)
                         {
@@ -1111,9 +1114,8 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_Value"></param>
         /// <returns></returns>
-        private bool RegexIsNumeric(string _Value)
+        private static bool RegexIsNumeric(string _Value)
         {
-
             try
             {
                 Regex regex = new System.Text.RegularExpressions.Regex("^-?\\d+$");
@@ -1143,7 +1145,7 @@ namespace RebarSampling
         /// <param name="_cornerMsg">边角信息</param>
         /// <param name="_diameter">直径，缺省=1，因某些长度信息与直径相关</param>
         /// <returns></returns>
-        public List<GeneralMultiData> GetMultiData(string _cornerMsg,int _diameter=1)
+        public static List<GeneralMultiData> GetMultiData(string _cornerMsg,int _diameter=1)
         {
             try
             {
@@ -1782,14 +1784,11 @@ namespace RebarSampling
                     double.TryParse(_MultiLength[k].length, out tt);//可能有缩尺
                     _tempdata.TotalWeight = _data.TotalWeight * tt / (double)GetMultiTotalLength(_data.Length);
 
-
-                    ModifyRebarData(ref _tempdata);//修改其他的项
+                    //ModifyRebarData(ref _tempdata);//修改其他的项
                     ModifyRebarPicNum(ref _tempdata);//修改图形编号
 
                     _list.Add(_tempdata);
                 }
-
-
                 return _list;
             }
             catch (Exception ex) { MessageBox.Show("SplitMultiRebar error:" + ex.Message); return null; }
@@ -1821,11 +1820,18 @@ namespace RebarSampling
                 }
                 List<RebarData> _list = null;
 
-                int _num = Convert.ToInt32(_data.PieceNumUnitNum.Split('*')[0]);//例如：5*2，取5
+                int _num = 0;//根数
+                int _piece = 0;//件数
+                string[] _numStr = _data.PieceNumUnitNum.Split('*');//例如：根数*件数=5*2，取5为根数，2为件数
+                _num = Convert.ToInt32(_numStr[0]);
+                _piece = (_numStr.Length > 1) ? Convert.ToInt32(_numStr[1]) : 1;
+
 
                 RebarData _newdata = new RebarData();
 
                 string[] _length = _data.Length.Split('~');
+                int _maxlength = Convert.ToInt32(_length[0]);//这里的最大不一定最大，有可能是最小
+                int _minlength = Convert.ToInt32(_length[1]);//这里的最小不一定最小，有可能是最大
 
                 for (int i = 0; i < _num; i++)
                 {

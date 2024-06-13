@@ -17,7 +17,7 @@ namespace RebarSampling
         /// </summary>
         public GeneralMaterial()
         {
-            this._diameter = EnumDiameterBang.NONE;
+            this._diameter = EnumDiaBang.NONE;
             this._length = 0;
             this._num = 0;
         }
@@ -27,7 +27,7 @@ namespace RebarSampling
         /// <param name="m_diameter"></param>
         /// <param name="m_length"></param>
         /// <param name="m_num"></param>
-        public GeneralMaterial(EnumDiameterBang m_diameter, int m_length, int m_num)
+        public GeneralMaterial(EnumDiaBang m_diameter, int m_length, int m_num)
         {
             this._diameter = m_diameter;
             this._length = m_length;
@@ -36,7 +36,7 @@ namespace RebarSampling
         /// <summary>
         /// 直径
         /// </summary>
-        public EnumDiameterBang _diameter { get; set; }
+        public EnumDiaBang _diameter { get; set; }
         /// <summary>
         /// 长度（mm）
         /// </summary>

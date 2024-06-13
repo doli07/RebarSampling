@@ -87,7 +87,7 @@ namespace RebarSampling
 
                     int startIndex = 3;//从第三行开始
                     //读取数据行
-                    for (int i = startIndex; i < sheet.LastRowNum; i++)
+                    for (int i = startIndex; i <= sheet.LastRowNum; i++)//注意此处为<=，sheet.lastRowNum从0开始，20240517解决bug
                     {
                         IRow row = sheet.GetRow(i);
                         DataRow dr = dt.NewRow();

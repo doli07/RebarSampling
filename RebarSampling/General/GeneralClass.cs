@@ -120,23 +120,23 @@ namespace RebarSampling
 
             if (GeneralClass.CfgData.OriginType == EnumOriType.ORI_9)
             {
-                for (int i = (int)EnumDiameterBang.BANG_C12; i <= (int)EnumDiameterBang.BANG_C40; i++)
+                for (int i = (int)EnumDiaBang.BANG_C12; i <= (int)EnumDiaBang.BANG_C40; i++)
                 {
                     if (GeneralClass.CfgData.MatPoolSetType == EnumMatPoolSetType.INTEGER)//整数倍模数
                     {
-                        _material = new GeneralMaterial((EnumDiameterBang)i, 1800, 999);
+                        _material = new GeneralMaterial((EnumDiaBang)i, 1800, 999);
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                        _material = new GeneralMaterial((EnumDiameterBang)i, 2250, 999);
+                        _material = new GeneralMaterial((EnumDiaBang)i, 2250, 999);
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                        _material = new GeneralMaterial((EnumDiameterBang)i, 3000, 999);
+                        _material = new GeneralMaterial((EnumDiaBang)i, 3000, 999);
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                        _material = new GeneralMaterial((EnumDiameterBang)i, 4500, 999);
+                        _material = new GeneralMaterial((EnumDiaBang)i, 4500, 999);
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                        _material = new GeneralMaterial((EnumDiameterBang)i, 6000, 999);
+                        _material = new GeneralMaterial((EnumDiaBang)i, 6000, 999);
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                        _material = new GeneralMaterial((EnumDiameterBang)i, 7200, 999);
+                        _material = new GeneralMaterial((EnumDiaBang)i, 7200, 999);
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                        _material = new GeneralMaterial((EnumDiameterBang)i, 9000, 999);
+                        _material = new GeneralMaterial((EnumDiaBang)i, 9000, 999);
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
 
                     }
@@ -146,20 +146,20 @@ namespace RebarSampling
                         //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
                         //_material = new GeneralMaterial((EnumDiameterBang)i, 1500, 999);            //余料利用1500
                         //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                        _material = new GeneralMaterial((EnumDiameterBang)i, GeneralClass.CfgData.MatPoolYuliao1, 999);            //余料利用1200
+                        _material = new GeneralMaterial((EnumDiaBang)i, GeneralClass.CfgData.MatPoolYuliao1, 999);            //余料利用1200
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                        _material = new GeneralMaterial((EnumDiameterBang)i, GeneralClass.CfgData.MatPoolYuliao2, 999);            //余料利用1500
+                        _material = new GeneralMaterial((EnumDiaBang)i, GeneralClass.CfgData.MatPoolYuliao2, 999);            //余料利用1500
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
 
-                        _material = new GeneralMaterial((EnumDiameterBang)i, 3000, 999);
+                        _material = new GeneralMaterial((EnumDiaBang)i, 3000, 999);
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
                         //_material = new GeneralMaterial((EnumDiameterBang)i, 4500, 999);
                         //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                        _material = new GeneralMaterial((EnumDiameterBang)i, 6000, 999);
+                        _material = new GeneralMaterial((EnumDiaBang)i, 6000, 999);
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
                         //_material = new GeneralMaterial((EnumDiameterBang)i, 7500, 999);
                         //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                        _material = new GeneralMaterial((EnumDiameterBang)i, 9000, 999);
+                        _material = new GeneralMaterial((EnumDiaBang)i, 9000, 999);
                         if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
 
 
@@ -170,22 +170,22 @@ namespace RebarSampling
             }
             else
             {
-                for (int i = (int)EnumDiameterBang.BANG_C12; i <= (int)EnumDiameterBang.BANG_C40; i++)
+                for (int i = (int)EnumDiaBang.BANG_C12; i <= (int)EnumDiaBang.BANG_C40; i++)
                 {
                     //_material = new GeneralMaterial((EnumDiameterBang)i, 1200, 999);            //余料利用1200
                     //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
                     //_material = new GeneralMaterial((EnumDiameterBang)i, 1500, 999);            //余料利用1500
                     //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                    _material = new GeneralMaterial((EnumDiameterBang)i, GeneralClass.CfgData.MatPoolYuliao1, 999);            //余料利用1200
+                    _material = new GeneralMaterial((EnumDiaBang)i, GeneralClass.CfgData.MatPoolYuliao1, 999);            //余料利用1200
                     if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                    _material = new GeneralMaterial((EnumDiameterBang)i, GeneralClass.CfgData.MatPoolYuliao2, 999);            //余料利用1500
+                    _material = new GeneralMaterial((EnumDiaBang)i, GeneralClass.CfgData.MatPoolYuliao2, 999);            //余料利用1500
                     if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
 
-                    _material = new GeneralMaterial((EnumDiameterBang)i, 3000, 999);
+                    _material = new GeneralMaterial((EnumDiaBang)i, 3000, 999);
                     if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
                     //_material = new GeneralMaterial((EnumDiameterBang)i, 4500, 999);
                     //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                    _material = new GeneralMaterial((EnumDiameterBang)i, 6000, 999);
+                    _material = new GeneralMaterial((EnumDiaBang)i, 6000, 999);
                     if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
                     //_material = new GeneralMaterial((EnumDiameterBang)i, 7500, 999);
                     //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
@@ -193,7 +193,7 @@ namespace RebarSampling
                     //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
                     //_material = new GeneralMaterial((EnumDiameterBang)i, 10000, 999);
                     //if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
-                    _material = new GeneralMaterial((EnumDiameterBang)i, 12000, 999);
+                    _material = new GeneralMaterial((EnumDiaBang)i, 12000, 999);
                     if (!m_MaterialPool.Contains(_material)) m_MaterialPool.Add(_material);
 
 
@@ -217,7 +217,7 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_bang"></param>
         /// <returns></returns>
-        public static int EnumDiameterToInt(EnumDiameterBang _bang)
+        public static int EnumDiameterToInt(EnumDiaBang _bang)
         {
             return Convert.ToInt16(_bang.ToString().Substring(6, 2));
         }
@@ -226,14 +226,14 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_diameter"></param>
         /// <returns></returns>
-        public static EnumDiameterBang IntToEnumDiameter(int _diameter)
+        public static EnumDiaBang IntToEnumDiameter(int _diameter)
         {
-            return (EnumDiameterBang)System.Enum.Parse(typeof(EnumDiameterBang), "BANG_C" + _diameter.ToString());//将直径转为enum
+            return (EnumDiaBang)System.Enum.Parse(typeof(EnumDiaBang), "BANG_C" + _diameter.ToString());//将直径转为enum
         }
 
         //public static int[] wareNum = new int[(int)EnumWareNumGroup.maxNum] { 48, 12, 6, 3 };
 
-        private static int[] warenum = new int[(int)EnumWareNumGroup.maxNum] /*{ 48,12,6,3}*/;
+        private static int[] warenum = new int[(int)EnumWareNumSet.maxNum] /*{ 48,12,6,3}*/;
         /// <summary>
         /// 仓位数
         /// </summary>
@@ -244,22 +244,22 @@ namespace RebarSampling
                 switch (m_factoryType)
                 {
                     case EnumFactoryType.LowConfig:
-                        warenum[(int)EnumWareNumGroup.EIGHT] = 16;
-                        warenum[(int)EnumWareNumGroup.FOUR] = 8;
-                        warenum[(int)EnumWareNumGroup.TWO] = 4;
-                        warenum[(int)EnumWareNumGroup.ONE] = 2;
+                        warenum[(int)EnumWareNumSet.WARESET_8] = 16;
+                        warenum[(int)EnumWareNumSet.WARESET_4] = 8;
+                        warenum[(int)EnumWareNumSet.WARESET_2] = 4;
+                        warenum[(int)EnumWareNumSet.WARESET_1] = 2;
                         break;
                     case EnumFactoryType.HighConfig:
-                        warenum[(int)EnumWareNumGroup.EIGHT] = 32;
-                        warenum[(int)EnumWareNumGroup.FOUR] = 16;
-                        warenum[(int)EnumWareNumGroup.TWO] = 8;
-                        warenum[(int)EnumWareNumGroup.ONE] = 4;
+                        warenum[(int)EnumWareNumSet.WARESET_8] = 32;
+                        warenum[(int)EnumWareNumSet.WARESET_4] = 16;
+                        warenum[(int)EnumWareNumSet.WARESET_2] = 8;
+                        warenum[(int)EnumWareNumSet.WARESET_1] = 4;
                         break;
                     case EnumFactoryType.Experiment:
-                        warenum[(int)EnumWareNumGroup.EIGHT] = 8;
-                        warenum[(int)EnumWareNumGroup.FOUR] = 4;
-                        warenum[(int)EnumWareNumGroup.TWO] = 2;
-                        warenum[(int)EnumWareNumGroup.ONE] = 1;
+                        warenum[(int)EnumWareNumSet.WARESET_8] = 8;
+                        warenum[(int)EnumWareNumSet.WARESET_4] = 4;
+                        warenum[(int)EnumWareNumSet.WARESET_2] = 2;
+                        warenum[(int)EnumWareNumSet.WARESET_1] = 1;
                         break;
                 }
                 return warenum;
@@ -280,7 +280,7 @@ namespace RebarSampling
         /// </summary>
         public static readonly bool m_checkPitchType = false;
         /// <summary>
-        /// 仓位划分的数量区间，四种仓位，三个节点:15,50,100
+        /// 仓位划分的数量区间，四种仓位，三个节点:25,50,100
         /// </summary>
         public static readonly int[] wareArea = new int[3] { 15, 50, 100 };
 
@@ -297,7 +297,7 @@ namespace RebarSampling
         /// <summary>
         /// 套料显示图片的尺寸
         /// </summary>
-        public static  System.Drawing.Size taoPicSize = new System.Drawing.Size(650, 30);
+        public static  System.Drawing.Size taoPicSize = new System.Drawing.Size(620, 30);
 
         /*************配置文件**************/
         public static ConfigData CfgData { get; set; }

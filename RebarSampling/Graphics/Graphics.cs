@@ -79,7 +79,7 @@ namespace RebarSampling
                     g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
 
                     //拆解corner信息,准备绘制两端套丝和弯曲标识
-                    List<GeneralMultiData> _MultiData = GeneralClass.SQLiteOpt.GetMultiData(item.CornerMessage, item.Diameter);
+                    List<GeneralMultiData> _MultiData = SQLiteOpt.GetMultiData(item.CornerMessage, item.Diameter);
                     if (_MultiData != null && _MultiData.Count != 0)//可以画弯曲套丝的就画，画不了的就算了
                     {
                         if (_MultiData.First().type == 2)//端头套丝
@@ -253,7 +253,7 @@ namespace RebarSampling
                 g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
 
                 //拆解corner信息,准备绘制两端套丝和弯曲标识
-                List<GeneralMultiData> _MultiData = GeneralClass.SQLiteOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                List<GeneralMultiData> _MultiData = SQLiteOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
                 if (_MultiData != null && _MultiData.Count != 0)//可以画弯曲套丝的就画，画不了的就算了
                 {
                     if (_MultiData.First().type == 2)//端头套丝

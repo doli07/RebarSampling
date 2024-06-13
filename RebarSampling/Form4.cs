@@ -213,7 +213,7 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_index"></param>
         /// <returns></returns>
-        private SingleRebarData CreateSingleRebarData(int _index)
+        private WorkBill_SingleRebar CreateSingleRebarData(int _index)
         {
             string _length = "";
             string _wareno = "";
@@ -251,13 +251,13 @@ namespace RebarSampling
                     break;
             }
 
-            SingleRebarData _singleRebar = new SingleRebarData();
+            WorkBill_SingleRebar _singleRebar = new WorkBill_SingleRebar();
             GeneralMultiData _mData1 = new GeneralMultiData();
             GeneralMultiData _mData2 = new GeneralMultiData();
 
             if (_length != "0")
             {
-                _singleRebar = new SingleRebarData();
+                _singleRebar = new WorkBill_SingleRebar();
                 _singleRebar.SeriNo = _index.ToString();
                 _singleRebar.ProjectName = "光谷国际社区";
                 _singleRebar.AssemblyName = "梁";
@@ -339,11 +339,11 @@ namespace RebarSampling
         private int SeriNo = 0;
         private void button1_Click(object sender, EventArgs e)
         {
-            WorkBill _workbill = new WorkBill();
+            WorkBill_LB _workbill = new WorkBill_LB();
 
-            List<SingleRebarData> _rebarlist = new List<SingleRebarData>();
+            List<WorkBill_SingleRebar> _rebarlist = new List<WorkBill_SingleRebar>();
 
-            SingleRebarData _singleRebar;
+            WorkBill_SingleRebar _singleRebar;
 
             for (int i = 0; i < 3; i++)
             {
@@ -664,7 +664,7 @@ namespace RebarSampling
                 //var jsonObj=JsonConvert.DeserializeObject(sss);
                 //textBox1.Text = JsonConvert.SerializeObject(jsonObj,Formatting.Indented);
 
-                var jsonobj = NewtonJson.Deserializer<WorkBill>(sss);// 将JSON字符串转换为对象
+                var jsonobj = NewtonJson.Deserializer<WorkBill_LB>(sss);// 将JSON字符串转换为对象
                 textBox1.Text = NewtonJson.Serializer(jsonobj);// 在textBox.Text中显示格式化的JSON内容
             }
         }

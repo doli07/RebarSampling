@@ -85,7 +85,6 @@
             this.button11 = new System.Windows.Forms.Button();
             this.textBox17 = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
-            this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -93,6 +92,7 @@
             this.button14 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button10 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
@@ -692,11 +692,11 @@
             // button12
             // 
             this.button12.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button12.Location = new System.Drawing.Point(125, 410);
+            this.button12.Location = new System.Drawing.Point(86, 410);
             this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(116, 52);
+            this.button12.Size = new System.Drawing.Size(81, 52);
             this.button12.TabIndex = 17;
-            this.button12.Text = "导入工单";
+            this.button12.Text = "导入梁板工单";
             this.button12.UseVisualStyleBackColor = false;
             this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
@@ -728,24 +728,12 @@
             this.label21.TabIndex = 14;
             this.label21.Text = "发送间隔(ms)";
             // 
-            // button10
-            // 
-            this.button10.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button10.Location = new System.Drawing.Point(1485, 652);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(116, 52);
-            this.button10.TabIndex = 13;
-            this.button10.Text = "发送";
-            this.button10.UseVisualStyleBackColor = false;
-            this.button10.Visible = false;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
-            // 
             // button9
             // 
             this.button9.BackColor = System.Drawing.Color.DarkSalmon;
             this.button9.Location = new System.Drawing.Point(3, 410);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(116, 52);
+            this.button9.Size = new System.Drawing.Size(77, 52);
             this.button9.TabIndex = 12;
             this.button9.Text = "清空";
             this.button9.UseVisualStyleBackColor = false;
@@ -815,6 +803,18 @@
             this.pictureBox1.Size = new System.Drawing.Size(433, 434);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            // 
+            // button10
+            // 
+            this.button10.BackColor = System.Drawing.Color.DarkSalmon;
+            this.button10.Location = new System.Drawing.Point(1485, 652);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(116, 52);
+            this.button10.TabIndex = 13;
+            this.button10.Text = "发送";
+            this.button10.UseVisualStyleBackColor = false;
+            this.button10.Visible = false;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // button8
             // 

@@ -268,6 +268,9 @@
     <Compile Include="Algorithm\algorithm_pi.cs" />
     <Compile Include="Algorithm\BinaryTree.cs" />
     <Compile Include="chart\chartshow.cs" />
+    <Compile Include="Form2_plus.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form3_plus.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -303,6 +306,18 @@
     </Compile>
     <Compile Include="Form4.Designer.cs">
       <DependentUpon>Form4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormManualGroupLB.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormManualGroupLB.Designer.cs">
+      <DependentUpon>FormManualGroupLB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormTaosiSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormTaosiSetting.Designer.cs">
+      <DependentUpon>FormTaosiSetting.cs</DependentUpon>
     </Compile>
     <Compile Include="GeneralElementData\GeneralTest.cs" />
     <Compile Include="GeneralElementData\GeneralElementData.cs" />
@@ -351,6 +366,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form5.resx">
       <DependentUpon>Form5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormManualGroupLB.resx">
+      <DependentUpon>FormManualGroupLB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormTaosiSetting.resx">
+      <DependentUpon>FormTaosiSetting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -719,7 +719,7 @@ namespace RebarSampling
     /// <summary>
     /// 线材直径规格
     /// </summary>
-    public enum EnumDiameterXian
+    public enum EnumDiaXian
     {
         XIAN_A6,
         XIAN_A8,
@@ -733,7 +733,7 @@ namespace RebarSampling
     /// <summary>
     /// 棒材直径规格
     /// </summary>
-    public enum EnumDiameterBang
+    public enum EnumDiaBang
     {
         NONE=-1,
         BANG_C12,
@@ -770,27 +770,27 @@ namespace RebarSampling
     }
 
     /// <summary>
-    /// 钢筋数量分组，原则：EIGHT:1~15(8仓)，FOUR:16~50(4仓)，TWO:51~100(2仓)，ONE:100~(1仓)
+    /// 钢筋数量分组，原则：WARESET_8:1~25(8仓)，WARESET_4:26~50(4仓)，WARESET_2:51~100(2仓)，WARESET_1:100~(1仓)
     /// </summary>
-    public enum EnumWareNumGroup
+    public enum EnumWareNumSet
     { 
         NONE=-1,
         /// <summary>
         /// 1~15(8仓)
         /// </summary>
-        EIGHT,
+        WARESET_8,
         /// <summary>
         /// 16~50(4仓)
         /// </summary>
-        FOUR,
+        WARESET_4,
         /// <summary>
         /// 51~100(2仓)
         /// </summary>
-        TWO,
+        WARESET_2,
         /// <summary>
         /// 100~(1仓)
         /// </summary>
-        ONE,
+        WARESET_1,
 
         maxNum
     }

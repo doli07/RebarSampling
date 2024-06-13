@@ -64,6 +64,11 @@ namespace RebarSampling
     public delegate void DelegateSendWorkBill(List<string> _jsonlist,int timeStep);
         
     /// <summary>
+    /// 委托事件，获取套丝机设置
+    /// </summary>
+    /// <returns></returns>
+    public delegate void DelegateGetTaosiSetting(string _setting);
+    /// <summary>
     /// 内部数据交互类，主要用于不同线程间、不同窗口间传递数据的委托
     /// </summary>
     public class InteractivityData
@@ -91,5 +96,7 @@ namespace RebarSampling
         public DelegateFindImage ifFindImage { get; set; }
 
         public DelegateSendWorkBill sendworkbill { get; set; }
+
+        public DelegateGetTaosiSetting getTaosiSetting { get; set; }
     }
 }
