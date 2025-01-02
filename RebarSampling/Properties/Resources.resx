@@ -121,4 +121,19 @@
   <data name="cscec_xjy" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\img\other\先进技术研究院横式.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="icons8-double-down-26" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\img\other\icons8-double-down-26.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8-double-left-26" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\img\other\icons8-double-left-26.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8-double-right-26" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\img\other\icons8-double-right-26.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8-double-up-26" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\img\other\icons8-double-up-26.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\img\other\钢筋云工厂_black.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

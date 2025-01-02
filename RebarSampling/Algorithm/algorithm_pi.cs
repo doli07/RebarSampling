@@ -1,5 +1,7 @@
 ﻿using NPOI.OpenXmlFormats.Dml;
+using NPOI.SS.Formula.Functions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,25 +56,25 @@ namespace RebarSampling
         private static List<RebarOri> Tao_single(ref List<Rebar> _list)
         {
             List<RebarOri> returnlist = new List<RebarOri>();
-            RebarOri temp = new RebarOri();
+            RebarOri temp = new RebarOri(_list.First().Level, _list.First().Diameter);
 
             //先按照长度分组，并累加数量
             List<RebarPi> _grouplist = _list.GroupBy(x => x.length).Select(
                  y => new RebarPi
                  {
-                     length = y.Key,
+                     //length = y.Key,
                      _rebarList = y.ToList()
                  }).ToList().OrderBy(t => t.length).ToList();//升序
 
             foreach (var item in _grouplist)
             {
-                temp = new RebarOri();
+                temp = new RebarOri(_list.First().Level, _list.First().Diameter);
                 for (int i = 0; i < item.num; i++)
                 {
                     if (temp._lengthFirstLeft < item.length)//塞不进去了，新建一个rebarOri
                     {
                         returnlist.Add(temp);
-                        temp = new RebarOri();
+                        temp = new RebarOri(_list.First().Level, _list.First().Diameter);
                         temp._list.Add(item._rebarList[i]);
                     }
                     else
@@ -100,17 +102,17 @@ namespace RebarSampling
         private static List<RebarOri> Tao_CutStdOri(ref List<Rebar> _list, int _cutNum, int _threshold)
         {
             List<RebarOri> returnlist = new List<RebarOri>();
-            RebarOri temp = new RebarOri();
+            RebarOri temp = new RebarOri(_list.First().Level, _list.First().Diameter);
 
             //先按照长度分组，并累加数量
             List<RebarPi> _grouplist = _list.GroupBy(x => x.length).Select(
                  y => new RebarPi
                  {
-                     length = y.Key,
+                     //length = y.Key,
                      _rebarList = y.ToList()
                  }).ToList().OrderBy(t => t.length).ToList();//升序
 
-            double _pieceLength = GeneralClass.OriginalLength / _cutNum;//每一段的长度
+            double _pieceLength = GeneralClass.OriginalLength(_list.First().Level, _list.First().Diameter) / _cutNum;//每一段的长度
 
             foreach (var item in _grouplist)
             {
@@ -118,7 +120,7 @@ namespace RebarSampling
                 {
                     while (item._rebarList.Count > 0)
                     {
-                        temp = new RebarOri();
+                        temp = new RebarOri(_list.First().Level, _list.First().Diameter);
                         temp._list.AddRange((item._rebarList.Count >= _cutNum) ? item._rebarList.Take(_cutNum) : item._rebarList);//存入新建的rebarOri
 
                         if (item._rebarList.Count >= _cutNum)//移除
@@ -146,18 +148,18 @@ namespace RebarSampling
             List<RebarPi> _grouplist = _list.GroupBy(x => x.length).Select(
                  y => new RebarPi
                  {
-                     length = y.Key,
+                     //length = y.Key,
                      _rebarList = y.ToList()
                  }).ToList().OrderBy(t => t.length).ToList();//升序
 
             //第一步，只考虑长度维度，按照长度套料
             List<RebarPiOri> _templist = new List<RebarPiOri>();//虚拟的rebarOri链表
-            RebarPiOri _temp = new RebarPiOri();
+            RebarPiOri _temp = new RebarPiOri(_list.First().Level,_list.First().Diameter);//20241121修改，根据级别直径创建rebarpiori
             for (int i = _grouplist.Count - 1; i >= 0; i--)
             {
                 if (_templist.Count == 0)//原材list为空，新增一根原材
                 {
-                    _temp = new RebarPiOri();
+                    _temp = new RebarPiOri(_list.First().Level,_list.First().Diameter);
 
                     _temp._list.Add(_grouplist[i]);//新建一个指定长度的rebar
                     _templist.Add(_temp);
@@ -177,7 +179,7 @@ namespace RebarSampling
                         {
                             if (ttt == _templist.Last())//如果是最后一根原材了，还是塞不进去，就新建一根原材
                             {
-                                _temp = new RebarPiOri();
+                                _temp = new RebarPiOri(_list.First().Level, _list.First().Diameter);
                                 _temp._list.Add(_grouplist[i]);//新建一个指定长度的rebar
                                 _templist.Add(_temp);
                                 //_grouplist.Remove(_grouplist[i]);
@@ -219,12 +221,15 @@ namespace RebarSampling
         /// <returns></returns>
         private static List<RebarOri> ApartRebarPi(RebarPiOri _rebarPiOri, ref List<Rebar> _leftRebar)
         {
+            string _level=_rebarPiOri._list.First()._rebarList.First().Level;
+            int _diameter= _rebarPiOri._list.First()._rebarList.First().Diameter;//获取钢筋级别直径
+
             List<RebarOri> _returnlist = new List<RebarOri>();
 
             int cutNum = _rebarPiOri._list.Min(t => t.num);
             for (int i = 0; i < cutNum; i++)
             {
-                RebarOri _newOri = new RebarOri();
+                RebarOri _newOri = new RebarOri(_level, _diameter);
                 foreach (var ttt in _rebarPiOri._list)
                 {
                     _newOri._list.Add(ttt._rebarList.Last());//纳入新的rebarOri

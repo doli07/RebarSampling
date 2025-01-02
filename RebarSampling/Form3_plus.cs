@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -142,7 +143,7 @@ namespace RebarSampling
                 foreach (var item in _rebarOri._list)
                 {
                     _lengAdd += item.length;
-                    _endlist.Add((int)((double)(_lengAdd) / (double)GeneralClass.OriginalLength * 600));
+                    _endlist.Add((int)((double)(_lengAdd) / (double)GeneralClass.OriginalLength(item.Level, item.Diameter) * 600));
                 }
                 _endlist.Add(600);//增加一个足尺寸终点
 

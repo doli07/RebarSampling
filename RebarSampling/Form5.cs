@@ -73,18 +73,70 @@ namespace RebarSampling
                 checkBox3.Text = GeneralClass.CfgData.IfShortRebar ? "加载短钢筋数据" : "不加载短钢筋数据";
                 textBox1.Text = GeneralClass.CfgData.MinLength.ToString();
 
-                //原材类型
-                switch (GeneralClass.CfgData.OriginType)
+                try
                 {
-                    case EnumOriType.ORI_9:
-                        radioButton6.Checked = true;
-                        break;
-                    case EnumOriType.ORI_12:
-                        radioButton7.Checked = true;
-                        break;
-                    default:
-                        break;
+
+                //原材库，三级钢
+                radioButton6.Checked=(GeneralClass.CfgData.MaterialOriPool_3.Find(t=>t._diameter==EnumDiaBang.BANG_C12 )._length==9000)?true:false;
+                radioButton7.Checked= (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C12)._length == 12000) ? true : false;
+                radioButton18.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C14)._length == 9000) ? true : false;
+                radioButton19.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C14)._length == 12000) ? true : false;
+                radioButton20.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C16)._length == 9000) ? true : false;
+                radioButton21.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C16)._length == 12000) ? true : false;
+                radioButton22.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C18)._length == 9000) ? true : false;
+                radioButton23.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C18)._length == 12000) ? true : false;
+                radioButton24.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C20)._length == 9000) ? true : false;
+                radioButton25.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C20)._length == 12000) ? true : false;
+                radioButton26.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C22)._length == 9000) ? true : false;
+                radioButton27.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C22)._length == 12000) ? true : false;
+                radioButton28.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C25)._length == 9000) ? true : false;
+                radioButton29.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C25)._length == 12000) ? true : false;
+                radioButton30.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C28)._length == 9000) ? true : false;
+                radioButton31.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C28)._length == 12000) ? true : false;
+                radioButton32.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C32)._length == 9000) ? true : false;
+                radioButton33.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C32)._length == 12000) ? true : false;
+                radioButton34.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C36)._length == 9000) ? true : false;
+                radioButton35.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C36)._length == 12000) ? true : false;
+                radioButton36.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C40)._length == 9000) ? true : false;
+                radioButton37.Checked = (GeneralClass.CfgData.MaterialOriPool_3.Find(t => t._diameter == EnumDiaBang.BANG_C40)._length == 12000) ? true : false;
+                //原材库，四级钢
+                radioButton38.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C12)._length == 9000) ? true : false;
+                radioButton39.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C12)._length == 12000) ? true : false;
+                radioButton40.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C14)._length == 9000) ? true : false;
+                radioButton41.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C14)._length == 12000) ? true : false;
+                radioButton42.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C16)._length == 9000) ? true : false;
+                radioButton43.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C16)._length == 12000) ? true : false;
+                radioButton44.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C18)._length == 9000) ? true : false;
+                radioButton45.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C18)._length == 12000) ? true : false;
+                radioButton46.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C20)._length == 9000) ? true : false;
+                radioButton47.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C20)._length == 12000) ? true : false;
+                radioButton48.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C22)._length == 9000) ? true : false;
+                radioButton49.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C22)._length == 12000) ? true : false;
+                radioButton50.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C25)._length == 9000) ? true : false;
+                radioButton51.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C25)._length == 12000) ? true : false;
+                radioButton52.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C28)._length == 9000) ? true : false;
+                radioButton53.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C28)._length == 12000) ? true : false;
+                radioButton54.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C32)._length == 9000) ? true : false;
+                radioButton55.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C32)._length == 12000) ? true : false;
+                radioButton56.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C36)._length == 9000) ? true : false;
+                radioButton57.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C36)._length == 12000) ? true : false;
+                radioButton58.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C40)._length == 9000) ? true : false;
+                radioButton59.Checked = (GeneralClass.CfgData.MaterialOriPool_4.Find(t => t._diameter == EnumDiaBang.BANG_C40)._length == 12000) ? true : false;
                 }
+                catch (Exception e) { MessageBox.Show("loadconfig error" + e.Message); }
+
+
+                //switch (GeneralClass.CfgData.OriginType)
+                //{
+                //    case EnumOriType.ORI_9:
+                //        radioButton6.Checked = true;
+                //        break;
+                //    case EnumOriType.ORI_12:
+                //        radioButton7.Checked = true;
+                //        break;
+                //    default:
+                //        break;
+                //}
 
                 //是否切端头
                 checkBox4.Checked = GeneralClass.CfgData.IfCutHead;
@@ -139,12 +191,40 @@ namespace RebarSampling
                     default:
                         break;
                 }
+                checkBox5.Checked = GeneralClass.CfgData.MatPoolHave3;
+                checkBox6.Checked = GeneralClass.CfgData.MatPoolHave6;
 
                 //纳入原材库的余料参数
                 textBox5.Text = GeneralClass.CfgData.MatPoolYuliao1.ToString();
                 textBox6.Text = GeneralClass.CfgData.MatPoolYuliao2.ToString();
 
+                //数据库设置
+                switch (GeneralClass.CfgData.DatabaseType)
+                {
+                    case EnumDatabaseType.SQLITE:
+                        radioButton16.Checked = true;
+                        break;
+                    case EnumDatabaseType.MYSQL:
+                        radioButton17.Checked = true;
+                        break;
+                    default:
+                        break;
+                }
 
+                //仓位数量区间设置
+                textBox7.Text = GeneralClass.CfgData.WareAreaSet1.ToString();
+                textBox8.Text=GeneralClass.CfgData.WareAreaSet2.ToString();
+                textBox9.Text=GeneralClass.CfgData.WareAreaSet3.ToString();
+                //料仓通道
+                textBox10.Text=GeneralClass.CfgData.WareHouseChannels.ToString();
+
+                //原材是否参与套料
+                checkBox7.Checked = GeneralClass.CfgData.IfOrignalTao;
+                checkBox7.Text = GeneralClass.CfgData.IfOrignalTao ? "原材参与套料" : "原材不参与套料";
+
+                //套料排序是否优化
+                checkBox8.Checked = GeneralClass.CfgData.IfSeriTao;
+                checkBox8.Text = GeneralClass.CfgData.IfSeriTao ? "执行套料排序优化" : "不执行套料排序优化";
             }
 
         }
@@ -185,15 +265,43 @@ namespace RebarSampling
             //是否加载短钢筋数据
             GeneralClass.CfgData.IfShortRebar = checkBox3.Checked;
 
-            //原材长度
-            if (radioButton6.Checked)
-            {
-                GeneralClass.CfgData.OriginType = EnumOriType.ORI_9;
-            }
-            if (radioButton7.Checked)
-            {
-                GeneralClass.CfgData.OriginType = EnumOriType.ORI_12;
-            }
+            //原材库
+            GeneralClass.CfgData.MaterialOriPool_3 = new List<MaterialOri>();
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C12, radioButton6.Checked ? 9000 : 12000, 9999, "C"));
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C14, radioButton18.Checked ? 9000 : 12000, 9999, "C"));
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C16, radioButton20.Checked ? 9000 : 12000, 9999, "C"));
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C18, radioButton22.Checked ? 9000 : 12000, 9999, "C"));
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C20, radioButton24.Checked ? 9000 : 12000, 9999, "C"));
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C22, radioButton26.Checked ? 9000 : 12000, 9999, "C"));
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C25, radioButton28.Checked ? 9000 : 12000, 9999, "C"));
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C28, radioButton30.Checked ? 9000 : 12000, 9999, "C"));
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C32, radioButton32.Checked ? 9000 : 12000, 9999, "C"));
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C36, radioButton34.Checked ? 9000 : 12000, 9999, "C"));
+            GeneralClass.CfgData.MaterialOriPool_3.Add(new MaterialOri(EnumDiaBang.BANG_C40, radioButton36.Checked ? 9000 : 12000, 9999, "C"));
+
+            GeneralClass.CfgData.MaterialOriPool_4 = new List<MaterialOri>();
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C12, radioButton38.Checked ? 9000 : 12000, 9999, "D"));
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C14, radioButton40.Checked ? 9000 : 12000, 9999, "D"));
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C16, radioButton42.Checked ? 9000 : 12000, 9999, "D"));
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C18, radioButton44.Checked ? 9000 : 12000, 9999, "D"));
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C20, radioButton46.Checked ? 9000 : 12000, 9999, "D"));
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C22, radioButton48.Checked ? 9000 : 12000, 9999, "D"));
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C25, radioButton50.Checked ? 9000 : 12000, 9999, "D"));
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C28, radioButton52.Checked ? 9000 : 12000, 9999, "D"));
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C32, radioButton54.Checked ? 9000 : 12000, 9999, "D"));
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C36, radioButton56.Checked ? 9000 : 12000, 9999, "D"));
+            GeneralClass.CfgData.MaterialOriPool_4.Add(new MaterialOri(EnumDiaBang.BANG_C40, radioButton58.Checked ? 9000 : 12000, 9999, "D"));
+
+            //if (radioButton6.Checked)
+            //{
+            //    GeneralClass.CfgData.OriginType = EnumOriType.ORI_9;
+            //    GeneralClass.AddDefaultMaterial();//20241010修改【临时改原材长度时，原材库并没有同步修改】的bug
+            //}
+            //if (radioButton7.Checked)
+            //{
+            //    GeneralClass.CfgData.OriginType = EnumOriType.ORI_12;
+            //    GeneralClass.AddDefaultMaterial();//20241010修改【临时改原材长度时，原材库并没有同步修改】的bug
+            //}
 
             //是否切端头
             GeneralClass.CfgData.IfCutHead = checkBox4.Checked;
@@ -242,16 +350,39 @@ namespace RebarSampling
             {
                 GeneralClass.CfgData.MatPoolSetType = EnumMatPoolSetType.AVERAGE;
             }
+            GeneralClass.CfgData.MatPoolHave3 = checkBox5.Checked;//3米是否进入原材库
+            GeneralClass.CfgData.MatPoolHave6 = checkBox6.Checked;//6米是否进入原材库
 
             //纳入原材库的余料长度
             GeneralClass.CfgData.MatPoolYuliao1 = Convert.ToInt32(textBox5.Text);
             GeneralClass.CfgData.MatPoolYuliao2 = Convert.ToInt32(textBox6.Text);
 
 
+            //选用哪种数据库
+            if(radioButton16.Checked)
+            {
+                GeneralClass.CfgData.DatabaseType =EnumDatabaseType.SQLITE;
+            }
+            if(radioButton17.Checked)
+            {
+                GeneralClass.CfgData.DatabaseType = EnumDatabaseType.MYSQL;
+            }
+
+            //仓位划分数量区间设置
+            GeneralClass.CfgData.WareAreaSet1= Convert.ToInt32(textBox7.Text);
+            GeneralClass.CfgData.WareAreaSet2 = Convert.ToInt32(textBox8.Text);
+            GeneralClass.CfgData.WareAreaSet3 = Convert.ToInt32(textBox9.Text);
+            //料仓通道数
+            GeneralClass.CfgData.WareHouseChannels = Convert.ToInt32(textBox10.Text);
 
 
-            //存为json
-            string _json = NewtonJson.Serializer(GeneralClass.CfgData);
+            //原材是否参与套料
+            GeneralClass.CfgData.IfOrignalTao=checkBox7.Checked;
+
+            //是否自动优化套料排序，以节省加工时间
+            GeneralClass.CfgData.IfSeriTao=checkBox8.Checked;   
+            
+            string _json = NewtonJson.Serializer(GeneralClass.CfgData);//存为json
             Config.SaveConfig(_json);
 
             GeneralClass.interactivityData?.printlog(1, "系统配置已修改");
@@ -309,6 +440,30 @@ namespace RebarSampling
             else
             {
                 checkBox4.Text = "不切端头";
+            }
+        }
+
+        private void checkBox7_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox7.Checked)
+            {
+                checkBox7.Text = "原材参与套料";
+            }
+            else
+            {
+                checkBox7.Text = "原材不参与套料";
+            }
+        }
+
+        private void checkBox8_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox8.Checked)
+            {
+                checkBox8.Text = "执行套料排序优化";
+            }
+            else
+            {
+                checkBox8.Text = "不执行套料排序优化";
             }
         }
     }

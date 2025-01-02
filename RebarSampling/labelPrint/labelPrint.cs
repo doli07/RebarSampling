@@ -19,9 +19,27 @@ namespace RebarSampling
 
         static string printerName = "Gprinter GP-1834T";//打印机名称
 
+        private static string _lbfilepath = Directory.GetCurrentDirectory() + @"\labelfile\" + "构件包标签模板.bmp";
+        private static string _qzfilepath = Directory.GetCurrentDirectory() + @"\labelfile\" + "批量包标签模板.bmp";
+
+
         static System.Drawing.Image pic = null;
-        public static void print(System.Drawing.Image _image)
+        public static void print(System.Drawing.Image _image, EnumLabelType _labeltype)
         {
+            //图片保存到文件路径中
+            if(_labeltype==EnumLabelType.LB_LABEL)
+            {
+                _image.Save(_lbfilepath, System.Drawing.Imaging.ImageFormat.Bmp);
+                //_image.Save(_lbfilepath, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+            }
+            else if(_labeltype==EnumLabelType.QZ_LABEL)
+            {
+                _image.Save(_qzfilepath, System.Drawing.Imaging.ImageFormat.Bmp);
+                //_image.Save(_qzfilepath, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+            }
+
             pic = _image;
 
             if(hasPrinter(printerName))
@@ -30,7 +48,8 @@ namespace RebarSampling
                 pd.PrintPage += new PrintPageEventHandler(PrintElement);
 
                 pd.DefaultPageSettings.PrinterSettings.PrinterName = printerName;       //打印机名称
-                pd.DefaultPageSettings.PaperSize = new PaperSize("钢筋", mm2inch(50), mm2inch(100));
+                //pd.DefaultPageSettings.PaperSize = new PaperSize("钢筋", mm2inch(GeneralClass.LabelPrintSizeWidth), mm2inch(GeneralClass.LabelPrintSizeHeight));
+                pd.DefaultPageSettings.PaperSize = new PaperSize("钢筋", mm2inch(GeneralClass.LabelPrintSizeWidth), _image.Height+150);//以标签的实际大小来设置打印区域大小
                 //pd.DefaultPageSettings.Landscape = true;  //设置横向打印，不设置默认是纵向的
                 pd.PrintController = new System.Drawing.Printing.StandardPrintController();
                 pd.Print();

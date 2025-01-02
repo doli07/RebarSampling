@@ -21,7 +21,7 @@ namespace RebarSampling
             dataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView4.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 
-            dataGridView5.AutoSizeColumnsMode=DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView5.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView6.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView7.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView8.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
@@ -32,7 +32,7 @@ namespace RebarSampling
         /// <summary>
         /// 拖拽中的list
         /// </summary>
-        private List<ElementData> _flyingElement = new List<ElementData>();
+        private List<ElementRebarFB> _flyingElement = new List<ElementRebarFB>();
         /// <summary>
         /// 套丝机设置
         /// </summary>
@@ -40,44 +40,97 @@ namespace RebarSampling
         /// <summary>
         /// 构件批的list
         /// </summary>
-        private List<ElementDataBatch> _batchList = new List<ElementDataBatch>();
+        //private List<ElementDataBatch> _ElementBatchList = new List<ElementDataBatch>();
+        private List<ElementBatch> _ElementBatchList = new List<ElementBatch>();
 
         /// <summary>
         /// 手动排程sourcelist
         /// </summary>
-        private List<ElementData> _ElementSourceList = new List<ElementData>();
+        private List<ElementRebarFB> _ElementSourceList = new List<ElementRebarFB>();
+        //private List<ElementData> _ElementSourceList = new List<ElementData>();
+
+        ///// <summary>
+        ///// 手动排程targetlist
+        ///// </summary>
+        //private List<ElementData> _ElementTargetList = new List<ElementData>();
+        private List<ElementRebarFB> _ElementTargetList_1 = new List<ElementRebarFB>();//1#料仓
+        private List<ElementRebarFB> _ElementTargetList_2 = new List<ElementRebarFB>();//2#料仓
+        private List<ElementRebarFB> _ElementTargetList_3 = new List<ElementRebarFB>();//3#料仓
+        private List<ElementRebarFB> _ElementTargetList_4 = new List<ElementRebarFB>();//4#料仓
+
+        //private List<ElementData> _ElementTargetList_1 = new List<ElementData>();//1#料仓
+        //private List<ElementData> _ElementTargetList_2 = new List<ElementData>();//2#料仓
+        //private List<ElementData> _ElementTargetList_3 = new List<ElementData>();//3#料仓
+        //private List<ElementData> _ElementTargetList_4 = new List<ElementData>();//4#料仓
+
         /// <summary>
-        /// 手动排程targetlist
+        /// 从form3界面获取料单选择状态，依次为：棒材、线材、箍筋、拉钩、马凳、主筋
         /// </summary>
-        private List<ElementData> _ElementTargetList = new List<ElementData>();
+        /// <param name="_data"></param>
+        /// <returns></returns>
+        private List<RebarData> Pick(List<RebarData> _data)
+        {
+            List<RebarData> _ret = new List<RebarData>();
 
-        private List<ElementData> _ElementTargetList_1 = new List<ElementData>();//1#料仓
-        private List<ElementData> _ElementTargetList_2 = new List<ElementData>();//2#料仓
-        private List<ElementData> _ElementTargetList_3 = new List<ElementData>();//3#料仓
-        private List<ElementData> _ElementTargetList_4 = new List<ElementData>();//4#料仓
+            Tuple<bool, bool, bool, bool, bool, bool,bool> _sts = new Tuple<bool, bool, bool, bool, bool, bool,bool>(false, false, false, false, false, false,false);//init
+            GeneralClass.interactivityData?.askForPickStatus(out _sts);//从form3界面获取料单选择状态，依次为：棒材、线材、箍筋、拉钩、马凳、端头、主筋
 
+            //筛选棒材、线材，筛选箍筋、拉钩、马凳、主筋
+            _ret = _data.Where(t =>
+                   ((_sts.Item1 ? (t.RebarSizeType == EnumRebarSizeType.BANG) : false) ||
+                   (_sts.Item2 ? (t.RebarSizeType == EnumRebarSizeType.XIAN) : false))
+                   &&
+                    ((_sts.Item3 ? (t.RebarShapeType == EnumRebarShapeType.SHAPE_GJ) : false) ||
+                     (_sts.Item4 ? (t.RebarShapeType == EnumRebarShapeType.SHAPE_LG) : false) ||
+                      (_sts.Item5 ? (t.RebarShapeType == EnumRebarShapeType.SHAPE_MD) : false) ||
+                      (_sts.Item6 ? (t.RebarShapeType == EnumRebarShapeType.SHAPE_DT) : false) ||
+                       (_sts.Item7 ? (t.RebarShapeType == EnumRebarShapeType.SHAPE_ZJ) : false))
+                ).ToList();
+
+            return _ret;
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             GeneralClass.interactivityData?.printlog(1, "开始对所有构件包进行手动分组排程");
 
-            GeneralClass.AllElementList = GeneralClass.SQLiteOpt.GetAllElementList(GeneralClass.AllRebarTableName);
-
-            if (GeneralClass.AllElementList.Count == 0)
-            {
-                GeneralClass.interactivityData?.printlog(1, "构件包列表为空");
-                return;
-            }
-
-            button1.BackColor = Color.DarkSalmon;
+            GeneralClass.AllElementList = GeneralClass.DBOpt.GetAllElementList(GeneralClass.TableName_AllRebar);
+            if (GeneralClass.AllElementList.Count == 0) { GeneralClass.interactivityData?.printlog(1, "构件包列表为空"); return; }
 
             _ElementSourceList.Clear();
-            _ElementSourceList.AddRange(GeneralClass.AllElementList);
+
+            ElementData elementAfterPick;//经过条件筛选后的构件
+
+            List<RebarData> temp = new List<RebarData>();
+            foreach (var item in GeneralClass.AllElementList)
+            {
+                elementAfterPick = new ElementData();
+                elementAfterPick.Copy(item);
+
+                temp = Pick(item.rebarlist);
+                elementAfterPick.rebarlist.Clear();
+                foreach (var ttt in temp)//复制筛选后的rebarlist
+                {
+                    elementAfterPick.rebarlist.Add(ttt);
+                }
+
+                _ElementSourceList.Add(elementAfterPick.elementDataFB);
+            }
+
+
+
+
             FillDGV_Elements_source_show(_ElementSourceList, ref dataGridView1);
 
+            _ElementBatchList.Clear();
+            FillDGV_batch_show(_ElementBatchList, ref dataGridView2);
+
             ClearAllElementTarget();
+
+            button1.BackColor = Color.DarkSalmon;
+            tabControl1.SelectedIndex = 0;
         }
 
-        private void FillDGV_Elements_source_show(List<ElementData> _elements, ref DataGridView _dgv)
+        private void FillDGV_Elements_source_show(List<ElementRebarFB> _elements, ref DataGridView _dgv)
         {
             DataTable dt_z = new DataTable();
             dt_z.Columns.Add("构件编号", typeof(string));
@@ -200,7 +253,7 @@ namespace RebarSampling
             FillDGV_Elements_target_show(_ElementTargetList_4, ref dataGridView8);
 
         }
-        private void FillDGV_Elements_target_show(List<ElementData> _elements, ref DataGridView _dgv)
+        private void FillDGV_Elements_target_show(List<ElementRebarFB> _elements, ref DataGridView _dgv)
         {
             DataTable dt_z = new DataTable();
             dt_z.Columns.Add("构件", typeof(string));
@@ -215,10 +268,11 @@ namespace RebarSampling
 
             foreach (var item in _elements)
             {
-                int _wareSet = Convert.ToInt32(item.numSetting_bc.ToString().Substring(8, 1));
+                //int _wareSet = Convert.ToInt32(item.wareNumSet.ToString().Substring(8, 1));
+                int _wareSet = GeneralClass.EnumWareSetToInt(item.wareNumSet);
 
                 dt_z.Rows.Add("A-" + item.elementIndex.ToString(),
-                    item.totalNum_bc,
+                    item.totalNum,
                    _wareSet,
                    0,
 
@@ -312,13 +366,13 @@ namespace RebarSampling
                 //如果数量分组不匹配，则不允许放一起
                 if (_ElementTargetList_1.Count != 0)
                 {
-                    if (_flyingElement[0].numSetting_bc != _ElementTargetList_1[0].numSetting_bc)
+                    if (_flyingElement[0].wareNumSet > _ElementTargetList_1[0].wareNumSet)//大仓可以放小包，小仓不能放大包，所以此处用“>”
                     {
                         MessageBox.Show("仓位设置不一致，手动分组失败！");
                         return;
                     }
 
-                    int _num = Convert.ToInt32(_ElementTargetList_1[0].numSetting_bc.ToString().Substring(8, 1));//取仓位设置enum的数字部分
+                    int _num = Convert.ToInt32(_ElementTargetList_1[0].wareNumSet.ToString().Substring(8, 1));//取仓位设置enum的数字部分
                     if ((_ElementTargetList_1.Count + _flyingElement.Count) > _num)
                     {
                         MessageBox.Show("构件包数量太多，手动分组失败！");
@@ -377,13 +431,13 @@ namespace RebarSampling
                 //如果数量分组不匹配，则不允许放一起
                 if (_ElementTargetList_2.Count != 0)
                 {
-                    if (_flyingElement[0].numSetting_bc != _ElementTargetList_2[0].numSetting_bc)
+                    if (_flyingElement[0].wareNumSet > _ElementTargetList_2[0].wareNumSet)//大仓可以放小包，小仓不能放大包，所以此处用“>”
                     {
                         MessageBox.Show("仓位设置不一致，手动分组失败！");
                         return;
                     }
 
-                    int _num = Convert.ToInt32(_ElementTargetList_2[0].numSetting_bc.ToString().Substring(8, 1));//取仓位设置enum的数字部分
+                    int _num = Convert.ToInt32(_ElementTargetList_2[0].wareNumSet.ToString().Substring(8, 1));//取仓位设置enum的数字部分
                     if ((_ElementTargetList_2.Count + _flyingElement.Count) > _num)
                     {
                         MessageBox.Show("构件包数量太多，手动分组失败！");
@@ -442,13 +496,13 @@ namespace RebarSampling
                 //如果数量分组不匹配，则不允许放一起
                 if (_ElementTargetList_3.Count != 0)
                 {
-                    if (_flyingElement[0].numSetting_bc != _ElementTargetList_3[0].numSetting_bc)
+                    if (_flyingElement[0].wareNumSet > _ElementTargetList_3[0].wareNumSet)//大仓可以放小包，小仓不能放大包，所以此处用“>”
                     {
                         MessageBox.Show("仓位设置不一致，手动分组失败！");
                         return;
                     }
 
-                    int _num = Convert.ToInt32(_ElementTargetList_3[0].numSetting_bc.ToString().Substring(8, 1));//取仓位设置enum的数字部分
+                    int _num = Convert.ToInt32(_ElementTargetList_3[0].wareNumSet.ToString().Substring(8, 1));//取仓位设置enum的数字部分
                     if ((_ElementTargetList_3.Count + _flyingElement.Count) > _num)
                     {
                         MessageBox.Show("构件包数量太多，手动分组失败！");
@@ -507,13 +561,13 @@ namespace RebarSampling
                 //如果数量分组不匹配，则不允许放一起
                 if (_ElementTargetList_4.Count != 0)
                 {
-                    if (_flyingElement[0].numSetting_bc != _ElementTargetList_4[0].numSetting_bc)
+                    if (_flyingElement[0].wareNumSet > _ElementTargetList_4[0].wareNumSet)//大仓可以放小包，小仓不能放大包，所以此处用“>”
                     {
                         MessageBox.Show("仓位设置不一致，手动分组失败！");
                         return;
                     }
 
-                    int _num = Convert.ToInt32(_ElementTargetList_4[0].numSetting_bc.ToString().Substring(8, 1));//取仓位设置enum的数字部分
+                    int _num = Convert.ToInt32(_ElementTargetList_4[0].wareNumSet.ToString().Substring(8, 1));//取仓位设置enum的数字部分
                     if ((_ElementTargetList_4.Count + _flyingElement.Count) > _num)
                     {
                         MessageBox.Show("构件包数量太多，手动分组失败！");
@@ -624,7 +678,7 @@ namespace RebarSampling
                 dataGridView4.DataSource = new DataTable();
                 return;
             }
-            List<ElementData> _elements = new List<ElementData>();
+            List<ElementRebarFB> _elements = new List<ElementRebarFB>();
 
             _elements.AddRange(_ElementTargetList_1);
             _elements.AddRange(_ElementTargetList_2);
@@ -697,7 +751,7 @@ namespace RebarSampling
 
         }
 
-        private void FillDGV_batch_show(List<ElementDataBatch> _batchlist, ref DataGridView _dgv)
+        private void FillDGV_batch_show(List<ElementBatch> _batchlist, ref DataGridView _dgv)
         {
             DataTable dt_z = new DataTable();
             dt_z.Columns.Add("生产批号", typeof(string));
@@ -711,8 +765,8 @@ namespace RebarSampling
 
             foreach (var item in _batchlist)
             {
-                string _batchNo = "A-" + DateTime.Now.ToString("yyyyMMdd") + "-" + item.totalBatch.ToString("D3") + "-" + item.curBatch.ToString("D3");
-                dt_z.Rows.Add(_batchNo,/*item.curBatch,*/ item.diameterStr_bc, item.diameterStr_bc_tao, item.TaosiSetting, item.totalnum, item.totalweight);
+                //string _batchNo = "A-" + DateTime.Now.ToString("yyyyMMdd") + "-" + item.totalBatch.ToString("D3") + "-" + item.curBatch.ToString("D3");
+                dt_z.Rows.Add(/*_batchNo,*/item.BatchSeri, item.diameterStr_bc, item.diameterStr_bc_tao, item.TaosiSetting, item.totalNum_bc, item.totalWeight_bc);
             }
 
             _dgv.DataSource = dt_z;
@@ -734,7 +788,7 @@ namespace RebarSampling
                 list.Add(dr[0].ToString());
             }
 
-            FormTaosiSetting _form = new FormTaosiSetting(list);//
+            FormTaosiSetting _form = new FormTaosiSetting(this._taosiSetting, list);//
 
             if (_form.ShowDialog() == DialogResult.OK)
             {
@@ -745,14 +799,35 @@ namespace RebarSampling
         {
             this._taosiSetting = taosiSetting;
         }
-        private void button2_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 将已分组好的构件进行打包，创建新的构件生产批
+        /// </summary>
+        private void AddNewElementBatch()
         {
-            if (_ElementTargetList_1.Count == 0 && _ElementTargetList_2.Count == 0 && _ElementTargetList_3.Count == 0 && _ElementTargetList_4.Count == 0)//全为空，不可生成加工批
+            //先分配四个料仓的料仓号和仓位号
+            foreach (var item in _ElementTargetList_1)
             {
-                MessageBox.Show("未做构件包分组，不可建立新的加工批");
-                return;
+                item.warehouseNo = 1;//料仓号
+                item.wareNo = _ElementTargetList_1.IndexOf(item) + 1;//仓位号
             }
-            ElementDataBatch _batch = new ElementDataBatch();
+            foreach (var item in _ElementTargetList_2)
+            {
+                item.warehouseNo = 2;//料仓号
+                item.wareNo = _ElementTargetList_2.IndexOf(item) + 1;//仓位号
+            }
+            foreach (var item in _ElementTargetList_3)
+            {
+                item.warehouseNo = 3;//料仓号
+                item.wareNo = _ElementTargetList_3.IndexOf(item) + 1;//仓位号
+            }
+            foreach (var item in _ElementTargetList_4)
+            {
+                item.warehouseNo = 4;//料仓号
+                item.wareNo = _ElementTargetList_4.IndexOf(item) + 1;//仓位号
+            }
+
+            //添加新的构件生产批
+            ElementBatch _batch = new ElementBatch();
 
             _batch.elementData.AddRange(_ElementTargetList_1);
             _batch.elementData.AddRange(_ElementTargetList_2);
@@ -760,22 +835,168 @@ namespace RebarSampling
             _batch.elementData.AddRange(_ElementTargetList_4);
             _batch.TaosiSetting = _taosiSetting;//添加套丝设置
 
-            if (_batchList.Count == 0)
+            _ElementBatchList.Add(_batch);
+
+            //重新梳理一下构件批列表里面每个生产批的总批次，当前批次，以及序列号等信息
+            foreach (var item in _ElementBatchList)
             {
-                _batch.curBatch = 0;
-                _batchList.Add(_batch);
+                item.totalBatch = _ElementBatchList.Count;
+                item.curBatch = _ElementBatchList.IndexOf(item) + 1;
+                item.BatchSeri = "A-" + DateTime.Now.ToString("yyyyMMdd") + "-" + item.totalBatch.ToString("D3") + "-" + item.curBatch.ToString("D3");
             }
-            else
+
+
+        }
+
+        /// <summary>
+        /// 从数据库中取出所有构件生产批
+        /// </summary>
+        private void LoadElementBatchListFromDB()
+        {
+            try
             {
-                _batch.curBatch = _batchList.Max(t => t.curBatch) + 1;
-                _batchList.Add(_batch);
+
+                GeneralClass.AllElementList = GeneralClass.DBOpt.GetAllElementList(GeneralClass.TableName_AllRebar);//取出所有构件
+
+                DataTable dt = GeneralClass.DBOpt.dbHelper.GetDataTable(GeneralClass.TableName_ElementBatch_LB);
+
+
+                //先用tuple结果存储db中的数据，依次为【构件批编号】、【构件数据】、【套丝设置】
+                List<Tuple<string, ElementRebarFB, string>> templist = new List<Tuple<string, ElementRebarFB, string>>();
+                foreach (DataRow row in dt.Rows)
+                {
+                    string _batchseri = row[1].ToString();
+                    int _warehouseNo = Convert.ToInt32(row[2].ToString());
+                    int _wareNo = Convert.ToInt32(row[3].ToString());
+                    int _wareset = Convert.ToInt32(row[4].ToString());
+                    string _tempNo = row[5].ToString();
+                    string _taosisetting = row[6].ToString();
+                    string _project = row[7].ToString();
+                    string _assembly = row[8].ToString();
+                    string _element = row[9].ToString();
+
+                    ElementRebarFB temp = GeneralClass.AllElementList.Find(t => t.projectName == _project && t.assemblyName == _assembly && t.elementName == _element).elementDataFB;
+                    temp.warehouseNo = _warehouseNo;
+                    temp.wareNo = _wareNo;
+                    temp.batchSeri = _batchseri;
+
+                    templist.Add(new Tuple<string, ElementRebarFB, string>(_batchseri, temp, _taosisetting));
+                }
+
+                var _group = templist.GroupBy(t => t.Item1).ToList();//按照生产批编号来分组
+
+                _ElementBatchList.Clear();
+
+                foreach (var item in _group)
+                {
+                    ElementBatch _newbatch = new ElementBatch();
+                    _newbatch.BatchSeri = item.Key;
+
+                    foreach (var ttt in item.ToList())
+                    {
+                        _newbatch.elementData.Add(ttt.Item2);
+                    }
+                    _newbatch.TaosiSetting = item.ToList().First().Item3;//默认套丝设置跟构件批编号是唯一对应的
+                    _newbatch.totalBatch = Convert.ToInt32(item.Key.Split('-')[2]);//A-20240806-004-001，取分隔后的第二个元素
+                    _newbatch.curBatch = Convert.ToInt32(item.Key.Split('-')[3]);//A-20240806-004-001，取分隔后的第三个元素
+
+                    _ElementBatchList.Add(_newbatch);
+                }
+
+                FillDGV_batch_show(_ElementBatchList, ref dataGridView2);//将数据库中提取的elementbatchlist显示出来
+
             }
-            FillDGV_batch_show(_batchList, ref dataGridView2);
+            catch (Exception ex) { MessageBox.Show("LoadElementBatchListFromDB error:" + ex.Message); }
+
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (_ElementTargetList_1.Count == 0 && _ElementTargetList_2.Count == 0 && _ElementTargetList_3.Count == 0 && _ElementTargetList_4.Count == 0)//全为空，不可生成加工批
+            {
+                MessageBox.Show("未做构件包分组，不可建立新的加工批");
+                return;
+            }
+
+
+            AddNewElementBatch();//添加新的构件生产批
+
+            FillDGV_batch_show(_ElementBatchList, ref dataGridView2);
 
             ClearAllElementTarget();//清空
             FillDGV_Elements_Realtime(true);//清空
             this._taosiSetting = "";//清空
 
+            tabControl1.SelectTab(0);
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (_ElementBatchList.Count == 0)
+            {
+                MessageBox.Show("加工批为空，操作无效！");
+            }
+            else
+            {
+                //DBOpt.SaveAllElementBatchToDB(_ElementBatchList);//所有构件生产批存入数据库
+
+                GeneralClass.interactivityData?.getManualBatchList(_ElementBatchList);//将batchlist传输给form3
+                GeneralClass.interactivityData?.printlog(1, "手动分组完成，已生成所有加工批！");
+                MessageBox.Show("手动分组完成，已生成所有加工批！");
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            //隐藏导航栏
+            this.splitContainer1.Panel2Collapsed = !this.splitContainer1.Panel2Collapsed;
+            //根据隐藏属性切换项目资源文件中的图片显示
+            button5.Image = this.splitContainer1.Panel2Collapsed ? Properties.Resources.icons8_double_up_26 : Properties.Resources.icons8_double_down_26;
+
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            LoadElementBatchListFromDB();
+            tabControl1.SelectedIndex = 1;
+        }
+
+        private void dataGridView2_MouseDown(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                // 获取鼠标在DataGridView中的位置（行和列索引）  
+                int rowIndex = dataGridView2.HitTest(e.X, e.Y).RowIndex;
+                int colIndex = dataGridView2.HitTest(e.X, e.Y).ColumnIndex;
+
+                DataTable dt = dataGridView2.DataSource as DataTable;
+
+                // 检查是否确实点击在了一个单元格上  
+                if (rowIndex >= 0 && colIndex >= 0)//
+                {
+                    string _batchseri = dt.Rows[rowIndex][0].ToString();
+                    ElementBatch _batch = _ElementBatchList.Find(t => t.BatchSeri.Equals(_batchseri));//根据构件批编号搜索出构件批
+
+                    _ElementTargetList_1.Clear();
+                    _ElementTargetList_2.Clear();
+                    _ElementTargetList_3.Clear();
+                    _ElementTargetList_4.Clear();
+
+                    _ElementTargetList_1.AddRange(_batch.elementData.Where(t => t.warehouseNo == 1).ToList());
+                    _ElementTargetList_2.AddRange(_batch.elementData.Where(t => t.warehouseNo == 2).ToList());
+                    _ElementTargetList_3.AddRange(_batch.elementData.Where(t => t.warehouseNo == 3).ToList());
+                    _ElementTargetList_4.AddRange(_batch.elementData.Where(t => t.warehouseNo == 4).ToList());
+
+
+                    FillDGV_Elements_target_show(_ElementTargetList_1, ref dataGridView5);
+                    FillDGV_Elements_target_show(_ElementTargetList_2, ref dataGridView6);
+                    FillDGV_Elements_target_show(_ElementTargetList_3, ref dataGridView7);
+                    FillDGV_Elements_target_show(_ElementTargetList_4, ref dataGridView8);
+
+                    FillDGV_Elements_Realtime();
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("dataGridView2_MouseDown error:" + ex.Message); }
         }
     }
 }

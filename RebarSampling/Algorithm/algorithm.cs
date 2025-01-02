@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.UI;
+using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RebarSampling
@@ -27,6 +28,8 @@ namespace RebarSampling
         /// <returns>返回套料后的原材钢筋</returns>
         public static List<RebarOri> Taoliao(List<RebarData> _list, out int _totallength)
         {
+
+ 
             List<Rebar> _alllist = new List<Rebar>();
             _alllist = ListDescend(_list);//降序展开
 
@@ -80,7 +83,7 @@ namespace RebarSampling
             {
 
                 //短钢筋只用1500、1200的二次利用余料来套料，20240402
-                List<GeneralMaterial> _materialPool = GeneralClass.m_MaterialPool.Where(t => t._length == GeneralClass.CfgData.MatPoolYuliao1
+                List<MaterialOri> _materialPool = GeneralClass.m_MaterialPool.Where(t => t._length == GeneralClass.CfgData.MatPoolYuliao1
                 || t._length == GeneralClass.CfgData.MatPoolYuliao2).ToList();
 
                 //_returnlist.AddRange(Algorithm_FFD_1(_part2));//FFD首次适应算法，改进版
@@ -106,8 +109,48 @@ namespace RebarSampling
                 }
             }
 
+            _returnlist=_returnlist.OrderBy(t=>t._lengthFirstLeft).ToList();
+
+            //按照工序优化的原则，对原材list重新排序，20241104添加此功能
+            if(GeneralClass.CfgData.IfSeriTao)
+            {
+                SerialTao(ref _returnlist);
+            }
 
             return _returnlist;
+        }
+
+        /// <summary>
+        /// 将套料结果进行排序，目的是优化工序节拍
+        /// </summary>
+        /// <param name="_list"></param>
+        /// <returns></returns>
+        private static void SerialTao(ref List<RebarOri> _list)
+        {
+            //第一步，将一根原材内部按照加工工序数量来排序，工序最多的在前面，最少的在后面
+            foreach(RebarOri o in _list)
+            {                
+                o._list=o._list. OrderByDescending(t=>t.caseCount).ToList();//按照加工工序数量多少，降序排列
+            }
+
+            //第二步，将前后两个原材按照加工工序多少间隔开
+            _list=_list.OrderByDescending(t=>t._caseCount).ToList();//先降序排列
+            int _zeroIndex = 0;
+            RebarOri temp =new RebarOri(_list.First()._level, _list.First()._diameter);
+            for(int i=0;i<_list.Count;i++)
+            {
+                if (_list[i]._caseCount != 0) continue;//先找到caseCount==0的元素
+
+                _zeroIndex++;
+                if (_zeroIndex*2<_list.Count&& _list[_zeroIndex*2-1]._caseCount!=0)//把当前caseCount==0跟前面不为0且为偶数行的元素进行互换
+                {
+                    temp=_list[i];
+                    _list[i]=_list[_zeroIndex*2-1];
+                    _list[_zeroIndex * 2 - 1] = temp;//交换
+                }
+
+            }
+
         }
 
         /// <summary>
@@ -195,6 +238,54 @@ namespace RebarSampling
 
             return _alllist;
         }
+
+        /// <summary>
+        /// 将rebar按照长度和边角信息两个变量汇总成rebarPi
+        /// </summary>
+        /// <param name="_rebarlist"></param>
+        /// <returns></returns>
+        public static List<RebarPi> PackageRebar(List<Rebar> _rebarlist)
+        {
+            List<RebarPi> _rebarPi = _rebarlist.GroupBy(t => new { t.length, t.CornerMessage }).Select(
+                y => new RebarPi
+                {
+                    //length = y.Key.length,
+                    _rebarList = y.ToList(),
+                }
+                ).ToList();
+
+            return _rebarPi;
+        }
+        /// <summary>
+        /// 批量锯切场景下，将rebarOri的list转换为rebarPiOri
+        /// </summary>
+        /// <param name="_oriList"></param>
+        /// <returns></returns>
+        public static List<RebarOriPi> ExchangeRebarOri(List<RebarOri> _oriList)
+        {
+            //注意此处的泛型委托func写法，func<输入类型，输出类型>
+            Func<List<Rebar>, string> msglist = x =>
+            {
+                string sss = "";
+                foreach (var ttt in x)
+                {
+                    sss += ttt.CornerMessage;//拼接cornerMessage
+                }
+                return sss;
+            };
+
+            //此处使用func委托类型创建一个复杂的键选择器，目的是根据rebarOri中所有rebar边角信息的拼接来进行筛选
+            var temp = _oriList.GroupBy(p => new { cornerMsgkey = msglist(p._list) }).Select(
+                            y => new RebarOriPi
+                            {
+                                //cornerMsgList = y.Key,
+                                //num = y.Count(),
+                                _list = y.ToList()
+                            }
+                            ).ToList();
+
+            return temp;
+        }
         /// <summary>
         /// 首次适应算法FFD（first fit） 
         /// 算法思路：
@@ -206,7 +297,7 @@ namespace RebarSampling
         private static List<RebarOri> Algorithm_FFD(List<Rebar> _alllist)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_alllist.First().Level,_alllist.First().Diameter);
 
             foreach (var item in _alllist)//取一根钢筋过来
             {
@@ -219,7 +310,7 @@ namespace RebarSampling
                 {
                     foreach (var ttt in _returnlist)//遍历所有原材
                     {
-                        if ((ttt._lengthListUsed + item.length) <= GeneralClass.OriginalLength)//找到长度塞的下的原材
+                        if ((ttt._lengthListUsed + item.length) <= GeneralClass.OriginalLength(item.Level, item.Diameter))//找到长度塞的下的原材
                         {
                             ttt._list.Add(item);//塞进去就break
                             break;
@@ -228,7 +319,7 @@ namespace RebarSampling
                         {
                             if (ttt == _returnlist.Last())//如果是最后一根原材了，还是塞不进去，就新建一根原材
                             {
-                                _temp = new RebarOri();
+                                _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
                                 _temp._list.Add(item);
                                 _returnlist.Add(_temp);
                                 break;
@@ -258,7 +349,7 @@ namespace RebarSampling
         private static List<RebarOri> Algorithm_BFD(List<Rebar> _alllist)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
 
             while (_alllist.Count > 0)
             {
@@ -268,7 +359,7 @@ namespace RebarSampling
                 {
                     if (_returnlist.Count == 0)//原材list为空，新增一根原材
                     {
-                        _temp = new RebarOri();
+                        _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
                         _temp._list.Add(item);
                         _returnlist.Add(_temp);
 
@@ -278,7 +369,7 @@ namespace RebarSampling
                     {
                         foreach (var ttt in _returnlist)//遍历所有原材
                         {
-                            if ((ttt._lengthListUsed + item.length) <= GeneralClass.OriginalLength)//找到长度塞的下的原材
+                            if ((ttt._lengthListUsed + item.length) <= GeneralClass.OriginalLength(item.Level, item.Diameter))//找到长度塞的下的原材
                             {
                                 ttt._list.Add(item);//塞进去就break
                                 _alllist.Remove(item);//已经分配的从_alllist移除
@@ -297,7 +388,7 @@ namespace RebarSampling
                             {
                                 if (ttt == _returnlist.Last())//如果是最后一根原材了，还是塞不进去，就新建一根原材
                                 {
-                                    _temp = new RebarOri();
+                                    _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
                                     _temp._list.Add(item);
                                     _returnlist.Add(_temp);
 
@@ -328,7 +419,7 @@ namespace RebarSampling
         /// <param name="_lengthInMaterial">返回所用的原材库长度</param>
         /// <param name="_threshold">阈值,默认为0</param>
         /// <returns></returns>
-        private static bool IfContain(Rebar _rebar, List<GeneralMaterial> _material, out int _lengthInMaterial, int _threshold = 0)
+        private static bool IfContain(Rebar _rebar, List<MaterialOri> _material, out int _lengthInMaterial, int _threshold = 0)
         {
 
             foreach (var item in _material)
@@ -354,7 +445,7 @@ namespace RebarSampling
         /// <param name="_lengthInMaterial">返回所使用的原材</param>
         /// <param name="_threshold">阈值</param>
         /// <returns></returns>
-        private static bool IfContain(List<Rebar> _rebarlist, List<GeneralMaterial> _material, out int _lengthInMaterial, int _threshold = 0)
+        private static bool IfContain(List<Rebar> _rebarlist, List<MaterialOri> _material, out int _lengthInMaterial, int _threshold = 0)
         {
             foreach (var item in _material)
             {
@@ -378,7 +469,7 @@ namespace RebarSampling
         /// <param name="_material">原材</param>
         /// <param name="_threshold">阈值</param>
         /// <returns></returns>
-        private static bool IfContain(List<Rebar> _rebarlist, GeneralMaterial _material, int _threshold = 0)
+        private static bool IfContain(List<Rebar> _rebarlist, MaterialOri _material, int _threshold = 0)
         {
             if ((_material._length - _rebarlist.Sum(t => t.length)) >= 0 && (_material._length - _rebarlist.Sum(t => t.length)) <= _threshold)//所需长度与原材库的长度相差:0≤x＜500
             {
@@ -399,9 +490,9 @@ namespace RebarSampling
         private static List<RebarOri> Algorithm_FFD_1(List<Rebar> _alllist)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
 
-            _returnlist.AddRange(Tao(ref _alllist, GeneralClass.OriginalLength,99999,true));//允许超过原材长度
+            _returnlist.AddRange(Tao(ref _alllist, GeneralClass.OriginalLength(_alllist[0].Level, _alllist[0].Diameter), 99999,true));//允许超过原材长度
 
             ////首次套料
             //foreach (var item in _alllist)//取一根钢筋过来
@@ -452,14 +543,20 @@ namespace RebarSampling
         /// <param name="_alllist">待加工的rebarlist</param>
         /// <param name="_material">原材库</param>
         /// <returns></returns>
-        private static List<RebarOri> Algorithm_FFD_2(List<Rebar> _alllist, List<GeneralMaterial> _material)
+        private static List<RebarOri> Algorithm_FFD_2(List<Rebar> _alllist, List<MaterialOri> _material)
         {
+            string _level = _alllist.First().Level;
+            int _diameter = _alllist.First().Diameter;
+
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_level, _diameter);
 
             //先排完全不用切的，跟原材库长度完全一致的，主要考虑到柱构件中的3米
             _material = _material.OrderBy(t => t._length).ToList();//先升序，排阈值0的
-            _returnlist.AddRange(Tao_1(ref _alllist, _material, 0, 0));//0
+            if(_alllist!=null&&_alllist.Count!=0)
+            {
+                _returnlist.AddRange(Tao_1(ref _alllist, _material, 0, 0));//0
+            }
             //foreach (var item in _material)
             //{
             //    _returnlist.AddRange(Tao(ref _alllist, item._length, 0));
@@ -470,7 +567,10 @@ namespace RebarSampling
             //}
 
             //再排需要套料的
-            _returnlist.AddRange(Tao(ref _alllist, GeneralClass.OriginalLength, 99999, true));//允许超过原材长度
+            if (_alllist != null && _alllist.Count != 0)
+            {
+                _returnlist.AddRange(Tao(ref _alllist, GeneralClass.OriginalLength(_level, _diameter), 99999, true));//允许超过原材长度
+            }
 
             ////如果最后还没排完，按区间去丢
             //if (_alllist.Count != 0)
@@ -486,14 +586,14 @@ namespace RebarSampling
             //}
 
 
-            //对已经排好的，做筛选，余料长度太长的，都要重新用合适长度的原材库替换
-            for(int i =0;i<_returnlist.Count;i++)
-            {
-                _temp = new RebarOri(lengthBetween(_material, _returnlist[i]._lengthListUsed)._length);
-                _temp._list.AddRange(_returnlist[i]._list);
-                _returnlist[i] = _temp;//重新替换
-            }
-
+            ////对已经排好的，做筛选，余料长度太长的，都要重新用合适长度的原材库替换
+            //for(int i =0;i<_returnlist.Count;i++)
+            //{
+            //    _temp = new RebarOri(lengthBetween(_material, _returnlist[i]._lengthListUsed)._length, _level, _diameter);
+            //    _temp._list.AddRange(_returnlist[i]._list);
+            //    _returnlist[i] = _temp;//重新替换
+            //}
+            //20241124关闭
 
             ////最后一根的尾料做处理
             //CutTail(ref _returnlist);
@@ -510,7 +610,7 @@ namespace RebarSampling
         /// <param name="_alllist">待加工的rebarlist</param>
         /// <param name="_material">原材库</param>
         /// <returns></returns>
-        private static List<RebarOri> Algorithm_FFD_3(List<Rebar> _alllist, List<GeneralMaterial> _material)
+        private static List<RebarOri> Algorithm_FFD_3(List<Rebar> _alllist, List<MaterialOri> _material)
         {
             if (_material.Count == 0)
             {
@@ -518,7 +618,7 @@ namespace RebarSampling
                 return new List<RebarOri>();
             }
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
 
             //首次套料，用非定尺原材
             //foreach (var item in _alllist)//取一根钢筋过来
@@ -527,7 +627,7 @@ namespace RebarSampling
                 int _lengthUsed = 0;
                 if (IfContain(_alllist[i], _material, out _lengthUsed, GeneralClass.CfgData.LeftThreshold))//先找原材库中是否有合适长度的
                 {
-                    _temp = new RebarOri(_lengthUsed);//新建一个指定长度的原材
+                    _temp = new RebarOri(_lengthUsed, _alllist.First().Level, _alllist.First().Diameter);//新建一个指定长度的原材
                     _temp._list.Add(_alllist[i]);
                     _returnlist.Add(_temp);
 
@@ -564,7 +664,7 @@ namespace RebarSampling
                 GeneralClass.interactivityData?.printlog(1, "料单异常，钢筋长度大于原材长度");
                 foreach (var item in _alllist)
                 {
-                    _temp = new RebarOri();//新建一个原材
+                    _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);//新建一个原材
                     _temp._list.Add(item);
                     _returnlist.Add(_temp);
                 }
@@ -588,7 +688,7 @@ namespace RebarSampling
         /// <param name="_alllist"></param>
         /// <param name="_material"></param>
         /// <returns></returns>
-        private static List<RebarOri> Algorithm_FFD_4(List<Rebar> _alllist, List<GeneralMaterial> _material)
+        private static List<RebarOri> Algorithm_FFD_4(List<Rebar> _alllist, List<MaterialOri> _material)
         {
             if (_material.Count == 0)
             {
@@ -596,7 +696,7 @@ namespace RebarSampling
                 return new List<RebarOri>();
             }
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
 
             //_alllist = _alllist.OrderByDescending(t => t.length).ToList();//先排序 ，从长到短
             _alllist = _alllist.OrderBy(t => t.length).ToList();//先排序 ，从短到长
@@ -607,7 +707,7 @@ namespace RebarSampling
                 int _lengthUsed = 0;
                 if (IfContain(_alllist[i], _material, out _lengthUsed))//先找原材库中是否有合适长度的
                 {
-                    _temp = new RebarOri(_lengthUsed);//新建一个指定长度的原材
+                    _temp = new RebarOri(_lengthUsed, _alllist.First().Level, _alllist.First().Diameter);//新建一个指定长度的原材
                     _temp._list.Add(_alllist[i]);
                     _returnlist.Add(_temp);
 
@@ -627,7 +727,7 @@ namespace RebarSampling
                     int _lengthUsed = 0;
                     if (IfContain(_alllist[i], _material, out _lengthUsed, _threshold))//先找原材库中是否有合适长度的
                     {
-                        _temp = new RebarOri(_lengthUsed);//新建一个指定长度的原材
+                        _temp = new RebarOri(_lengthUsed, _alllist.First().Level, _alllist.First().Diameter);//新建一个指定长度的原材
                         _temp._list.Add(_alllist[i]);
                         _returnTemp.Add(_temp);
 
@@ -641,7 +741,7 @@ namespace RebarSampling
                 GeneralClass.interactivityData?.printlog(1, "料单异常，钢筋长度大于原材长度");
                 foreach (var item in _alllist)
                 {
-                    _temp = new RebarOri();//新建一个原材
+                    _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);//新建一个原材
                     _temp._list.Add(item);
                     _returnlist.Add(_temp);
                 }
@@ -669,7 +769,7 @@ namespace RebarSampling
         /// <param name="_alllist"></param>
         /// <param name="_material"></param>
         /// <returns></returns>
-        private static List<RebarOri> Algorithm_FFD_5(List<Rebar> _alllist, List<GeneralMaterial> _material)
+        private static List<RebarOri> Algorithm_FFD_5(List<Rebar> _alllist, List<MaterialOri> _material)
         {
             if (_material.Count == 0)
             {
@@ -677,7 +777,7 @@ namespace RebarSampling
                 return new List<RebarOri>();
             }
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
 
             _alllist = _alllist.OrderBy(t => t.length).ToList();//先排序 ，从短到长
             //_alllist = _alllist.OrderByDescending(t => t.length).ToList();//先排序 ，从长到短
@@ -751,7 +851,7 @@ namespace RebarSampling
                     ////提取直径一致的原材按照长度降序排列
                     //_material = _material.Where(t => t._diameter == GeneralClass.IntToEnumDiameter(_alllist[0].Diameter)).ToList().OrderByDescending(k => k._length).ToList();
 
-                    _temp = new RebarOri(lengthBetween(_material, item.length)._length);//查询所在的原材区间，并新建一个对应长度的原材
+                    _temp = new RebarOri(lengthBetween(_material, item.length)._length, _alllist.First().Level, _alllist.First().Diameter);//查询所在的原材区间，并新建一个对应长度的原材
                     _temp._list.Add(item);
                     _returnlist.Add(_temp);
                 }
@@ -767,7 +867,7 @@ namespace RebarSampling
         /// <param name="_alllist"></param>
         /// <param name="_material"></param>
         /// <returns></returns>
-        private static List<RebarOri> Algorithm_FFD_6(List<Rebar> _alllist, List<GeneralMaterial> _material)
+        private static List<RebarOri> Algorithm_FFD_6(List<Rebar> _alllist, List<MaterialOri> _material)
         {
             if (_material.Count == 0)
             {
@@ -775,7 +875,7 @@ namespace RebarSampling
                 return new List<RebarOri>();
             }
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
 
             _alllist = _alllist.OrderBy(t => t.length).ToList();//先排序 ，从短到长
             //_alllist = _alllist.OrderByDescending(t => t.length).ToList();//先排序 ，从长到短
@@ -853,7 +953,7 @@ namespace RebarSampling
                     ////提取直径一致的原材按照长度降序排列
                     //_material = _material.Where(t => t._diameter == GeneralClass.IntToEnumDiameter(_alllist[0].Diameter)).ToList().OrderByDescending(k => k._length).ToList();
 
-                    _temp = new RebarOri(lengthBetween(_material, item.length)._length);//查询所在的原材区间，并新建一个对应长度的原材
+                    _temp = new RebarOri(lengthBetween(_material, item.length)._length,item.Level,item.Diameter);//查询所在的原材区间，并新建一个对应长度的原材
                     _temp._list.Add(item);
                     _returnlist.Add(_temp);
                 }
@@ -863,7 +963,7 @@ namespace RebarSampling
             {
                 GeneralClass.interactivityData?.printlog(1, "原材库区间没排完！！用定尺原材套");
 
-                _returnlist.AddRange(Tao(ref _alllist, GeneralClass.OriginalLength));
+                _returnlist.AddRange(Tao(ref _alllist, GeneralClass.OriginalLength(_alllist[0].Level, _alllist[0].Diameter)));
 
             }
 
@@ -875,19 +975,19 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_ma"></param>
         /// <param name="_length"></param>
-        private static GeneralMaterial lengthBetween(List<GeneralMaterial> _ma, int _length)
+        private static MaterialOri lengthBetween(List<MaterialOri> _ma, int _length)
         {
 
             //提取按照长度降序排列
             _ma = _ma.OrderByDescending(k => k._length).ToList();
 
-            _ma.Add(new GeneralMaterial(_ma.First()._diameter, 0, 999));//加入一个长度为0的在末尾，防止越界
+            _ma.Add(new MaterialOri(_ma.First()._diameter, 0, 999));//加入一个长度为0的在末尾，防止越界
 
 
             if (_length > _ma.First()._length)
             {
                 GeneralClass.interactivityData?.printlog(1, "长度=" + _length.ToString() + ",数据异常!");
-                return new GeneralMaterial(_ma.First()._diameter, GeneralClass.OriginalLength, 999);//给个原材吧
+                return new MaterialOri(_ma.First()._diameter, GeneralClass.OriginalLength(_ma.First()._level, _ma.First()._diameter), 999,_ma.First()._level);//给个原材吧
             }
             for (int i = 0; i < _ma.Count; i++)
             {
@@ -897,7 +997,7 @@ namespace RebarSampling
                 }
             }
 
-            return new GeneralMaterial(_ma.First()._diameter, GeneralClass.OriginalLength, 999);
+            return new MaterialOri(_ma.First()._diameter, GeneralClass.OriginalLength(_ma.First()._level, _ma.First()._diameter), 999, _ma.First()._level);
         }
 
         /// <summary>
@@ -908,10 +1008,10 @@ namespace RebarSampling
         /// <param name="_minThreshold"></param>
         /// <param name="_maxThreshold"></param>
         /// <returns></returns>
-        private static List<RebarOri> Tao_1(ref List<Rebar> _rebarlist, List<GeneralMaterial> _materialPool, int _minThreshold, int _maxThreshold/*, int _threshold = 99999*/)
+        private static List<RebarOri> Tao_1(ref List<Rebar> _rebarlist, List<MaterialOri> _materialPool, int _minThreshold, int _maxThreshold/*, int _threshold = 99999*/)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_rebarlist.First().Level, _rebarlist.First().Diameter);
             int _lengthUSE = 0;
 
             for (int i = _rebarlist.Count - 1; i >= 0; i--)//注意逆序 检索，因rebarlist会删除部分元素
@@ -920,7 +1020,7 @@ namespace RebarSampling
                 {
                     if (IfContain(_rebarlist[i], _materialPool, out _lengthUSE, _th))
                     {
-                        _temp = new RebarOri(_lengthUSE);
+                        _temp = new RebarOri(_lengthUSE, _rebarlist.First().Level, _rebarlist.First().Diameter);
                         _temp._list.Add(_rebarlist[i]);
                         _returnlist.Add(_temp);
 
@@ -939,10 +1039,10 @@ namespace RebarSampling
         /// <param name="_minThreshold"></param>
         /// <param name="_maxThreshold"></param>
         /// <returns></returns>
-        private static List<RebarOri> Tao_2(ref List<Rebar> _rebarlist, List<GeneralMaterial> _materialPool, int _minThreshold, int _maxThreshold/*, int _threshold = 99999*/)
+        private static List<RebarOri> Tao_2(ref List<Rebar> _rebarlist, List<MaterialOri> _materialPool, int _minThreshold, int _maxThreshold/*, int _threshold = 99999*/)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_rebarlist.First().Level, _rebarlist.First().Diameter);
             int _lengthUSE = 0;
 
             List<Rebar> _tttlist = new List<Rebar>();
@@ -964,7 +1064,7 @@ namespace RebarSampling
                     {
                         if (IfContain(_tttlist, _materialPool, out _lengthUSE, _th))
                         {
-                            _temp = new RebarOri(_lengthUSE);
+                            _temp = new RebarOri(_lengthUSE, _rebarlist.First().Level, _rebarlist.First().Diameter);
                             _temp._list.Add(_rebarlist[i]);
                             _temp._list.Add(_rebarlist[j]);
 
@@ -991,10 +1091,10 @@ namespace RebarSampling
         /// <param name="_minThreshold"></param>
         /// <param name="_maxThreshold"></param>
         /// <returns></returns>
-        private static List<RebarOri> Tao_3(ref List<Rebar> _rebarlist, List<GeneralMaterial> _materialPool, int _minThreshold, int _maxThreshold/*, int _threshold = 99999*/)
+        private static List<RebarOri> Tao_3(ref List<Rebar> _rebarlist, List<MaterialOri> _materialPool, int _minThreshold, int _maxThreshold/*, int _threshold = 99999*/)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_rebarlist.First().Level, _rebarlist.First().Diameter);
             int _lengthUSE = 0;
 
             List<Rebar> _tttlist = new List<Rebar>();
@@ -1019,7 +1119,7 @@ namespace RebarSampling
                         {
                             if (IfContain(_tttlist, _materialPool, out _lengthUSE, _th))
                             {
-                                _temp = new RebarOri(_lengthUSE);
+                                _temp = new RebarOri(_lengthUSE, _rebarlist.First().Level, _rebarlist.First().Diameter);
                                 _temp._list.Add(_rebarlist[i]);
                                 _temp._list.Add(_rebarlist[j]);
                                 _temp._list.Add(_rebarlist[k]);
@@ -1048,10 +1148,10 @@ namespace RebarSampling
         /// <param name="_minThreshold"></param>
         /// <param name="_maxThreshold"></param>
         /// <returns></returns>
-        private static List<RebarOri> Tao_1_tree(ref List<Rebar> _rebarlist, List<GeneralMaterial> _materialPool, int _minThreshold, int _maxThreshold/*, int _threshold = 99999*/)
+        private static List<RebarOri> Tao_1_tree(ref List<Rebar> _rebarlist, List<MaterialOri> _materialPool, int _minThreshold, int _maxThreshold/*, int _threshold = 99999*/)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_rebarlist.First().Level, _rebarlist.First().Diameter);
             int _lengthUSE = 0;
 
             for (int i = _rebarlist.Count - 1; i >= 0; i--)//注意逆序 检索，因rebarlist会删除部分元素
@@ -1060,7 +1160,7 @@ namespace RebarSampling
                 {
                     if (IfContain(_rebarlist[i], _materialPool, out _lengthUSE, _th))
                     {
-                        _temp = new RebarOri(_lengthUSE);
+                        _temp = new RebarOri(_lengthUSE, _rebarlist.First().Level, _rebarlist.First().Diameter);
                         _temp._list.Add(_rebarlist[i]);
                         _returnlist.Add(_temp);
 
@@ -1080,10 +1180,10 @@ namespace RebarSampling
         /// <param name="_maxThreshold"></param>
         /// <param name="_ascend">原材库升序OR降序,TRUE升序，FALSE降序</param>
         /// <returns></returns>
-        private static List<RebarOri> Tao_2_tree(ref List<Rebar> _rebarlist, List<GeneralMaterial> _materialPool, int _minThreshold, int _maxThreshold, bool _ascend = true/*, int _threshold = 99999*/)
+        private static List<RebarOri> Tao_2_tree(ref List<Rebar> _rebarlist, List<MaterialOri> _materialPool, int _minThreshold, int _maxThreshold, bool _ascend = true/*, int _threshold = 99999*/)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_rebarlist.First().Level, _rebarlist.First().Diameter);
             //int _lengthUSE = 0;
             bool _find = false;
 
@@ -1103,7 +1203,7 @@ namespace RebarSampling
                         var ttt = Solution.FindNode(root, _rebarlist[i], item, _th);
                         if (ttt != null)
                         {
-                            _temp = new RebarOri(item._length);     //建立新的rebarOri
+                            _temp = new RebarOri(item._length, _rebarlist.First().Level, _rebarlist.First().Diameter);     //建立新的rebarOri
                             _temp._list.Add(_rebarlist[i]);
                             _temp._list.Add(ttt.val);
 
@@ -1144,10 +1244,10 @@ namespace RebarSampling
         /// <param name="_minThreshold"></param>
         /// <param name="_maxThreshold"></param>
         /// <returns></returns>
-        private static List<RebarOri> Tao_3_tree(ref List<Rebar> _rebarlist, List<GeneralMaterial> _materialPool, int _minThreshold, int _maxThreshold, bool _ascend = true)
+        private static List<RebarOri> Tao_3_tree(ref List<Rebar> _rebarlist, List<MaterialOri> _materialPool, int _minThreshold, int _maxThreshold, bool _ascend = true)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_rebarlist.First().Level, _rebarlist.First().Diameter);
             //int _lengthUSE = 0;
             bool _find = false;
 
@@ -1173,7 +1273,7 @@ namespace RebarSampling
                             var ttt = Solution.FindNode(root, templist /*_rebarlist[i]*/, item, _th);
                             if (ttt != null)
                             {
-                                _temp = new RebarOri(item._length);     //建立新的rebarOri
+                                _temp = new RebarOri(item._length, _rebarlist.First().Level, _rebarlist.First().Diameter);     //建立新的rebarOri
                                 //_temp._list.Add(_rebarlist[i]);
                                 _temp._list.AddRange(templist);
                                 _temp._list.Add(ttt.val);
@@ -1382,7 +1482,7 @@ namespace RebarSampling
         private static List<RebarOri> Tao(ref List<Rebar> _rebarlist, int _materialLength, int _threshold = 99999, bool _useOver = false)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri();
+            RebarOri _temp = new RebarOri(_rebarlist.First().Level, _rebarlist.First().Diameter);
 
             _rebarlist = _rebarlist.OrderBy(t => t.length).ToList();//先升序排序，因为后面是从最后一根开始
 
@@ -1392,7 +1492,7 @@ namespace RebarSampling
 
                 if (_returnlist.Count == 0)//原材list为空，新增一根原材
                 {
-                    _temp = new RebarOri(_materialLength);
+                    _temp = new RebarOri(_materialLength, _rebarlist.First().Level, _rebarlist.First().Diameter);
 
                     if (_useOver ? true : (_rebarlist[i].length <= _temp._totalLength)) //新增一根原材，也要判定准备塞的长度是否大于原材长度
                     {
@@ -1416,7 +1516,7 @@ namespace RebarSampling
                         {
                             if (ttt == _returnlist.Last())//如果是最后一根原材了，还是塞不进去，就新建一根原材
                             {
-                                _temp = new RebarOri(_materialLength);
+                                _temp = new RebarOri(_materialLength, _rebarlist.First().Level, _rebarlist.First().Diameter);
                                 if (_useOver ? true : (_rebarlist[i].length <= _temp._totalLength)) //新增一根原材，也要判定准备塞的长度是否大于原材长度
                                 {
                                     _temp._list.Add(_rebarlist[i]);
@@ -1545,7 +1645,8 @@ namespace RebarSampling
             }
 
             //如果分成两组的长度都没有超过原材长度，则分配成功
-            if (_list1.Sum(t => t.length) <= GeneralClass.OriginalLength && _list2.Sum(t => t.length) <= GeneralClass.OriginalLength)
+            if (_list1.Sum(t => t.length) <= GeneralClass.OriginalLength(_list1.First().Level, _list1.First().Diameter) && 
+                _list2.Sum(t => t.length) <= GeneralClass.OriginalLength(_list1.First().Level, _list1.First().Diameter))
             {
                 _ori1._list = _list1;//
                 _ori2._list = _list2;

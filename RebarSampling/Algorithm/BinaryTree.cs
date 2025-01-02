@@ -49,7 +49,7 @@ namespace RebarSampling
         /// <param name="_material">原材组合目标</param>
         /// <param name="_threshold">阈值</param>
         /// <returns></returns>
-        public static BiTreeNode FindNode( BiTreeNode _root,  Rebar _rebar, GeneralMaterial _material, int _threshold = 0)
+        public static BiTreeNode FindNode( BiTreeNode _root,  Rebar _rebar, MaterialOri _material, int _threshold = 0)
         {
             if (_root == null) return null;
 
@@ -75,7 +75,7 @@ namespace RebarSampling
             }
 
         }
-        public static BiTreeNode FindNode(BiTreeNode _root, List<Rebar> _list, GeneralMaterial _material, int _threshold = 0)
+        public static BiTreeNode FindNode(BiTreeNode _root, List<Rebar> _list, MaterialOri _material, int _threshold = 0)
         {
             if (_root == null) return null;
 
@@ -133,7 +133,7 @@ namespace RebarSampling
         /// <param name="_material">原材</param>
         /// <param name="_threshold">阈值</param>
         /// <returns></returns>
-        private static bool IfContain(List<Rebar> _rebarlist, GeneralMaterial _material, int _threshold = 0)
+        private static bool IfContain(List<Rebar> _rebarlist, MaterialOri _material, int _threshold = 0)
         {
             if ((_material._length - _rebarlist.Sum(t => t.length)) >= 0 && (_material._length - _rebarlist.Sum(t => t.length)) <= _threshold)//所需长度与原材库的长度相差:0≤x＜500
             {

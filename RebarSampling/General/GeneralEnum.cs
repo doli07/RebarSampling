@@ -7,9 +7,26 @@ using System.Threading.Tasks;
 namespace RebarSampling
 {
     /// <summary>
+    /// 数据库类型
+    /// </summary>
+    public enum EnumDatabaseType
+    {
+        /// <summary>
+        /// sqlite
+        /// </summary>
+        SQLITE,
+        /// <summary>
+        /// mysql
+        /// </summary>
+        MYSQL,
+
+        maxDBtype
+    }
+
+    /// <summary>
     /// 区分线材棒材钢筋
     /// </summary>
-    public enum EnumRebarType
+    public enum EnumRebarSizeType
     {
         /// <summary>
         /// 棒材钢筋
@@ -387,11 +404,11 @@ namespace RebarSampling
     /// </summary>
     public enum EnumRebarAssemblyType
     {
-        None = -1,
+        NONE = -1,
         /// <summary>
         /// 基础，地下室
         /// </summary>
-        ASSEMBLY_BASE=0,
+        ASSEMBLY_BASE = 0,
         /// <summary>
         /// 墙
         /// </summary>
@@ -414,9 +431,38 @@ namespace RebarSampling
         ASSEMBLY_STAIR,
 
 
-            maxAssemblyNum
+        maxAssemblyNum
     }
+    /// <summary>
+    /// 钢筋的形状类型，包含：箍筋、拉勾、马凳、单段、多段
+    /// </summary>
+    public enum EnumRebarShapeType
+    {
+        NONE = -1,
+        /// <summary>
+        /// 箍筋
+        /// </summary>
+        SHAPE_GJ,
+        /// <summary>
+        /// 拉勾
+        /// </summary>
+        SHAPE_LG,
+        /// <summary>
+        /// 马凳，有两种马凳，分别以“FC”和“C”标注
+        /// </summary>
+        SHAPE_MD,
+        /// <summary>
+        /// 端头，一般为虚线显示
+        /// </summary>
+        SHAPE_DT,
+        /// <summary>
+        /// 主筋
+        /// </summary>
+        SHAPE_ZJ,
 
+
+        maxShapeType
+    }
 
     /// <summary>
     /// 钢筋列名枚举
@@ -426,7 +472,7 @@ namespace RebarSampling
         /// <summary>
         /// 项目名称
         /// </summary>
-        PROJECT_NAME=0,
+        PROJECT_NAME = 0,
         /// <summary>
         /// 主构件名称
         /// </summary>
@@ -436,9 +482,17 @@ namespace RebarSampling
         /// </summary>
         ELEMENT_NAME,           //
         /// <summary>
+        /// 料表名称
+        /// </summary>
+        TABLE_NAME,
+        /// <summary>
+        /// 料表sheet名称
+        /// </summary>
+        TABLE_SHEET_NAME,
+        /// <summary>
         /// 图形编号
         /// </summary>
-        TYPE_NAME,              //
+        PIC_NO,              //
         /// <summary>
         /// 级别
         /// </summary>
@@ -507,6 +561,50 @@ namespace RebarSampling
         /// 是否弯曲两次以上
         /// </summary>
         IFBENDTWICE,
+
+        /// <summary>
+        /// 是否选择，在主界面是否选择纳入筛选
+        /// </summary>
+        IFPICK,
+
+        /// <summary>
+        /// 梁板线构件批的生产批号
+        /// </summary>
+        WORK_LB__ELEMENTBATCH_SERI,
+        /// <summary>
+        /// 梁板线的料仓号
+        /// </summary>
+        WAREHOUSE_NO,
+        /// <summary>
+        /// 梁板线的仓位号
+        /// </summary>
+        WARE_NO,
+        /// <summary>
+        /// 梁板线的智能料仓设置，8421四种设置
+        /// </summary>
+        WAREHOUSE_SET,
+        /// <summary>
+        /// 构件的临时编号
+        /// </summary>
+        TEMP_ELEMENT_SERI,
+        /// <summary>
+        /// 套丝机设置
+        /// </summary>
+        TAOSI_SET,
+
+        /// <summary>
+        /// 批量锯切的生产批号
+        /// </summary>
+        WORK_QZ_PICUT_SERI,
+        /// <summary>
+        /// 批量锯切的数量
+        /// </summary>
+        NUM,
+        /// <summary>
+        /// 批量锯切一捆的临时编号
+        /// </summary>
+        TEMP_NO,
+
 
         maxRebarColNum
     }
@@ -636,7 +734,7 @@ namespace RebarSampling
         /// <summary>
         /// 原材，啥事不干
         /// </summary>
-        ORIGINAL=0,
+        ORIGINAL = 0,
         /// <summary>
         /// 原材仅套丝
         /// </summary>
@@ -672,7 +770,7 @@ namespace RebarSampling
     }
 
     public enum EnumDiameter
-    { 
+    {
         DIAMETER_6,
         DIAMETER_8,
         DIAMETER_10,
@@ -696,7 +794,7 @@ namespace RebarSampling
     /// 详细统计界面的行名，钢筋尺寸
     /// </summary>
     public enum EnumBangOrXian
-    { 
+    {
         XIAN_A6,
         XIAN_A8,
         XIAN_C6,
@@ -735,7 +833,7 @@ namespace RebarSampling
     /// </summary>
     public enum EnumDiaBang
     {
-        NONE=-1,
+        NONE = -1,
         BANG_C12,
         BANG_C14,
         BANG_C16,
@@ -756,8 +854,8 @@ namespace RebarSampling
     /// 钢筋螺距区间，Φ16~Φ22用2.5螺距，Φ25~Φ32用3.0螺距，Φ36~Φ40用3.5螺距
     /// </summary>
     public enum EnumDiameterPitchType
-    { 
-        NONE=-1,
+    {
+        NONE = -1,
         PITCH_1,
         PITCH_2,
         PITCH_3,
@@ -773,8 +871,8 @@ namespace RebarSampling
     /// 钢筋数量分组，原则：WARESET_8:1~25(8仓)，WARESET_4:26~50(4仓)，WARESET_2:51~100(2仓)，WARESET_1:100~(1仓)
     /// </summary>
     public enum EnumWareNumSet
-    { 
-        NONE=-1,
+    {
+        NONE = -1,
         /// <summary>
         /// 1~15(8仓)
         /// </summary>
@@ -799,8 +897,8 @@ namespace RebarSampling
     /// 注意与tabcontrol2 的tab顺序对应
     /// </summary>
     public enum EnumDiaGroupType
-    { 
-        NONE=-1,
+    {
+        NONE = -1,
         /// <summary>
         /// 1~4种直径
         /// </summary>
@@ -884,7 +982,11 @@ namespace RebarSampling
         /// <summary>
         /// 竖
         /// </summary>
-        SHU
+        SHU,
+        /// <summary>
+        /// 圆弧
+        /// </summary>
+        ARC
     }
 
     public enum EnumFactoryType
@@ -944,7 +1046,7 @@ namespace RebarSampling
     /// </summary>
     public enum EnumDiaGroupTypeSetting
     {
-        NONE=-1,
+        NONE = -1,
         /// <summary>
         /// 顺序分组
         /// </summary>
@@ -959,7 +1061,7 @@ namespace RebarSampling
 
     public enum EnumTaoType
     {
-        NONE=-1,
+        NONE = -1,
         /// <summary>
         /// 原材套料
         /// </summary>
@@ -980,9 +1082,11 @@ namespace RebarSampling
 
         maxTaoType
     }
-
+    /// <summary>
+    /// 原材库设置
+    /// </summary>
     public enum EnumMatPoolSetType
-    { 
+    {
         NONE = -1,
         /// <summary>
         /// 整数倍模数
@@ -996,5 +1100,19 @@ namespace RebarSampling
         maxMatPoolSetType
     }
 
+    public enum EnumLabelType
+    {
+        NONE = -1,
+        /// <summary>
+        /// 墙柱线标签
+        /// </summary>
+        QZ_LABEL,
+        /// <summary>
+        /// 梁板线标签
+        /// </summary>
+        LB_LABEL,
+
+        maxLabelType
+    }
 
 }

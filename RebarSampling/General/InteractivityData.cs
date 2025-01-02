@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,19 +62,38 @@ namespace RebarSampling
     /// <param name="_list"></param>
     /// <param name="timeStep"></param>
     /// <returns></returns>
-    public delegate void DelegateSendWorkBill(List<string> _jsonlist,int timeStep);
-        
+    //public delegate void DelegateSendWorkBill(List<string> _jsonlist,int timeStep);
+    public delegate void DelegateSendWorkBill(int timeStep);
+
     /// <summary>
     /// 委托事件，获取套丝机设置
     /// </summary>
     /// <returns></returns>
     public delegate void DelegateGetTaosiSetting(string _setting);
     /// <summary>
+    /// 委托类型，用于传输梁板线手动分组的加工批数据
+    /// </summary>
+    /// <param name="_batchlist"></param>
+    public delegate void DelegateGetManualBatchList(List<ElementBatch> _batchlist);
+    /// <summary>
+    /// 委托类型，用于套料界面传递料单的筛选项，依次为：棒材、线材、箍筋、拉钩、马凳、端头、主筋
+    /// </summary>
+    public delegate void DelegateAskForPickStatus(out Tuple<bool,bool,bool,bool,bool,bool,bool> _pickstatus);
+    /// <summary>
+    /// 委托类型，用于从FORM2获取钢筋简图编号对应的图片
+    /// </summary>
+    /// <param name="_picNum"></param>
+    /// <returns></returns>
+    public delegate Image DelegateGetImageUsePicNum(string _picNum);
+    /// <summary>
     /// 内部数据交互类，主要用于不同线程间、不同窗口间传递数据的委托
     /// </summary>
     public class InteractivityData
     {
-            
+        /// <summary>
+        /// 委托类型，用于往主界面输出日志
+        /// </summary>
+        /// <param name="Log"></param>
         public DelegatePrint printlog { get; set; }
 
         public DelegateInitStatisticsDGV initStatisticsDGV { get; set; }
@@ -98,5 +118,20 @@ namespace RebarSampling
         public DelegateSendWorkBill sendworkbill { get; set; }
 
         public DelegateGetTaosiSetting getTaosiSetting { get; set; }
+        /// <summary>
+        /// 委托类型，用于传输梁板线手动分组的加工批数据
+        /// </summary>
+        /// <param name="_batchlist"></param>
+        public DelegateGetManualBatchList getManualBatchList { get; set; }
+        /// <summary>
+        /// 委托类型，用于套料界面传递料单的筛选项，依次为：棒材、线材、箍筋、拉钩、马凳、主筋
+        /// </summary>
+        public DelegateAskForPickStatus askForPickStatus { get; set; }
+        /// <summary>
+        /// 委托类型 ，用于从form2获取钢筋简图对应的图片
+        /// </summary>
+        public DelegateGetImageUsePicNum getImageUsePicNum { get; set; }
+
+
     }
 }
