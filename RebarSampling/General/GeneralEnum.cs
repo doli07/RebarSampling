@@ -561,6 +561,14 @@ namespace RebarSampling
         /// 是否弯曲两次以上
         /// </summary>
         IFBENDTWICE,
+        /// <summary>
+        /// 广联达料单钢筋类型
+        /// </summary>
+        BAR_TYPE,
+        /// <summary>
+        /// 广联达料单制造类型
+        /// </summary>
+        FABRICATION_TYPE,
 
         /// <summary>
         /// 是否选择，在主界面是否选择纳入筛选
@@ -1008,6 +1016,24 @@ namespace RebarSampling
         Experiment,
 
         maxFactoryType
+    }
+
+    /// <summary>
+    /// 料单类型
+    /// </summary>
+    public enum EnumMaterialBill
+    {
+        NONE=-1,
+        /// <summary>
+        /// e筋料单
+        /// </summary>
+        EJIN,
+        /// <summary>
+        /// 广联达料单
+        /// </summary>
+        GLD,
+
+        maxMaterialBillType
     }
 
     public enum EnumFactory

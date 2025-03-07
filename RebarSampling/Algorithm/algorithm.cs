@@ -422,12 +422,12 @@ namespace RebarSampling
         private static bool IfContain(Rebar _rebar, List<MaterialOri> _material, out int _lengthInMaterial, int _threshold = 0)
         {
 
-            foreach (var item in _material)
+            foreach (var item in _material.FindAll(t=>t._level==_rebar.Level&&t._diameter==GeneralClass.IntToEnumDiameter( _rebar.Diameter)))//20250104修改bug，增加级别和直径判断，以免出现12米、9米原材混淆的问题
             {
-                if (_rebar.Diameter != GeneralClass.EnumDiameterToInt(item._diameter))//直径不对，跳过
-                {
-                    continue;
-                }
+                //if (_rebar.Diameter != GeneralClass.EnumDiameterToInt(item._diameter))//直径不对，跳过
+                //{
+                //    continue;
+                //}
                 if ((item._length - _rebar.length) >= 0 && (item._length - _rebar.length) <= _threshold)//所需长度与原材库的长度相差:0≤x＜500
                 {
                     _lengthInMaterial = item._length;

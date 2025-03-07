@@ -27,6 +27,14 @@ namespace RebarSampling
         /// </summary>
         public EnumFactory Factory { get; set; }
         /// <summary>
+        /// 料单类型，e筋还是广联达
+        /// </summary>
+        public EnumMaterialBill MaterialBill { get; set; }
+        /// <summary>
+        /// 广联达料单的默认路径
+        /// </summary>
+        public string GLDpath { get; set; }
+        /// <summary>
         /// 是否加载短钢筋数据（1.5米以下）
         /// </summary>
         public bool IfShortRebar { get; set; }

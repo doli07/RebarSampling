@@ -1080,6 +1080,10 @@ namespace RebarSampling
             get { return (this.rebarlist_bc.Count != 0) ? this.rebarlist_bc.Sum(t => t.TotalWeight) : 0; }
         }
 
+        public double totalweight
+        {
+            get { return (this.rebarlist.Count != 0) ? this.rebarlist.Sum(t => t.TotalWeight) : 0; }
+        }
         /// <summary>
         ///钢筋数量分组，原则：WARESET_8:1~25(8仓)，WARESET_4:26~50(4仓)，WARESET_2:51~100(2仓)，WARESET_1:100~(1仓)
         /// </summary>

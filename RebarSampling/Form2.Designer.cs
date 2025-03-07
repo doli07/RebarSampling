@@ -785,7 +785,7 @@
             this.groupBox9.Size = new System.Drawing.Size(492, 195);
             this.groupBox9.TabIndex = 4;
             this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "弯曲线材";
+            this.groupBox9.Text = "箍筋拉勾";
             // 
             // dataGridView12
             // 
@@ -811,7 +811,7 @@
             this.groupBox8.Size = new System.Drawing.Size(492, 190);
             this.groupBox8.TabIndex = 2;
             this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "直条线材";
+            this.groupBox8.Text = "非箍筋拉勾";
             // 
             // dataGridView9
             // 
@@ -3067,7 +3067,7 @@
             this.dataGridView26.Name = "dataGridView26";
             this.dataGridView26.RowHeadersWidth = 51;
             this.dataGridView26.RowTemplate.Height = 27;
-            this.dataGridView26.Size = new System.Drawing.Size(556, 205);
+            this.dataGridView26.Size = new System.Drawing.Size(556, 144);
             this.dataGridView26.TabIndex = 5;
             // 
             // dataGridView27
@@ -3075,11 +3075,11 @@
             this.dataGridView27.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView27.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView27.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView27.Location = new System.Drawing.Point(290, 217);
+            this.dataGridView27.Location = new System.Drawing.Point(290, 156);
             this.dataGridView27.Name = "dataGridView27";
             this.dataGridView27.RowHeadersWidth = 51;
             this.dataGridView27.RowTemplate.Height = 27;
-            this.dataGridView27.Size = new System.Drawing.Size(1165, 328);
+            this.dataGridView27.Size = new System.Drawing.Size(1165, 389);
             this.dataGridView27.TabIndex = 3;
             this.dataGridView27.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView27_CellFormatting);
             // 
@@ -4030,6 +4030,7 @@
             this.imageList1.Images.SetKeyName(83, "75202.png");
             this.imageList1.Images.SetKeyName(84, "76007.png");
             this.imageList1.Images.SetKeyName(85, "00000.png");
+            this.imageList1.Images.SetKeyName(86, "74230.png");
             // 
             // groupBox21
             // 

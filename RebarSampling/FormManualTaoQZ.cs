@@ -1176,7 +1176,7 @@ namespace RebarSampling
                 //string filename = System.IO.Path.GetFileNameWithoutExtension(filepath); //获取excel文件名作为根节点名称,不带后缀名
 
                 //List<DataTable> _dtlist = GeneralClass.readEXCEL?.GetAllSheets(filename);//获取所有datasheet的数据
-                List<DataTable> _dtlist = GeneralClass.ExcelOpt?.GetAllSheets(filepath);//获取所有datasheet的数据
+                List<DataTable> _dtlist = GeneralClass.ExcelReadOpt?.GetAllSheets(filepath);//获取所有datasheet的数据
 
                 DataTable dt = _dtlist.Last();//注意要取最后一个sheet
 

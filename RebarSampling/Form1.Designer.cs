@@ -40,6 +40,7 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -54,7 +55,6 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel4 = new System.Windows.Forms.Panel();
             this.button4 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -178,12 +178,27 @@
             this.panel1.Size = new System.Drawing.Size(1646, 64);
             this.panel1.TabIndex = 23;
             // 
+            // button8
+            // 
+            this.button8.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
+            this.button8.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.button8.Location = new System.Drawing.Point(154, 5);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(156, 56);
+            this.button8.TabIndex = 28;
+            this.button8.Text = "广联达料单";
+            this.button8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button8.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.button8.UseVisualStyleBackColor = false;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // button7
             // 
             this.button7.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button7.Image = ((System.Drawing.Image)(resources.GetObject("button7.Image")));
             this.button7.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button7.Location = new System.Drawing.Point(758, 5);
+            this.button7.Location = new System.Drawing.Point(770, 5);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(145, 56);
             this.button7.TabIndex = 27;
@@ -197,7 +212,7 @@
             // 
             this.button5.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
-            this.button5.Location = new System.Drawing.Point(909, 5);
+            this.button5.Location = new System.Drawing.Point(921, 5);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(145, 56);
             this.button5.TabIndex = 26;
@@ -212,7 +227,7 @@
             this.button3.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button3.Location = new System.Drawing.Point(1211, 5);
+            this.button3.Location = new System.Drawing.Point(1223, 5);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(145, 56);
             this.button3.TabIndex = 25;
@@ -228,7 +243,7 @@
             this.button13.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button13.Image = ((System.Drawing.Image)(resources.GetObject("button13.Image")));
             this.button13.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button13.Location = new System.Drawing.Point(1060, 5);
+            this.button13.Location = new System.Drawing.Point(1072, 5);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(145, 56);
             this.button13.TabIndex = 24;
@@ -242,7 +257,7 @@
             this.button2.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button2.Location = new System.Drawing.Point(607, 5);
+            this.button2.Location = new System.Drawing.Point(619, 5);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(145, 56);
             this.button2.TabIndex = 23;
@@ -262,7 +277,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(145, 56);
             this.button1.TabIndex = 0;
-            this.button1.Text = "导入料单";
+            this.button1.Text = "E筋料单";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.button1.UseVisualStyleBackColor = false;
@@ -273,7 +288,7 @@
             this.button12.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
             this.button12.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button12.Location = new System.Drawing.Point(456, 5);
+            this.button12.Location = new System.Drawing.Point(468, 5);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(145, 56);
             this.button12.TabIndex = 22;
@@ -288,7 +303,7 @@
             this.button11.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button11.Image = ((System.Drawing.Image)(resources.GetObject("button11.Image")));
             this.button11.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button11.Location = new System.Drawing.Point(305, 5);
+            this.button11.Location = new System.Drawing.Point(317, 5);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(145, 56);
             this.button11.TabIndex = 21;
@@ -370,17 +385,6 @@
             this.button4.TabIndex = 27;
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button8
-            // 
-            this.button8.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.button8.Location = new System.Drawing.Point(154, 5);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(145, 56);
-            this.button8.TabIndex = 28;
-            this.button8.Text = "广联达料单";
-            this.button8.UseVisualStyleBackColor = false;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // Form1
             // 

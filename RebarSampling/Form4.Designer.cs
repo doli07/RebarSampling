@@ -97,6 +97,8 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.tabControl3 = new System.Windows.Forms.TabControl();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.button18 = new System.Windows.Forms.Button();
             this.textBox26 = new System.Windows.Forms.TextBox();
@@ -115,6 +117,12 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.textBox33 = new System.Windows.Forms.TextBox();
+            this.button19 = new System.Windows.Forms.Button();
+            this.textBox32 = new System.Windows.Forms.TextBox();
+            this.textBox31 = new System.Windows.Forms.TextBox();
+            this.textBox30 = new System.Windows.Forms.TextBox();
             this.button16 = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
@@ -165,14 +173,7 @@
             this.textBox16 = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.tabControl3 = new System.Windows.Forms.TabControl();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.textBox30 = new System.Windows.Forms.TextBox();
-            this.textBox31 = new System.Windows.Forms.TextBox();
-            this.textBox32 = new System.Windows.Forms.TextBox();
-            this.button19 = new System.Windows.Forms.Button();
-            this.textBox33 = new System.Windows.Forms.TextBox();
+            this.button20 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -187,16 +188,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.tabControl3.SuspendLayout();
+            this.tabPage6.SuspendLayout();
             this.groupBox10.SuspendLayout();
+            this.tabPage7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.groupBox9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox7.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.tabControl3.SuspendLayout();
-            this.tabPage6.SuspendLayout();
-            this.tabPage7.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -905,6 +906,7 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.button20);
             this.tabPage5.Controls.Add(this.tabControl3);
             this.tabPage5.Controls.Add(this.button16);
             this.tabPage5.Controls.Add(this.dataGridView2);
@@ -917,6 +919,27 @@
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "水洗标打印";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // tabControl3
+            // 
+            this.tabControl3.Controls.Add(this.tabPage6);
+            this.tabControl3.Controls.Add(this.tabPage7);
+            this.tabControl3.Location = new System.Drawing.Point(921, 140);
+            this.tabControl3.Name = "tabControl3";
+            this.tabControl3.SelectedIndex = 0;
+            this.tabControl3.Size = new System.Drawing.Size(289, 343);
+            this.tabControl3.TabIndex = 14;
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.groupBox10);
+            this.tabPage6.Location = new System.Drawing.Point(4, 25);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(281, 314);
+            this.tabPage6.TabIndex = 0;
+            this.tabPage6.Text = "手动补料单";
+            this.tabPage6.UseVisualStyleBackColor = true;
             // 
             // groupBox10
             // 
@@ -1084,12 +1107,66 @@
             this.label22.TabIndex = 0;
             this.label22.Text = "项目名称:";
             // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.textBox33);
+            this.tabPage7.Controls.Add(this.button19);
+            this.tabPage7.Controls.Add(this.textBox32);
+            this.tabPage7.Controls.Add(this.textBox31);
+            this.tabPage7.Controls.Add(this.textBox30);
+            this.tabPage7.Location = new System.Drawing.Point(4, 25);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(269, 314);
+            this.tabPage7.TabIndex = 1;
+            this.tabPage7.Text = "编码打印";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // textBox33
+            // 
+            this.textBox33.Location = new System.Drawing.Point(40, 164);
+            this.textBox33.Name = "textBox33";
+            this.textBox33.Size = new System.Drawing.Size(178, 25);
+            this.textBox33.TabIndex = 4;
+            // 
+            // button19
+            // 
+            this.button19.BackColor = System.Drawing.Color.DarkSalmon;
+            this.button19.Location = new System.Drawing.Point(40, 246);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(178, 42);
+            this.button19.TabIndex = 3;
+            this.button19.Text = "生成";
+            this.button19.UseVisualStyleBackColor = false;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
+            // 
+            // textBox32
+            // 
+            this.textBox32.Location = new System.Drawing.Point(40, 116);
+            this.textBox32.Name = "textBox32";
+            this.textBox32.Size = new System.Drawing.Size(178, 25);
+            this.textBox32.TabIndex = 2;
+            // 
+            // textBox31
+            // 
+            this.textBox31.Location = new System.Drawing.Point(40, 73);
+            this.textBox31.Name = "textBox31";
+            this.textBox31.Size = new System.Drawing.Size(178, 25);
+            this.textBox31.TabIndex = 1;
+            // 
+            // textBox30
+            // 
+            this.textBox30.Location = new System.Drawing.Point(40, 31);
+            this.textBox30.Name = "textBox30";
+            this.textBox30.Size = new System.Drawing.Size(178, 25);
+            this.textBox30.TabIndex = 0;
+            // 
             // button16
             // 
             this.button16.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button16.Location = new System.Drawing.Point(1100, 14);
+            this.button16.Location = new System.Drawing.Point(1019, 13);
             this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(110, 120);
+            this.button16.Size = new System.Drawing.Size(92, 120);
             this.button16.TabIndex = 5;
             this.button16.Text = "打印所有";
             this.button16.UseVisualStyleBackColor = false;
@@ -1102,7 +1179,7 @@
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersWidth = 51;
             this.dataGridView2.RowTemplate.Height = 27;
-            this.dataGridView2.Size = new System.Drawing.Size(594, 480);
+            this.dataGridView2.Size = new System.Drawing.Size(532, 480);
             this.dataGridView2.TabIndex = 4;
             this.dataGridView2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView2_MouseDown);
             // 
@@ -1122,7 +1199,7 @@
             this.groupBox9.Controls.Add(this.radioButton8);
             this.groupBox9.Controls.Add(this.radioButton5);
             this.groupBox9.Controls.Add(this.radioButton6);
-            this.groupBox9.Location = new System.Drawing.Point(610, 3);
+            this.groupBox9.Location = new System.Drawing.Point(548, 3);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(367, 135);
             this.groupBox9.TabIndex = 3;
@@ -1274,9 +1351,9 @@
             // button14
             // 
             this.button14.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button14.Location = new System.Drawing.Point(984, 14);
+            this.button14.Location = new System.Drawing.Point(921, 14);
             this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(110, 120);
+            this.button14.Size = new System.Drawing.Size(92, 120);
             this.button14.TabIndex = 2;
             this.button14.Text = "打印";
             this.button14.UseVisualStyleBackColor = false;
@@ -1286,9 +1363,9 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(610, 154);
+            this.pictureBox1.Location = new System.Drawing.Point(548, 154);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(325, 329);
+            this.pictureBox1.Size = new System.Drawing.Size(367, 329);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -1611,80 +1688,16 @@
             this.panel1.TabIndex = 8;
             this.panel1.Visible = false;
             // 
-            // tabControl3
+            // button20
             // 
-            this.tabControl3.Controls.Add(this.tabPage6);
-            this.tabControl3.Controls.Add(this.tabPage7);
-            this.tabControl3.Location = new System.Drawing.Point(940, 140);
-            this.tabControl3.Name = "tabControl3";
-            this.tabControl3.SelectedIndex = 0;
-            this.tabControl3.Size = new System.Drawing.Size(277, 343);
-            this.tabControl3.TabIndex = 14;
-            // 
-            // tabPage6
-            // 
-            this.tabPage6.Controls.Add(this.groupBox10);
-            this.tabPage6.Location = new System.Drawing.Point(4, 25);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(269, 314);
-            this.tabPage6.TabIndex = 0;
-            this.tabPage6.Text = "手动补料单";
-            this.tabPage6.UseVisualStyleBackColor = true;
-            // 
-            // tabPage7
-            // 
-            this.tabPage7.Controls.Add(this.textBox33);
-            this.tabPage7.Controls.Add(this.button19);
-            this.tabPage7.Controls.Add(this.textBox32);
-            this.tabPage7.Controls.Add(this.textBox31);
-            this.tabPage7.Controls.Add(this.textBox30);
-            this.tabPage7.Location = new System.Drawing.Point(4, 25);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(269, 314);
-            this.tabPage7.TabIndex = 1;
-            this.tabPage7.Text = "编码打印";
-            this.tabPage7.UseVisualStyleBackColor = true;
-            // 
-            // textBox30
-            // 
-            this.textBox30.Location = new System.Drawing.Point(40, 31);
-            this.textBox30.Name = "textBox30";
-            this.textBox30.Size = new System.Drawing.Size(178, 25);
-            this.textBox30.TabIndex = 0;
-            // 
-            // textBox31
-            // 
-            this.textBox31.Location = new System.Drawing.Point(40, 73);
-            this.textBox31.Name = "textBox31";
-            this.textBox31.Size = new System.Drawing.Size(178, 25);
-            this.textBox31.TabIndex = 1;
-            // 
-            // textBox32
-            // 
-            this.textBox32.Location = new System.Drawing.Point(40, 116);
-            this.textBox32.Name = "textBox32";
-            this.textBox32.Size = new System.Drawing.Size(178, 25);
-            this.textBox32.TabIndex = 2;
-            // 
-            // button19
-            // 
-            this.button19.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button19.Location = new System.Drawing.Point(40, 246);
-            this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(178, 42);
-            this.button19.TabIndex = 3;
-            this.button19.Text = "生成";
-            this.button19.UseVisualStyleBackColor = false;
-            this.button19.Click += new System.EventHandler(this.button19_Click);
-            // 
-            // textBox33
-            // 
-            this.textBox33.Location = new System.Drawing.Point(40, 164);
-            this.textBox33.Name = "textBox33";
-            this.textBox33.Size = new System.Drawing.Size(178, 25);
-            this.textBox33.TabIndex = 4;
+            this.button20.BackColor = System.Drawing.Color.DarkSalmon;
+            this.button20.Location = new System.Drawing.Point(1118, 13);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(92, 120);
+            this.button20.TabIndex = 15;
+            this.button20.Text = "导出excel";
+            this.button20.UseVisualStyleBackColor = false;
+            this.button20.Click += new System.EventHandler(this.button20_Click);
             // 
             // Form4
             // 
@@ -1718,8 +1731,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            this.tabControl3.ResumeLayout(false);
+            this.tabPage6.ResumeLayout(false);
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
@@ -1729,10 +1746,6 @@
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.tabControl3.ResumeLayout(false);
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage7.ResumeLayout(false);
-            this.tabPage7.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1883,5 +1896,6 @@
         private System.Windows.Forms.TextBox textBox31;
         private System.Windows.Forms.TextBox textBox30;
         private System.Windows.Forms.TextBox textBox33;
+        private System.Windows.Forms.Button button20;
     }
 }

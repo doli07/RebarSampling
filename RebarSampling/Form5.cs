@@ -68,6 +68,19 @@ namespace RebarSampling
                         break;
                 }
 
+                //料单类型
+                switch (GeneralClass.CfgData.MaterialBill)
+                {
+                    case EnumMaterialBill.EJIN:
+                        radioButton60.Checked = true;
+                        break;
+                    case EnumMaterialBill.GLD:
+                        radioButton61.Checked = true;
+                        break;
+                    default:
+                        break;
+                }
+
                 //是否加载短钢筋数据
                 checkBox3.Checked = GeneralClass.CfgData.IfShortRebar;
                 checkBox3.Text = GeneralClass.CfgData.IfShortRebar ? "加载短钢筋数据" : "不加载短钢筋数据";
@@ -246,6 +259,8 @@ namespace RebarSampling
                 GeneralClass.CfgData.Factorytype = EnumFactoryType.Experiment;
             }
 
+
+
             //设置Φ12直径和Φ14直径钢筋归属于线材还是棒材
             GeneralClass.CfgData.TypeC12 = checkBox1.Checked;
             GeneralClass.CfgData.TypeC14 = checkBox2.Checked;
@@ -259,6 +274,17 @@ namespace RebarSampling
             {
                 GeneralClass.CfgData.Factory = EnumFactory.RouXing;
             }
+
+            //料单类型
+            if(radioButton60.Checked)
+            {
+                GeneralClass.CfgData.MaterialBill=EnumMaterialBill.EJIN;
+            }
+            if(radioButton61.Checked)
+            {
+                GeneralClass.CfgData.MaterialBill=EnumMaterialBill.GLD;
+            }
+
 
             //定尺锯切最短长度
             GeneralClass.CfgData.MinLength = Convert.ToInt32(textBox1.Text);

@@ -1,4 +1,5 @@
-﻿using RebarSampling.GeneralWorkBill;
+﻿using RebarSampling.Database;
+using RebarSampling.GeneralWorkBill;
 using RebarSampling.labelPrint;
 using RebarSampling.log;
 //using SixLabors.ImageSharp;
@@ -16,9 +17,17 @@ namespace RebarSampling
     public static partial class GeneralClass
     {
         /// <summary>
-        /// 操作读写excel文件
+        /// 广联达料单解析类的对象
         /// </summary>
-        public static ExcelReader ExcelOpt = new ExcelReader();
+        public static GLD.Gld GldOpt = new GLD.Gld();
+        /// <summary>
+        /// 操作读excel文件
+        /// </summary>
+        public static ExcelReader ExcelReadOpt = new ExcelReader();
+        /// <summary>
+        /// 操作写excel文件
+        /// </summary>
+        public static ExcelWriter ExcelWriteOpt= new ExcelWriter();
         /// <summary>
         /// 操作解析E筋格式文件
         /// 通过E筋公司提供的ETable.dll实现
@@ -33,6 +42,10 @@ namespace RebarSampling
         /// 操作数据库文件读写，20240805修改，不在此处初始化，而通过配置文件，确定用哪种数据库进行初始化
         /// </summary>
         public static DBOpt DBOpt /*= new DBOpt()*/;
+        /// <summary>
+        /// 根据不同料单的通用操作，20250206修改，不在此处初始化，而通过配置文件，确定用哪种料单进行初始化
+        /// </summary>
+        public static LDOpt LDOpt;
         /// <summary>
         /// 操作工单
         /// </summary>
@@ -536,6 +549,8 @@ namespace RebarSampling
             "是否弯曲",
             "是否切断",
             "是否弯曲两次以上",
+            "钢筋类型",
+            "制作类型",
 
             "是否选择",
 

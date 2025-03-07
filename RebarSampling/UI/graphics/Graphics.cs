@@ -17,6 +17,7 @@ using NPOI.HPSF;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using NPOI.SS.Formula.Functions;
 using System.Web.SessionState;
+using RebarSampling.Database;
 
 namespace RebarSampling
 {
@@ -82,7 +83,8 @@ namespace RebarSampling
                     g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
 
                     //拆解corner信息,准备绘制两端套丝和弯曲标识
-                    List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(item.CornerMessage, item.Diameter);
+                    //List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(item.CornerMessage, item.Diameter);
+                    List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(item.CornerMessage, item.Diameter);
                     if (_MultiData != null && _MultiData.Count != 0)//可以画弯曲套丝的就画，画不了的就算了
                     {
                         if (_MultiData.First().ilength == 0 && _MultiData.First().type == 2)//端头套丝，20241113修改增加长度判断，例如“6000，套”是单头套，非双头套
@@ -209,9 +211,15 @@ namespace RebarSampling
 
         public static Bitmap PaintRebarPic(RebarData _rebar)
         {
-            List<Rebar> _list = Algorithm.ListExpand(new List<RebarData> { _rebar });
+            try
+            {
+                List<Rebar> _list = Algorithm.ListExpand(new List<RebarData> { _rebar });
 
-            return PaintRebarPic(_list[0]);
+                return PaintRebarPic(_list[0]);
+                //return (_list.Count > 0) ? PaintRebarPic(_list[0]) : null;//存在_list数量=0的情况，一般是料单有错误
+            }
+            catch (Exception ex) { MessageBox.Show("PaintRebarPic error :" + ex.Message); return null; }
+
         }
         /// <summary>
         /// 画钢筋的简图，真正的形状（带弯曲的）,此处根据钢筋简图编号做分拣，实际用各自的图形
@@ -300,7 +308,9 @@ namespace RebarSampling
 
 
                 //拆解corner信息,准备绘制两端套丝和弯曲标识
-                List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                //List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+
                 if (_MultiData != null && _MultiData.Count != 0)//
                 {
                     int _lengthmax = _MultiData.FindAll(t => t.headType != EnumMultiHeadType.ARC).Max(t => t.ilength);//找到不为arc的且长度最长的multidata，其长度即为中段长度
@@ -503,7 +513,9 @@ namespace RebarSampling
 
 
                 //拆解corner信息,准备绘制两端套丝和弯曲标识
-                List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                //List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+
                 if (_MultiData != null && _MultiData.Count != 0)//
                 {
                     if (_MultiData.First().type == 2 && _MultiData.First().ilength == 0)//端头套丝的一般标为【0,丝】
@@ -613,7 +625,8 @@ namespace RebarSampling
             try
             {
                 //拆解corner信息,
-                List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                //List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
 
                 //if (_MultiData.Count != 2) { GeneralClass.interactivityData?.printlog(1, "PaintRebarPic_20000，GetMultiData num error!"); return bitmap; }//段数不对
 
@@ -700,7 +713,8 @@ namespace RebarSampling
             try
             {
                 //拆解corner信息,
-                List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                //List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
 
                 int _index_s = (_MultiData[0].ilength == 0) ? 1 : 0;//起始序号，如果第一段长度为0，则为端头，
 
@@ -766,7 +780,7 @@ namespace RebarSampling
             try
             {
                 //拆解corner信息,
-                List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
 
                 int _index_s = (_MultiData[0].ilength == 0) ? 1 : 0;//起始序号，如果第一段长度为0，则为端头，
 
@@ -861,7 +875,7 @@ namespace RebarSampling
             try
             {
                 //拆解corner信息,
-                List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
 
                 int _index_s = (_MultiData[0].ilength == 0) ? 1 : 0;//起始序号，如果第一段长度为0，则为端头，
 
@@ -911,11 +925,20 @@ namespace RebarSampling
 
         /// <summary>
         /// 画箍筋钢筋的简图，
+        /// 注意有半箍的情况，500,90;150,90;500,0&G
         /// </summary>
         /// <param name="_rebar">单根钢筋</param>
         /// <returns></returns>
         private static Bitmap PaintRebarPic_GJ(Rebar _rebar)
         {
+            int _gjtype = 0;//箍筋类型，1为全箍，2为半箍
+            //先判断是否有半箍的情况
+            List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(_rebar.CornerMessage);//拆解边角信息，提取矩形边长
+            //_ret = new Tuple<int, int>(_MultiData[1].ilength, _MultiData[2].ilength);//取第二段长度为箍筋的宽度，取第三段长度为箍筋的高度
+            if (_MultiData.Count == 6) { _gjtype = 1; }//全箍
+            else if (_MultiData.Count == 3) { _gjtype = 2; }//半箍
+            else { _gjtype = 0; }//其他
+
             Bitmap bitmap = new Bitmap(180, 40);//新建一个bitmap，用于绘图
 
             Graphics g = System.Drawing.Graphics.FromImage(bitmap);//从bitmap中建一个画图对象
@@ -939,44 +962,62 @@ namespace RebarSampling
 
             try
             {
-                //画圆角矩形框
-                _pen = new Pen(new SolidBrush(Color.Black), 3);//粗细3
-                g.DrawArc(_pen, _startX + 0, _startY + 0, 8, 8, 180, 90);
-                g.DrawLine(_pen, _startX + 4, _startY + 0, _startX + width - 5, _startY + 0);
-                g.DrawArc(_pen, _startX + width - 9, _startY + 0, 8, 8, 270, 90);
-                g.DrawLine(_pen, _startX + width - 1, _startY + 4, _startX + width - 1, _startY + height - 5);
-                g.DrawArc(_pen, _startX + width - 9, _startY + height - 9, 8, 8, 0, 90);
-                g.DrawLine(_pen, _startX + 4, _startY + height - 1, _startX + width - 5, _startY + height - 1);
-                g.DrawArc(_pen, _startX + 0, _startY + height - 9, 8, 8, 90, 90);
-                g.DrawLine(_pen, _startX + 0, _startY + 4, _startX + 0, _startY + height - 5);
+                if(_gjtype==1)//全箍
+                {
+                    //画圆角矩形框
+                    _pen = new Pen(new SolidBrush(Color.Black), 3);//粗细3
+                    g.DrawArc(_pen, _startX + 0, _startY + 0, 8, 8, 180, 90);
+                    g.DrawLine(_pen, _startX + 4, _startY + 0, _startX + width - 5, _startY + 0);
+                    g.DrawArc(_pen, _startX + width - 9, _startY + 0, 8, 8, 270, 90);
+                    g.DrawLine(_pen, _startX + width - 1, _startY + 4, _startX + width - 1, _startY + height - 5);
+                    g.DrawArc(_pen, _startX + width - 9, _startY + height - 9, 8, 8, 0, 90);
+                    g.DrawLine(_pen, _startX + 4, _startY + height - 1, _startX + width - 5, _startY + height - 1);
+                    g.DrawArc(_pen, _startX + 0, _startY + height - 9, 8, 8, 90, 90);
+                    g.DrawLine(_pen, _startX + 0, _startY + 4, _startX + 0, _startY + height - 5);
 
-                //g.DrawArc(_pen, _startX + 0, _startY + 0, 4, 4, 90, 90);
-                //g.DrawLine(_pen, _startX + 4, _startY + 0, _startX + width - 4, _startY + 0);
-                //g.DrawArc(_pen, _startX + width - 4, _startY + 0, 4, 4, 0, 90);
-                //g.DrawLine(_pen, _startX + width, _startY + 4, _startX + width , _startY + height - 4);
-                //g.DrawArc(_pen, _startX + width - 4, _startY + height - 4, 4, 4, 270, 90);
-                //g.DrawLine(_pen, _startX + 4, _startY + height , _startX + width - 4, _startY + height );
-                //g.DrawArc(_pen, _startX + 0, _startY + height - 4, 4, 4, 180, 90);
-                //g.DrawLine(_pen, _startX + 0, _startY + 4, _startX + 0, _startY + height - 4);
+                    //画右上角的箍筋端头
+                    int _delta = 6;
+                    g.DrawLine(_pen, _startX + width - 5, _startY + 0, _startX + width - 5 - _delta, _startY + _delta);
+                    g.DrawLine(_pen, _startX + width - 1, _startY + 4, _startX + width - 1 - _delta, _startY + 4 + _delta);
+
+                    //画长度标识
+                    text = _rebar.GJsize.Item1.ToString();//箍筋宽度
+                    fontX = _startX + width / 2 - 15;
+                    fontY = _startY + height - 20;
+                    g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
+
+                    text = _rebar.GJsize.Item2.ToString();//箍筋高度
+                    fontX = _startX + width;
+                    fontY = _startY + height / 2 - 10;
+                    g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
 
 
-                //画右上角的箍筋端头
-                int _delta = 6;
-                g.DrawLine(_pen, _startX + width - 5, _startY + 0, _startX + width - 5 - _delta, _startY + _delta);
-                g.DrawLine(_pen, _startX + width - 1, _startY + 4, _startX + width - 1 - _delta, _startY + 4 + _delta);
+                }
+                else//半箍
+                {
+                    //画圆角半矩形框
+                    _pen = new Pen(new SolidBrush(Color.Black), 3);//粗细3
+                    g.DrawArc(_pen, _startX + 0, _startY + 0, 8, 8, 180, 90);
+                    g.DrawLine(_pen, _startX + 4, _startY + 0, _startX + width - 5, _startY + 0);
+                    //g.DrawArc(_pen, _startX + width - 9, _startY + 0, 8, 8, 270, 90);
+                    //g.DrawLine(_pen, _startX + width - 1, _startY + 4, _startX + width - 1, _startY + height - 5);
+                    //g.DrawArc(_pen, _startX + width - 9, _startY + height - 9, 8, 8, 0, 90);
+                    g.DrawLine(_pen, _startX + 4, _startY + height - 1, _startX + width - 5, _startY + height - 1);
+                    g.DrawArc(_pen, _startX + 0, _startY + height - 9, 8, 8, 90, 90);
+                    g.DrawLine(_pen, _startX + 0, _startY + 4, _startX + 0, _startY + height - 5);
 
+                    //画长度标识
+                    text = _rebar.GJsize.Item2.ToString();//箍筋宽度
+                    fontX = _startX + width / 2 - 15;
+                    fontY = _startY + height - 20;
+                    g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
 
-                //画长度标识
-                text = _rebar.GJsize.Item1.ToString();//箍筋宽度
-                fontX = _startX + width / 2 - 15;
-                fontY = _startY + height - 20;
-                g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
+                    text = _rebar.GJsize.Item1.ToString();//箍筋高度
+                    fontX = _startX -30;
+                    fontY = _startY + height / 2 - 10;
+                    g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
 
-                text = _rebar.GJsize.Item2.ToString();//箍筋高度
-                fontX = _startX + width;
-                fontY = _startY + height / 2 - 10;
-                g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
-
+                }
 
 
 
@@ -1100,7 +1141,7 @@ namespace RebarSampling
                 g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
 
                 //拆解corner信息,准备绘制两端套丝和弯曲标识
-                List<GeneralMultiData> _MultiData = DBOpt.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
+                List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(_rebar.CornerMessage, _rebar.Diameter);
                 if (_MultiData != null && _MultiData.Count != 0)//可以画弯曲套丝的就画，画不了的就算了
                 {
                     if (_MultiData.First().type == 2)//端头套丝
@@ -1172,22 +1213,29 @@ namespace RebarSampling
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;// 设置高质量插值法              
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;// 设置高质量平滑度  
 
-            Pen _pen = new Pen(new SolidBrush(Color.Green), 3);
+            Pen _pen = new Pen(new SolidBrush(Color.Black), 3);
             Point _start = new Point(10, 10);//起始点，可以调整整个页面的偏置
+            Point _end = new Point(10, 10);//结束点，可以调整每行的偏置
 
-            PaintString(ref g, "中建壹品*汉韵公馆", _start.X, _start.Y, 14);//项目名称
+            PaintString(ref g, "中建壹品*汉韵公馆", _start.X, _start.Y, 15, FontStyle.Bold);//项目名称
+            _end.Y += _start.Y + 16;
+            //20250303关闭，领导要求去掉矩形框和料仓编号
+            //g.DrawRectangle(_pen, new Rectangle(_start.X, _start.Y + 30, 180, 40));//画矩形
+            //PaintString(ref g, "料仓编号：", _start.X + 10, _start.Y + 32);//
+            //PaintString(ref g, _element.warehouseNo + "-" + _element.wareNo, _start.X + 80, _start.Y + 32);//料仓编号
+            //PaintString(ref g, _element.batchSeri, _start.X + 2, _start.Y + 50);//批次流水号
 
-            g.DrawRectangle(_pen, new Rectangle(_start.X, _start.Y + 30, 180, 40));//画矩形
+            g.DrawLine(_pen, new Point(_start.X, _end.Y + 2), new Point(_start.X + 180, _end.Y + 2));//画黑线
+            _end.Y += 2;
 
-            PaintString(ref g, "料仓编号：", _start.X + 10, _start.Y + 32);//
-            PaintString(ref g, _element.warehouseNo + "-" + _element.wareNo, _start.X + 80, _start.Y + 32);//料仓编号
-            PaintString(ref g, _element.batchSeri, _start.X + 2, _start.Y + 50);//批次流水号
 
-            PaintString(ref g, _element.projectName, _start.X, _start.Y + 80, 12, FontStyle.Regular);//项目名称
-            PaintString(ref g, _element.assemblyName, _start.X, _start.Y + 110, 12, FontStyle.Regular);//构件部位
-            PaintString(ref g, _element.elementName, _start.X, _start.Y + 150, 16, FontStyle.Bold);//构件名称，20号字体，加粗
+            //PaintString(ref g, _element.projectName, _start.X, _start.Y + 80, 12, FontStyle.Regular);//项目名称
+            //PaintString(ref g, _element.assemblyName, _start.X, _start.Y + 110, 12, FontStyle.Regular);//构件部位
+            //PaintString(ref g, _element.elementName, _start.X, _start.Y + 150, 16, FontStyle.Bold);//构件名称，20号字体，加粗
 
-            //PaintString(ref g, "钢筋形状：", _start.X, _start.Y + 190);//
+            PaintString(ref g, _element.projectName.Replace("汉韵公馆", "") + _element.assemblyName, _start.X, _end.Y + 2, 12, FontStyle.Regular);//项目名称，注意去掉真正的项目名称
+            PaintString(ref g, _element.elementName, _start.X, _end.Y + 32, 16, FontStyle.Bold);//构件名称，20号字体，加粗
+            _end.Y += 72;
 
             _pen = new Pen(new SolidBrush(Color.Black), 2);
             _pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;//画虚线、点线
@@ -1196,7 +1244,7 @@ namespace RebarSampling
             //int _Threshold = (GeneralClass.m_typeC12) ? 12 : ((GeneralClass.m_typeC14) ? 14 : 16);//先看12是否为棒材，再看14是否为棒材
 
 
-            int _height = 100;
+            int _height = 108;
             int _count = 0;
             for (int i = 0; i < _element.rebarlist.Count; i++)
             {
@@ -1208,52 +1256,66 @@ namespace RebarSampling
                                             _element.rebarlist[i].RebarShapeType == EnumRebarShapeType.SHAPE_MD))
                     ) continue;
 
+                //g.DrawLine(_pen, new Point(_start.X, _start.Y + 210 + _height * _count), new Point(_start.X + 180, _start.Y + 210 + _height * _count));//画黑线
+                //PaintRebarString(ref g, _element.rebarlist[i].Level, _start.X + 0, _start.Y + 214 + _height * _count, 16, FontStyle.Regular);//钢筋直径符号
+                //PaintString(ref g, _element.rebarlist[i].Diameter.ToString(), _start.X + 15, _start.Y + 212 + _height * _count, 14, FontStyle.Regular);//直径
+                //PaintString(ref g, _element.rebarlist[i].iLength.ToString(), _start.X + 60, _start.Y + 212 + _height * _count, 14, FontStyle.Regular);//长度
+                //PaintString(ref g, _element.rebarlist[i].TotalPieceNum.ToString() + "根", _start.X + 130, _start.Y + 212 + _height * _count, 14, FontStyle.Regular);//数量
 
-                g.DrawLine(_pen, new Point(_start.X, _start.Y + 210 + _height * _count), new Point(_start.X + 180, _start.Y + 210 + _height * _count));//画黑线
+                //Bitmap pic = PaintRebarPic(_element.rebarlist[i]);//直接画钢筋简图
+                //PaintImage(ref g, pic, new Point(_start.X, _start.Y + 240 + _height * _count), 180, 40);
+                //PaintString(ref g, _element.rebarlist[i].Description.ToString(), _start.X + 10, _start.Y + 280 + _height * _count, 9, FontStyle.Regular);//备注
 
-                //PaintRebarString(ref g, "C", _start.X + 0, _start.Y + 212 + _height * i, 16, FontStyle.Bold);//钢筋直径符号
-                PaintRebarString(ref g, _element.rebarlist[i].Level, _start.X + 0, _start.Y + 214 + _height * _count, 16, FontStyle.Regular);//钢筋直径符号
-                PaintString(ref g, _element.rebarlist[i].Diameter.ToString(), _start.X + 15, _start.Y + 212 + _height * _count, 14, FontStyle.Regular);//直径
-                PaintString(ref g, _element.rebarlist[i].iLength.ToString(), _start.X + 60, _start.Y + 212 + _height * _count, 14, FontStyle.Regular);//长度
-                PaintString(ref g, _element.rebarlist[i].TotalPieceNum.ToString() + "根", _start.X + 130, _start.Y + 212 + _height * _count, 14, FontStyle.Regular);//数量
+                g.DrawLine(_pen, new Point(_start.X, _end.Y + _height * _count), new Point(_start.X + 180, _end.Y + _height * _count));//画黑线
 
-                //Bitmap pic = (Bitmap)GeneralClass.interactivityData?.getImageUsePicNum(_pi._picTypeNum);
+                PaintRebarString(ref g, _element.rebarlist[i].Level, _start.X + 0, _end.Y + 4 + _height * _count, 17, FontStyle.Regular);//钢筋直径符号
+                PaintString(ref g, _element.rebarlist[i].Diameter.ToString(), _start.X + 15, _end.Y + 2 + _height * _count, 13, FontStyle.Regular);//直径
+                PaintString(ref g, _element.rebarlist[i].iLength.ToString(), _start.X + 60, _end.Y + 2 + _height * _count, 13, FontStyle.Regular);//长度
+                PaintString(ref g, _element.rebarlist[i].TotalPieceNum.ToString() + "根", _start.X + 130, _end.Y + 2 + _height * _count, 13, FontStyle.Regular);//数量
+
                 Bitmap pic = PaintRebarPic(_element.rebarlist[i]);//直接画钢筋简图
-                PaintImage(ref g, pic, new Point(_start.X, _start.Y + 240 + _height * _count), 180, 40);
+                PaintImage(ref g, pic, new Point(_start.X, _end.Y + 30 + _height * _count), 180, 40);
 
-                PaintString(ref g, _element.rebarlist[i].Description.ToString(), _start.X + 10, _start.Y + 280 + _height * _count, 9, FontStyle.Regular);//备注
+                PaintString(ref g, _element.rebarlist[i].Description.ToString(), _start.X + 10, _end.Y + 70 + _height * _count, 12, FontStyle.Bold, true);//备注
 
                 _count++;//自增计数
             }
-
+            _end.Y += _height * _count;//
 
 
             int lineheight = 30;
-            g.DrawLine(_pen, new Point(_start.X, _start.Y + 315 + _height * (_count - 1)),
-                new Point(_start.X + 180, _start.Y + 315 + _height * (_count - 1)));//画黑线
+            //g.DrawLine(_pen, new Point(_start.X, _start.Y + 315 + _height * (_count - 1)),
+            //    new Point(_start.X + 180, _start.Y + 315 + _height * (_count - 1)));//画黑线
+            g.DrawLine(_pen, new Point(_start.X, _end.Y + 2), new Point(_start.X + 180, _end.Y + 2));//画黑线
+            _end.Y += 3;
 
-            PaintString(ref g, "加工单元:", _start.X, _start.Y + 315 + _height * (_count - 1), 12, FontStyle.Regular);//加工单元
-            g.DrawLine(_pen, new Point(_start.X + 70, _start.Y + 315 + lineheight - 2 + _height * (_count - 1)),
-                        new Point(_start.X + 180, _start.Y + 315 + lineheight - 2 + _height * (_count - 1)));//画黑线
+            //PaintString(ref g, "加工单元:", _start.X, _start.Y + 315 + _height * (_count - 1), 12, FontStyle.Regular);//加工单元
+            //g.DrawLine(_pen, new Point(_start.X + 70, _start.Y + 315 + lineheight - 2 + _height * (_count - 1)),
+            //            new Point(_start.X + 180, _start.Y + 315 + lineheight - 2 + _height * (_count - 1)));//画黑线
 
-            PaintString(ref g, "加工人员:", _start.X, _start.Y + 315 + lineheight + _height * (_count - 1), 12, FontStyle.Regular);//加工单元
-            g.DrawLine(_pen, new Point(_start.X + 70, _start.Y + 315 + lineheight * 2 - 2 + _height * (_count - 1)),
-                        new Point(_start.X + 180, _start.Y + 315 + lineheight * 2 - 2 + _height * (_count - 1)));//画黑线
+            //PaintString(ref g, "加工人员:", _start.X, _start.Y + 315 + lineheight + _height * (_count - 1), 12, FontStyle.Regular);//加工单元
+            //g.DrawLine(_pen, new Point(_start.X + 70, _start.Y + 315 + lineheight * 2 - 2 + _height * (_count - 1)),
+            //            new Point(_start.X + 180, _start.Y + 315 + lineheight * 2 - 2 + _height * (_count - 1)));//画黑线
 
-            PaintString(ref g, "质检员:", _start.X, _start.Y + 315 + lineheight * 2 + _height * (_count - 1), 12, FontStyle.Regular);//加工单元
-            g.DrawLine(_pen, new Point(_start.X + 70, _start.Y + 315 + lineheight * 3 - 2 + _height * (_count - 1)),
-                        new Point(_start.X + 180, _start.Y + 315 + lineheight * 3 - 2 + _height * (_count - 1)));//画黑线
+            //PaintString(ref g, "质检员:", _start.X, _start.Y + 315 + lineheight * 2 + _height * (_count - 1), 12, FontStyle.Regular);//加工单元
+            //g.DrawLine(_pen, new Point(_start.X + 70, _start.Y + 315 + lineheight * 3 - 2 + _height * (_count - 1)),
+            //            new Point(_start.X + 180, _start.Y + 315 + lineheight * 3 - 2 + _height * (_count - 1)));//画黑线
 
 
             string _elementSeriNo = _No.Item1 + "_" + _No.Item2 + "_" + _No.Item3 + "_" + String.Join("", _element.elementName.Split('\n'));
             Bitmap _qrCode = CreateQRCode(_elementSeriNo, 100, 100);//打印构件的流水号，形成二维码
-            //Bitmap _qrCode = CreateQRCode(_element.batchSeri == string.Empty ? "0" : _element.batchSeri, 100, 100);//打印构件的流水号，形成二维码
-            PaintImage(ref g, _qrCode, new Point(_start.X + 10, _start.Y + 315 + lineheight * 3 - 2 + _height * (_count - 1)), 160, 160);
+            //PaintImage(ref g, _qrCode, new Point(_start.X + 10, _start.Y + 315 + lineheight * 3 - 2 + _height * (_count - 1)), 160, 160);
+            PaintImage(ref g, _qrCode, new Point(_start.X + 10, _end.Y), 160, 160);
+            _end.Y += 160;
 
             //绘制先进院logo
             Bitmap _sourceImage = global::RebarSampling.Properties.Resources.logo;//获取先进院logo
-            PaintImage(ref g, _sourceImage, new Point(_start.X, _start.Y + 475 + lineheight * 3 + _height * (_count - 1)), 180, 30);
-            _totalHeight = _start.Y + 475 + lineheight * 3 + _height * (_count - 1) + 30;
+            //PaintImage(ref g, _sourceImage, new Point(_start.X, _start.Y + 475 + lineheight * 3 + _height * (_count - 1)), 180, 30);
+            PaintImage(ref g, _sourceImage, new Point(_start.X, _end.Y), 180, 30);
+            _end.Y += 30;
+
+            //_totalHeight = _start.Y + 475 + lineheight * 3 + _height * (_count - 1) + 30;
+            _totalHeight = _end.Y;
 
             g.Dispose();//回收资源
 
@@ -1453,7 +1515,17 @@ namespace RebarSampling
                 _g.DrawImage(_bmp, _start.X, _start.Y, (int)(_bmp.Width * ratio), (int)(_bmp.Height * ratio));// 绘制缩略图  
             }
         }
-        private static void PaintString(ref Graphics _g, string _text, int _startX, int _startY, int _fontsize = 10, FontStyle _style = FontStyle.Regular)
+        /// <summary>
+        /// 画字符串
+        /// </summary>
+        /// <param name="_g"></param>
+        /// <param name="_text"></param>
+        /// <param name="_startX"></param>
+        /// <param name="_startY"></param>
+        /// <param name="_fontsize"></param>
+        /// <param name="_style"></param>
+        /// <param name="_multi">区分是否画多行，如果false，则只显示一行</param>
+        private static void PaintString(ref Graphics _g, string _text, int _startX, int _startY, int _fontsize = 10, FontStyle _style = FontStyle.Regular, bool _multi = false)
         {
             Brush _brush;
             Font _font;
@@ -1461,12 +1533,18 @@ namespace RebarSampling
             _font = new Font("微软雅黑", _fontsize, _style);
             _brush = new SolidBrush(Color.Black);
 
-            RectangleF descRect = new RectangleF();//一个可变大小的矩形区域，用于显示多行字符串
-            descRect.Location = new Point(_startX, _startY);
-            descRect.Size = new Size(180, ((int)_g.MeasureString(_text, _font, 180, StringFormat.GenericTypographic).Height));
+            if (_multi)//画多行
+            {
+                RectangleF descRect = new RectangleF();//一个可变大小的矩形区域，用于显示多行字符串
+                descRect.Location = new Point(_startX, _startY);
+                descRect.Size = new Size(180, ((int)_g.MeasureString(_text, _font, 180, StringFormat.GenericTypographic).Height));
 
-            _g.DrawString(_text, _font, _brush, descRect);
-
+                _g.DrawString(_text, _font, _brush, descRect);
+            }
+            else
+            {
+                _g.DrawString(_text, _font, _brush, new Point(_startX, _startY));
+            }
 
 
 
