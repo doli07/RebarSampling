@@ -225,5 +225,13 @@ namespace RebarSampling.Database
             catch (Exception ex) { MessageBox.Show("SuoChiDeal error:" + ex.Message); return null; }
         }
 
+        public string ExchangeRebarMsg(string _msg)
+        { 
+            return string.Empty;
+        }
+        public string ModifyRebarMsg(string _msg)
+        {
+            return string.Empty;
+        }
     }
 }

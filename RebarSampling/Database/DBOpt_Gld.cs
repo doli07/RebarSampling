@@ -138,7 +138,9 @@ namespace RebarSampling
                             rebarData.TotalPieceNum = eee.Count;
                             rebarData.TotalWeight = eee.Weight * eee.Count;
                             rebarData.Description = eee.Remark;
-                            rebarData.SerialNum = Convert.ToInt32(eee.BarIndex);
+                            //rebarData.SerialNum = Convert.ToInt32(eee.BarIndex);
+                            rebarData.SerialNum = eee.BarIndex;
+
                             rebarData.BarType = eee.BarType;
                             rebarData.FabricationType = eee.FabricationType;
                             ////rebarData.IsOriginal = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.ISORIGINAL + 1].ToString());

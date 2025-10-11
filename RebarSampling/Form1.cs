@@ -293,7 +293,9 @@ namespace RebarSampling
                 //打开excel文件
                 OpenFileDialog openFileDialog = new OpenFileDialog();//打开文件夹对话框
                 openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                openFileDialog.Filter = "excel文件(*.xls)|*.xls|excel文件(*.xlsx)|*.xlsx|所有文件(*.*)|*.*";
+                //openFileDialog.Filter = "excel文件(*.xls)|*.xls|excel文件(*.xlsx)|*.xlsx|所有文件(*.*)|*.*";
+                openFileDialog.Filter = "excel文件(*.xls,*.xlsx)|*.xls;*.xlsx|所有文件(*.*)|*.*";
+
                 openFileDialog.Title = "打开料单";
                 openFileDialog.FilterIndex = 0;
                 openFileDialog.Multiselect = true;
@@ -313,8 +315,19 @@ namespace RebarSampling
                 //GeneralClass.SQLiteOpt.InitDB(GeneralClass.AllRebarTableName);//先创建并清空db数据库表单
                 GeneralClass.DBOpt.InitRebarDB(GeneralClass.TableName_AllRebarBK);//先创建并清空db数据库表单
 
+                if (defaultfilepath != String.Empty)
+                {
+                    openFileDialog.InitialDirectory = defaultfilepath;
+                }
+                else
+                {
+                    openFileDialog.InitialDirectory = GeneralClass.CfgData.EJINpath;//配置文件里面存了默认路径
+                }
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
+                    string fullFilePath = openFileDialog.FileName;
+                    defaultfilepath = Path.GetDirectoryName(fullFilePath);//获取最新选择的路径
+
                     foreach (string filepath in openFileDialog.FileNames)
                     {
 
@@ -332,39 +345,56 @@ namespace RebarSampling
                         GeneralClass.DBOpt.ExcelToDB(filepath, tableName);//excel文件数据存入数据库
                         GeneralClass.interactivityData?.printlog(1, "料单[" + filename + "]导入数据库文件成功！");
 
-                        //treeView1.Nodes.Clear();
-                        //列举所有的sheet名称
-                        TreeNode tn = new TreeNode();
-                        TreeNode tn1 = new TreeNode();
-                        TreeNode tn2 = new TreeNode();
-                        tn.Text = filename; //获取excel文件名作为根节点名称
-                        for (int stnum = 0; stnum < GeneralClass.ExcelReadOpt.wb?.NumberOfSheets - 1; stnum++)//因为料单一般最后一页是汇总表，格式不一致，不解析
+                        int _totalsheetNum = GeneralClass.ExcelReadOpt.wb.NumberOfSheets;
+                        if (GeneralClass.ExcelReadOpt.wb?.GetSheetName(_totalsheetNum - 1) != "封面")
                         {
-                            ISheet sheet = GeneralClass.ExcelReadOpt.wb?.GetSheetAt(stnum);
-                            tn1 = new TreeNode();
-                            tn1.Text = sheet.SheetName;
-
-                            //List<ElementData> _list = GeneralClass.SQLiteOpt.GetAllElementList(tableName, filename, sheet.SheetName);
-                            //foreach (var item in _list)
-                            //{
-                            //    tn2 = new TreeNode();
-                            //    tn2.Text = item.elementName;
-                            //    tn1.Nodes.Add(tn2);
-                            //}
-
-
-                            tn.Nodes.Add(tn1);
+                            DialogResult rt = MessageBox.Show("当前料单文件缺少封面页，请确认是否继续？", "警告", MessageBoxButtons.OKCancel);
+                            if (rt == DialogResult.OK)
+                            {
+                                //treeView1.Nodes.Clear();
+                                //列举所有的sheet名称
+                                TreeNode tn = new TreeNode();
+                                TreeNode tn1 = new TreeNode();
+                                TreeNode tn2 = new TreeNode();
+                                tn.Text = filename; //获取excel文件名作为根节点名称
+                                for (int stnum = 0; stnum < _totalsheetNum; stnum++)//因为料单一般最后一页是汇总表，格式不一致，不解析
+                                {
+                                    ISheet sheet = GeneralClass.ExcelReadOpt.wb?.GetSheetAt(stnum);
+                                    tn1 = new TreeNode();
+                                    tn1.Text = sheet.SheetName;
+                                    tn.Nodes.Add(tn1);
+                                }
+                                //tn.Checked = true;//设置节点为选中
+                                treeView1.Nodes.Add(tn);
+                            }
                         }
-                        //tn.Checked = true;//设置节点为选中
-                        treeView1.Nodes.Add(tn);
+                        else
+                        {
+                            //treeView1.Nodes.Clear();
+                            //列举所有的sheet名称
+                            TreeNode tn = new TreeNode();
+                            TreeNode tn1 = new TreeNode();
+                            TreeNode tn2 = new TreeNode();
+                            tn.Text = filename; //获取excel文件名作为根节点名称
+                            for (int stnum = 0; stnum < _totalsheetNum - 1; stnum++)//因为料单一般最后一页是汇总表，格式不一致，不解析
+                            {
+                                ISheet sheet = GeneralClass.ExcelReadOpt.wb?.GetSheetAt(stnum);
+                                tn1 = new TreeNode();
+                                tn1.Text = sheet.SheetName;
+                                tn.Nodes.Add(tn1);
+                            }
+                            //tn.Checked = true;//设置节点为选中
+                            treeView1.Nodes.Add(tn);
+                        }
+
 
                         //GeneralClass.readEXCEL.CloseFile();//关闭文件流
-
                     }
+
                     GeneralClass.CfgData.MaterialBill = EnumMaterialBill.EJIN;//将系统参数设置里面的料单类型自动改为e筋料单
+                    GeneralClass.CfgData.EJINpath = defaultfilepath;
                     string _json = NewtonJson.Serializer(GeneralClass.CfgData);//存为json
                     Config.SaveConfig(_json);//保存配置文件
-
                     GeneralClass.LDOpt = new Database.LDOpt(EnumMaterialBill.EJIN);//根据料单配置类型，选择不同的料单操作对象
 
 
@@ -668,11 +698,12 @@ namespace RebarSampling
                     if (this.panel3.Controls.Contains(form2))//如果当前显示的是form2（统计界面），则执行显示主构件信息
                     {
                         GeneralClass.interactivityData?.showAssembly(e.Node.Parent.Text, e.Node.Text);
+
                     }
-                    //if (this.panel3.Controls.Contains(form3))//如果当前显示 的是form3（套料界面），则显示子构件详细信息
-                    //{
-                    //    GeneralClass.interactivityData?.showAssembly(e.Node.Parent.Text, e.Node.Text);
-                    //}
+                    if (this.panel3.Controls.Contains(form3))//如果当前显示 的是form3（套料界面），则显示子构件详细信息
+                    {
+                        GeneralClass.interactivityData?.showAssembly(e.Node.Parent.Text, e.Node.Text);
+                    }
 
                 }
             }
@@ -868,6 +899,12 @@ namespace RebarSampling
                     _allList_bk = GeneralClass.DBOpt.Gld_to_rebardata(GeneralClass.GldOpt.gld_Structure);
                 }
 
+                //赋予料单编号
+                foreach (var item in _allList_bk)
+                {
+                    item.TableNo = textBox1.Text + "_" + textBox2.Text + "_" + textBox3.Text;
+                }
+
                 //查询所有被选中的钢筋
                 List<RebarData> _newlist = new List<RebarData>();
                 foreach (RebarData _data in _allList_bk)
@@ -878,14 +915,17 @@ namespace RebarSampling
                     }
                 }
 
+                //List<RebarData> _newlist_0 = new List<RebarData>();
                 List<RebarData> _newlist_1 = new List<RebarData>();
                 List<RebarData> _newlist_2 = new List<RebarData>();
+                List<RebarData> _newlist_3 = new List<RebarData>(); 
                 List<RebarData> _insetlist = new List<RebarData>();
+
 
                 //对newlist做处理，拆分多段
                 for (int i = 0; i < _newlist.Count; i++)
                 {
-                    if (_newlist[i].IsMulti)//处理多段
+                    if (_newlist[i].IsMulti && _newlist[i].TotalPieceNum!=0)//处理多段
                     {
                         _insetlist = new List<RebarData>();
                         _insetlist = GeneralClass.LDOpt.ldhelper.SplitMultiRebar(_newlist[i]);
@@ -937,18 +977,36 @@ namespace RebarSampling
                 }
 
 
+                //拆解超重的rebardata，或者带弯拐数量超标的零件钢筋
+                _newlist_3 = GeneralClass.DBOpt.SplitRebarData(_newlist_2);
+
+                //翻转边角结构
+                foreach(var item in _newlist_3)
+                {
+                    item.CornerMessage = GeneralClass.LDOpt.ldhelper.ExchangeRebarMsg(item.CornerMessage);
+                }
+
+                //修改边角结构
+                foreach (var item in _newlist_3)
+                {
+                    item.CornerMessage = GeneralClass.LDOpt.ldhelper.ModifyRebarMsg(item.CornerMessage);
+                }
+
+
                 //创建筛选后的钢筋总表
                 GeneralClass.DBOpt.InitRebarDB(GeneralClass.TableName_AllRebar);
 
                 List<string> sqls = new List<string>();
                 string _newname = GeneralClass.TableName_AllRebar;
 
-                if (_newlist_2.Count != 0)   //按照新的list来
+                if (_newlist_3.Count != 0)   //按照新的list来
                 {
-                    foreach (RebarData _dd in _newlist_2)
+                    foreach (RebarData _dd in _newlist_3)
                     {
                         sqls.Add(GeneralClass.DBOpt.InsertRowRebarData(_newname, _dd));
                     }
+
+                    int i = 0;
                 }
                 GeneralClass.DBOpt.dbHelper.ExecuteSqlsTran(sqls);//批量存入
 
@@ -977,16 +1035,20 @@ namespace RebarSampling
 
                 //创建钢筋总表的构件表
                 GeneralClass.DBOpt.InitElementDB(GeneralClass.TableName_Element);
-
                 GeneralClass.AllElementList = GeneralClass.DBOpt.GetAllElementList(GeneralClass.TableName_AllRebar);
 
                 sqls = new List<string>();//重置
                 foreach (var item in GeneralClass.AllElementList)
                 {
-                    sqls.Add(GeneralClass.DBOpt.InsertRowElementData(GeneralClass.TableName_Element, item.projectName, item.assemblyName, item.elementName));
+                    sqls.Add(GeneralClass.DBOpt.InsertRowElementData(GeneralClass.TableName_Element,
+                        item.projectName,
+                        item.mainAssemblyName,
+                        item.childAssemblyName,
+                        item.elementName));
                 }
                 GeneralClass.DBOpt.dbHelper.ExecuteSqlsTran(sqls);//批量存入
 
+                //新增料表到料单管理表
 
 
 

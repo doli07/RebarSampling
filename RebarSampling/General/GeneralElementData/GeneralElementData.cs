@@ -510,6 +510,7 @@ namespace RebarSampling
         {
             this.projectName = "";
             this.assemblyName = "";
+            this.childAssemblyName = "";
             this.elementIndex = -1;
             this.elementName = "";
 
@@ -535,6 +536,10 @@ namespace RebarSampling
         /// 主构件名称
         /// </summary>
         public string assemblyName { get; set; }
+        /// <summary>
+        /// 子构件部位名称
+        /// </summary>
+        public string childAssemblyName { get;set; }
         /// <summary>
         /// 因为elementname并非唯一，所以需要elementindex来索引，指示在主构件中的索引位置
         /// </summary>
@@ -605,7 +610,13 @@ namespace RebarSampling
         public string batchSeri {  get; set; }
 
         /// <summary>
-        ///钢筋数量分组，原则：WARESET_8:1~25(8仓)，WARESET_4:26~50(4仓)，WARESET_2:51~100(2仓)，WARESET_1:100~(1仓)
+        ///钢筋数量分组，
+        ///原则：
+        ///WARESET_12:  1~10(12包，1仓1包)，
+        ///WARESET_6:   10~25(6包，2仓1包)，
+        ///WARESET_3:   25~50(3包，4仓1包)，
+        ///WARESET_2:   50~100(2包，6仓1包)
+        ///WARESET_1:   100~(1包，12仓1包)
         /// </summary>
         public EnumWareNumSet wareNumSet
         {
@@ -613,19 +624,23 @@ namespace RebarSampling
             {
                 if (this.totalNum != 0)
                 {
-                    if (this.totalNum > 0 && this.totalNum <= GeneralClass.wareArea[0])
+                    if (this.totalNum > 0 && this.totalNum <= GeneralClass.wareThreshold[0])
                     {
-                        return EnumWareNumSet.WARESET_8;
+                        return EnumWareNumSet.WARESET_12;
                     }
-                    else if (this.totalNum > GeneralClass.wareArea[0] && this.totalNum <= GeneralClass.wareArea[1])
+                    else if (this.totalNum > GeneralClass.wareThreshold[0] && this.totalNum <= GeneralClass.wareThreshold[1])
                     {
-                        return EnumWareNumSet.WARESET_4;
+                        return EnumWareNumSet.WARESET_6;
                     }
-                    else if (this.totalNum > GeneralClass.wareArea[1] && this.totalNum <= GeneralClass.wareArea[2])
+                    else if (this.totalNum > GeneralClass.wareThreshold[1] && this.totalNum <= GeneralClass.wareThreshold[2])
+                    {
+                        return EnumWareNumSet.WARESET_3;
+                    }
+                    else if (this.totalNum > GeneralClass.wareThreshold[2] && this.totalNum <= GeneralClass.wareThreshold[3])
                     {
                         return EnumWareNumSet.WARESET_2;
                     }
-                    else if (this.totalNum > GeneralClass.wareArea[2])
+                    else if (this.totalNum > GeneralClass.wareThreshold[3])
                     {
                         return EnumWareNumSet.WARESET_1;
                     }
@@ -933,7 +948,8 @@ namespace RebarSampling
         public ElementData()
         {
             this.projectName = "";
-            this.assemblyName = "";
+            this.mainAssemblyName = "";
+            this.childAssemblyName = "";
             this.elementIndex = 0;
             this.elementName = "";
 
@@ -949,7 +965,8 @@ namespace RebarSampling
         public void Copy(ElementData _data)
         {
             this.projectName = _data.projectName;
-            this.assemblyName= _data.assemblyName;
+            this.mainAssemblyName= _data.mainAssemblyName;
+            this.childAssemblyName = _data.childAssemblyName;
             this.elementIndex= _data.elementIndex;
             this.elementName = _data.elementName;
             this.rebarlist.Clear();
@@ -965,11 +982,19 @@ namespace RebarSampling
         /// <summary>
         /// 主构件名称
         /// </summary>
-        public string assemblyName { get; set; }
+        public string mainAssemblyName { get; set; }
+        /// <summary>
+        /// 子构件部位名称
+        /// </summary>
+        public string childAssemblyName { get; set; }
         /// <summary>
         /// 因为elementname并非唯一，所以需要elementindex来索引，指示在主构件中的索引位置
         /// </summary>
         public int elementIndex { get; set; }
+        /// <summary>
+        /// 记录在总的料表中构件的总数量
+        /// </summary>
+        public int elementTotalNum { get; set; }
         /// <summary>
         /// 构件名称
         /// </summary>
@@ -1093,19 +1118,23 @@ namespace RebarSampling
             {
                 if (this.totalNum_bc != 0)
                 {
-                    if (this.totalNum_bc > 0 && this.totalNum_bc <= GeneralClass.wareArea[0])
+                    if (this.totalNum_bc > 0 && this.totalNum_bc <= GeneralClass.wareThreshold[0])
                     {
-                        return EnumWareNumSet.WARESET_8;
+                        return EnumWareNumSet.WARESET_12;
                     }
-                    else if (this.totalNum_bc > GeneralClass.wareArea[0] && this.totalNum_bc <= GeneralClass.wareArea[1])
+                    else if (this.totalNum_bc > GeneralClass.wareThreshold[0] && this.totalNum_bc <= GeneralClass.wareThreshold[1])
                     {
-                        return EnumWareNumSet.WARESET_4;
+                        return EnumWareNumSet.WARESET_6;
                     }
-                    else if (this.totalNum_bc > GeneralClass.wareArea[1] && this.totalNum_bc <= GeneralClass.wareArea[2])
+                    else if (this.totalNum_bc > GeneralClass.wareThreshold[1] && this.totalNum_bc <= GeneralClass.wareThreshold[2])
+                    {
+                        return EnumWareNumSet.WARESET_3;
+                    }
+                    else if (this.totalNum_bc > GeneralClass.wareThreshold[2] && this.totalNum_bc <= GeneralClass.wareThreshold[3])
                     {
                         return EnumWareNumSet.WARESET_2;
                     }
-                    else if (this.totalNum_bc > GeneralClass.wareArea[2])
+                    else if (this.totalNum_bc > GeneralClass.wareThreshold[3])
                     {
                         return EnumWareNumSet.WARESET_1;
                     }
@@ -1202,7 +1231,8 @@ namespace RebarSampling
                     var _group = GeneralClass.DBOpt.QueryAllListByDiameterWithLength(this.rebarlist_bc);
 
                     _fb.projectName = this.projectName;
-                    _fb.assemblyName = this.assemblyName;
+                    _fb.assemblyName = this.mainAssemblyName;
+                    _fb.childAssemblyName= this.childAssemblyName;
                     _fb.elementIndex = this.elementIndex;
                     _fb.elementName = this.elementName;
 

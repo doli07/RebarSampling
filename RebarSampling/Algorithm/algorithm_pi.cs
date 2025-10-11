@@ -42,7 +42,7 @@ namespace RebarSampling
             }
 
             //最后排自我套料的
-            if(_rebarlist.Count!=0)
+            if (_rebarlist.Count != 0)
             {
                 returnlist.AddRange(Tao_single(ref _rebarlist));
             }
@@ -80,12 +80,13 @@ namespace RebarSampling
                     else
                     {
                         temp._list.Add(item._rebarList[i]);
-                        if (i == item.num - 1)//最后一根，存入returnlist
-                        {
-                            returnlist.Add(temp);
-                        }
+                        //if (i == item.num - 1)//最后一根，存入returnlist
+                        //{
+                        //    returnlist.Add(temp);
+                        //}
                     }
                 }
+                    returnlist.Add(temp);//最后一根，存入returnlist
 
             }
 

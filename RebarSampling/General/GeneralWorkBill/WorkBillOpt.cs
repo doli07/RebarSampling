@@ -1,4 +1,5 @@
-﻿using NPOI.HSSF.Record;
+﻿using BarTender;
+using NPOI.HSSF.Record;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,11 +43,13 @@ namespace RebarSampling.GeneralWorkBill
                                 + (_rebarOri._list[0]._batchMsg.curChildBatch + 1).ToString().PadLeft(3, '0') + "_"
                                 + _msg.totalOriginal.ToString().PadLeft(3, '0') + "/"
                                 + (_msg.curOriginal + 1).ToString().PadLeft(3, '0');
-            _workbill.ProjectName = _msg.projectName;
+            _workbill.TasklistNo = _msg.tasklistNo;//料单编号
+            _workbill.TasklistName= _msg.tasklistName;//料单名称
+            _workbill.ProjectName = _rebarOri._list[0].ProjectName/* _msg.projectName*/;
             _workbill.Block = _msg.block;
             _workbill.Building = _msg.building;
             _workbill.Floor = _msg.floor;
-            _workbill.Level = _msg.level;
+            _workbill.Level = _rebarOri._list[0].Level/* _msg.level*/;
             _workbill.Diameter = _rebarOri._list[0].Diameter;
             _workbill.Brand = _msg.brand;
             _workbill.Specification = _msg.specification;
@@ -127,7 +130,7 @@ namespace RebarSampling.GeneralWorkBill
         private void PrintIndexCodeAll(List<RebarData> _datalist)
         {
 
-            string filePath = Application.StartupPath + @"\logfile\indexcode.txt";
+            string filePath =System.Windows.Forms. Application.StartupPath + @"\logfile\indexcode.txt";
 
             if (!File.Exists(filePath))
             {
@@ -164,62 +167,110 @@ namespace RebarSampling.GeneralWorkBill
                 System.Windows.Forms.MessageBox.Show("文件路径:" + filePath + "不存在!");
             }
         }
-        public string CreateWorkBill_PiCut(WorkBillMsg _msg, RebarOriPiAllDiameter _alldiaWorkdata)
+        //public string CreateWorkBill_PiCut(WorkBillMsg _msg, RebarOriPiAllDiameter _alldiaWorkdata)
+        //{
+        //    string returnstr = "";
+
+        //    WorkBill_QZ _workbill = new WorkBill_QZ();
+
+        //    _workbill.Msgtype = 6;
+        //    string _Date = DateTime.Now.ToString("yyyyMMdd");
+        //    _workbill.BillNo = "B_" + _Date + "_"
+        //                        + _msg.shift.ToString() + "_"
+        //                        + "001" + "/"
+        //                        + "001";
+
+        //    _workbill.ProjectName = _msg.projectName;
+        //    _workbill.Block = _msg.block;
+        //    _workbill.Building = _msg.building;
+        //    _workbill.Floor = _msg.floor;
+        //    _workbill.Level = _msg.level;
+        //    _workbill.Brand = _msg.brand;
+        //    _workbill.Specification = _msg.specification;
+        //    _workbill.OriginalLength = _msg.originLength;
+        //    _workbill.CuttingUse = 1;//暂定墙柱线
+
+        //    foreach (var _ori in _alldiaWorkdata._list)
+        //    {
+        //        int _totalbatchNo = _alldiaWorkdata._list.Count;                  //根据不同直径分的总批次数
+        //        int _curbatchNo = _alldiaWorkdata._list.IndexOf(_ori);        //当前批次
+        //        WorkBill_QZ_PiCutDiameter temp = CreateWorkBill_QZ_PiCutDiameter(new Tuple<int, int, int>(_msg.shift, _totalbatchNo, _curbatchNo), _ori);
+
+        //        _workbill.CuttingList.Add(temp);
+        //    }
+
+        //    returnstr = NewtonJson.Serializer(_workbill);//json序列化
+
+        //    return returnstr;
+        //}
+
+
+        public void ParseWorkBill_QZ(WorkBill_QZ _bill,ref List<RebarOri> _data)
         {
-            string returnstr = "";
+            _data = new List<RebarOri>();
+            RebarOri _ori;
 
-            WorkBill_QZ _workbill = new WorkBill_QZ();
+            string _level;
+            int _diameter;
+            int _oriLength;
 
-            _workbill.Msgtype = 6;
-            string _Date = DateTime.Now.ToString("yyyyMMdd");
-            _workbill.BillNo = "B_" + _Date + "_"
-                                + _msg.shift.ToString() + "_"
-                                + "001" + "/"
-                                + "001";
-
-            _workbill.ProjectName = _msg.projectName;
-            _workbill.Block = _msg.block;
-            _workbill.Building = _msg.building;
-            _workbill.Floor = _msg.floor;
-            _workbill.Level = _msg.level;
-            _workbill.Brand = _msg.brand;
-            _workbill.Specification = _msg.specification;
-            _workbill.OriginalLength = _msg.originLength;
-            _workbill.CuttingUse = 1;//暂定墙柱线
-
-            foreach (var _ori in _alldiaWorkdata._list)
+            foreach (var iiii in _bill.CuttingList)
             {
-                int _totalbatchNo = _alldiaWorkdata._list.Count;                  //根据不同直径分的总批次数
-                int _curbatchNo = _alldiaWorkdata._list.IndexOf(_ori);        //当前批次
-                WorkBill_QZ_PiCutDiameter temp = CreateWorkBill_QZ_PiCutDiameter(new Tuple<int, int, int>(_msg.shift, _totalbatchNo, _curbatchNo), _ori);
+                _level =iiii.Level;
+                _diameter = iiii.Diameter;
+                _oriLength=iiii.OriginalLength;
+                foreach(var tttt in iiii.SolutionList)
+                {
+                    _ori = new RebarOri(_oriLength, _level, _diameter);
+                    int _num = tttt.OriginalNum;
 
-                _workbill.CuttingList.Add(temp);
+                    foreach(var eeee in tttt.RebarList)
+                    {
+                        Rebar _rebar = new Rebar();
+                        _rebar.Level = _level;
+                        _rebar.Diameter = _diameter;
+                        _rebar.CornerMessage = eeee.CornerMsg;
+                        _rebar.length = eeee.Length;
+                        _rebar.SerialNum=eeee.UniqueCode;//唯一识别码
+
+                        _ori._list.Add(_rebar); 
+                    }
+
+                    for(int i=0;i<_num;i++)
+                    {
+                        _data.Add(_ori);
+                    }
+                }
+
             }
 
-            returnstr = NewtonJson.Serializer(_workbill);//json序列化
 
-            return returnstr;
         }
+
 
         /// <summary>
         /// 墙柱线的工单，20240619
         /// </summary>
+        /// <param name="msgtype">4：批量剪切，6：批量锯切</param>
         /// <param name="_msg"></param>
         /// <param name="_rebarlist"></param>
         /// <returns></returns>
-        public string CreateWorkBill_QZ(WorkBillMsg _msg, RebarOriPiAllDiameter _alldiaWorkdata)
+        public string CreateWorkBill_QZ(WorkBillMsg _msg, RebarOriPiAllDiameter _alldiaWorkdata,out WorkBill_QZ _workbill)
         {
             string returnstr = "";
 
-            WorkBill_QZ _workbill = new WorkBill_QZ();
+             _workbill = new WorkBill_QZ();
 
-            _workbill.Msgtype = 4;
+            //_workbill.Msgtype = msgtype;
             string _Date = DateTime.Now.ToString("yyyyMMdd");
             _workbill.BillNo = "B_" + _Date + "_"
                                 + _msg.shift.ToString() + "_"
                                 + "001" + "/"
                                 + "001";
 
+            _workbill.TasklistNo = _alldiaWorkdata._list[0]._rebarOriPiList[0]._list[0]._list[0].TableNo;//料表编号
+            //_workbill.TasklistName = _alldiaWorkdata._list[0]._rebarOriPiList[0]._list[0]._list[0].TableName;//料表名称
+            _workbill.TasklistName = _msg.tasklistName;
             _workbill.ProjectName = _msg.projectName;
             _workbill.Block = _msg.block;
             _workbill.Building = _msg.building;
@@ -227,22 +278,35 @@ namespace RebarSampling.GeneralWorkBill
             _workbill.Level = _msg.level;
             _workbill.Brand = _msg.brand;
             _workbill.Specification = _msg.specification;
-            _workbill.OriginalLength = _msg.originLength;
+            //_workbill.OriginalLength = _msg.originLength;
+            _workbill.OriginalLength = _alldiaWorkdata.OriginalLength;
+
+            _workbill.OriginalNum = _alldiaWorkdata.OriginalNum;
+            _workbill.OriginalWeight = _alldiaWorkdata.OriginalWeight;
+            _workbill.SteelbarNum = _alldiaWorkdata.SteelbarNum;
+            _workbill.SteelbarWeight = _alldiaWorkdata.SteelbarWeight;
             _workbill.CuttingUse = 1;//暂定墙柱线
 
             _alldiaWorkdata.totalBatchNo = 1;//此处暂时给1，20240812
             _alldiaWorkdata.curBatchNo = 1;
 
+            bool _iftao = false;
             foreach (var _ori in _alldiaWorkdata._list)
             {
                 int _totalbatchNo = _alldiaWorkdata._list.Count;                  //根据不同直径分的总批次数
                 int _curbatchNo = _alldiaWorkdata._list.IndexOf(_ori);        //当前批次
                 //_ori.totalBatchNo = _totalbatchNo;//修改总批次参数
                 //_ori.curBatchNo = _curbatchNo;//修改当前批次参数
-                WorkBill_QZ_PiCutDiameter temp = CreateWorkBill_QZ_PiCutDiameter(new Tuple<int, int, int>(_msg.shift, _totalbatchNo, _curbatchNo), _ori);
 
+                bool _iftao2 = false;
+                WorkBill_QZ_PiCutDiameter temp = CreateWorkBill_QZ_PiCutDiameter(new Tuple<int, int, int>(_msg.shift, _totalbatchNo, _curbatchNo), _ori,out _iftao2);
+
+                if (_iftao2) { _iftao = true; }
                 _workbill.CuttingList.Add(temp);
             }
+            _workbill.Msgtype = _iftao ? 6 : 4;//如果需要套丝，则为锯切，不套丝则为剪切
+
+
 
             returnstr = NewtonJson.Serializer(_workbill);//json序列化
 
@@ -254,7 +318,7 @@ namespace RebarSampling.GeneralWorkBill
         /// <param name="_msg">班次、子加工批总批次、子加工批当前批号</param>
         /// <param name="_diaWorkdata"></param>
         /// <returns></returns>
-        public WorkBill_QZ_PiCutDiameter CreateWorkBill_QZ_PiCutDiameter(Tuple<int, int, int> _msg, RebarOriPiWithDiameter _diaWorkdata)
+        public WorkBill_QZ_PiCutDiameter CreateWorkBill_QZ_PiCutDiameter(Tuple<int, int, int> _msg, RebarOriPiWithDiameter _diaWorkdata,out bool _iftao)
         {
             WorkBill_QZ_PiCutDiameter _workbill = new WorkBill_QZ_PiCutDiameter();
 
@@ -268,8 +332,14 @@ namespace RebarSampling.GeneralWorkBill
 
             _workbill.Diameter = _diaWorkdata._diameter;
             _workbill.Level = _diaWorkdata._level;
-            _workbill.OriginalLength = GeneralClass.OriginalLength(_diaWorkdata._level, _diaWorkdata._diameter);
+            //_workbill.OriginalLength = GeneralClass.OriginalLength(_diaWorkdata._level, _diaWorkdata._diameter);
+            _workbill.OriginalLength = _diaWorkdata.OrignalLength;
+
             _workbill.Num = _diaWorkdata._rebarOriPiList.Sum(t => t.num);
+            _workbill.OriginalNum=_diaWorkdata.OriginalNum;
+            _workbill.SteelbarNum = _diaWorkdata.SteelbarNum;
+            _workbill.OriginalWeight = _diaWorkdata.OriginalWeight;
+            _workbill.SteelbarWeight=_diaWorkdata.SteelbarWeight;   
 
             int _dia = _diaWorkdata._diameter;
             _workbill.TaosiSetting = _dia.ToString() + "_"
@@ -282,13 +352,17 @@ namespace RebarSampling.GeneralWorkBill
             _diaWorkdata.totalBatchNo = _msg.Item2;//设置总批次
             _diaWorkdata.curBatchNo = _msg.Item3;//设置当前批次
 
+            _iftao = false;
             foreach (var item in _diaWorkdata._rebarOriPiList)
             {
                 int _totalbatchNo = _diaWorkdata._rebarOriPiList.Count;                  //不同锯切方案的数量统计
                 int _curbatchNo = _diaWorkdata._rebarOriPiList.IndexOf(item);        //当前锯切方案的序号
 
+                bool _iftao2=false;
                 WorkBill_QZ_PiCutSolution temp = CreateWorkBill_QZ_PiCutSolution(new Tuple<int, int, int, int, int>(_msg.Item1, _msg.Item2, _msg.Item3, _totalbatchNo, _curbatchNo),
-                    item, _workbill.OriginalLength);
+                    item, _workbill.OriginalLength,out _iftao2);
+
+                if (_iftao2) { _iftao = true; }
 
                 _workbill.SolutionList.Add(temp);
             }
@@ -301,7 +375,7 @@ namespace RebarSampling.GeneralWorkBill
         /// <param name="_msg">班次、子加工批总批次、子加工批当前批号、锯切方案总数、当前锯切方案序号</param>
         /// <param name="_oriPi"></param>
         /// <returns></returns>
-        public WorkBill_QZ_PiCutSolution CreateWorkBill_QZ_PiCutSolution(Tuple<int, int, int, int, int> _msg, RebarOriPi _oriPi, int _orilength)
+        public WorkBill_QZ_PiCutSolution CreateWorkBill_QZ_PiCutSolution(Tuple<int, int, int, int, int> _msg, RebarOriPi _oriPi, int _orilength,out bool _iftao)
         {
             WorkBill_QZ_PiCutSolution _workbill = new WorkBill_QZ_PiCutSolution();
 
@@ -317,16 +391,25 @@ namespace RebarSampling.GeneralWorkBill
 
             _workbill.OriginalLength = _orilength;//原材长度
             _workbill.Num = _oriPi.num;
+            _workbill.OriginalNum=_oriPi.OriginalNum;
+            _workbill.SteelbarNum= _oriPi.SteelbarNum;
+            _workbill.OriginalWeight= _oriPi.OriginalWeight;
+            _workbill.SteelbarWeight= _oriPi.SteelbarWeight;
+            _workbill.PicString =graphics.BitmapToBase64String( graphics.PaintRebar(_oriPi._list[0]));//将钢筋原材排布图画出来，bitmap再转为base64编码字符串，20250929
 
             _oriPi.totalBatchNo = _msg.Item4;//总批次
             _oriPi.curBatchNo = _msg.Item5;//当前批次
 
+             _iftao = false;
             foreach (var item in _oriPi._list[0]._list)
             {
                 int _totalbNo = _oriPi._list[0]._list.Count;                  //锯切方案的钢筋小段数
                 int _curNo = _oriPi._list[0]._list.IndexOf(item);        //当前小段
 
-                WorkBill_QZ_PiCutRebar temp = CreateWorkBill_QZ_PiCutRebar(new Tuple<int, int, int, int, int, int, int>(_msg.Item1, _msg.Item2, _msg.Item3, _msg.Item4, _msg.Item5, _totalbNo, _curNo), item);
+                bool _iftao2 = false;
+                WorkBill_QZ_PiCutRebar temp = CreateWorkBill_QZ_PiCutRebar(new Tuple<int, int, int, int, int, int, int>(_msg.Item1, _msg.Item2, _msg.Item3, _msg.Item4, _msg.Item5, _totalbNo, _curNo), item,out _iftao2);
+
+                if (_iftao2) { _iftao = true; }
 
                 _workbill.RebarList.Add(temp);
             }
@@ -339,7 +422,7 @@ namespace RebarSampling.GeneralWorkBill
         /// <param name="_msg">班次、子加工批总批次、子加工批当前批号、锯切方案总数、当前锯切方案序号、钢筋小段总数、当前钢筋小段</param>
         /// <param name="_rebar"></param>
         /// <returns></returns>
-        public WorkBill_QZ_PiCutRebar CreateWorkBill_QZ_PiCutRebar(Tuple<int, int, int, int, int, int, int> _msg, Rebar _rebar)
+        public WorkBill_QZ_PiCutRebar CreateWorkBill_QZ_PiCutRebar(Tuple<int, int, int, int, int, int, int> _msg, Rebar _rebar,out bool _iftao)
         {
             WorkBill_QZ_PiCutRebar _workbill = new WorkBill_QZ_PiCutRebar();
 
@@ -357,8 +440,19 @@ namespace RebarSampling.GeneralWorkBill
 
             _workbill.CornerMsg = _rebar.CornerMessage;
             _workbill.Length = _rebar.length;
+            _workbill.SteelbarWeight = _rebar.weight;
             _workbill.BendType = _rebar.IfBend;
             _workbill.TaosiType = _rebar.TaosiType;
+            _workbill.UniqueCode=_rebar.SerialNum;//料单标注序号
+
+            if(_rebar.TaosiType==0)//是否套丝
+            {
+                _iftao = false;
+            }
+            else
+            {
+                _iftao=true;
+            }
 
             return _workbill;
         }
@@ -407,6 +501,7 @@ namespace RebarSampling.GeneralWorkBill
             string temp2 = ConvertCode(_data.seriNo, 1,out _size).ToUpper().PadLeft(1, '0');
             _singleRebar.IndexCode = "A" + temp1 + temp2;
 
+            _singleRebar.UniqueCode = _data.SerialNum;
 
             return _singleRebar;
         }

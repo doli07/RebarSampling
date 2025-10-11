@@ -76,11 +76,14 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Enums.NET, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7ea1c1650d506225, processorArchitecture=MSIL">
-      <HintPath>..\packages\Enums.NET.4.0.0\lib\net45\Enums.NET.dll</HintPath>
+    <Reference Include="Enums.NET, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7ea1c1650d506225, processorArchitecture=MSIL">
+      <HintPath>..\packages\Enums.NET.5.0.0\lib\net461\Enums.NET.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.3.11, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.1.3.3\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ExtendedNumerics.BigDecimal, Version=2025.1001.2.129, Culture=neutral, PublicKeyToken=65f1315a45ad8949, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExtendedNumerics.BigDecimal.2025.1001.2.129\lib\net48\ExtendedNumerics.BigDecimal.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.4.2.13, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="itext.barcodes, Version=9.1.0.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\itext.9.1.0\lib\net461\itext.barcodes.dll</HintPath>
@@ -127,8 +130,8 @@
     <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MathNet.Numerics, Version=4.15.0.0, Culture=neutral, PublicKeyToken=cd8b63ad3d691a37, processorArchitecture=MSIL">
-      <HintPath>..\packages\MathNet.Numerics.Signed.4.15.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cd8b63ad3d691a37, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.Signed.5.0.0\lib\net48\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -151,8 +154,8 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.2.2.0\lib\net462\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.3.0.1\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
     </Reference>
     <Reference Include="MQTTnet, Version=4.2.1.781, Culture=neutral, PublicKeyToken=fdb7629f2e364a63, processorArchitecture=MSIL">
       <HintPath>..\packages\MQTTnet.4.2.1.781\lib\net461\MQTTnet.dll</HintPath>
@@ -167,17 +170,17 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NPOI, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.dll</HintPath>
+    <Reference Include="NPOI.Core, Version=2.7.4.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.7.4\lib\net472\NPOI.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NPOI.OOXML, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OOXML.dll</HintPath>
+    <Reference Include="NPOI.OOXML, Version=2.7.4.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.7.4\lib\net472\NPOI.OOXML.dll</HintPath>
     </Reference>
-    <Reference Include="NPOI.OpenXml4Net, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OpenXml4Net.dll</HintPath>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.7.4.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.7.4\lib\net472\NPOI.OpenXml4Net.dll</HintPath>
     </Reference>
-    <Reference Include="NPOI.OpenXmlFormats, Version=2.6.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NPOI.2.6.0\lib\net472\NPOI.OpenXmlFormats.dll</HintPath>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.7.4.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.7.4\lib\net472\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="O2S.Components.PDFRender4NET.Win, Version=11.3.16.0, Culture=neutral, PublicKeyToken=6753860be21d84fb, processorArchitecture=MSIL">
       <HintPath>..\packages\O2S.Components.PDFRender4NET.Win.11.3.16.0\lib\net40\O2S.Components.PDFRender4NET.Win.dll</HintPath>
@@ -185,14 +188,15 @@
     <Reference Include="PdfiumViewer, Version=2.13.0.0, Culture=neutral, PublicKeyToken=91e4789cfb0609e0, processorArchitecture=MSIL">
       <HintPath>..\packages\PdfiumViewer.2.13.0.0\lib\net20\PdfiumViewer.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="Seagull.BarTender.Print, Version=11.3.8.1, Culture=neutral, PublicKeyToken=109ff779a1b4cbc7, processorArchitecture=AMD64" />
     <Reference Include="Seagull.Services.PrintScheduler, Version=11.3.8.1, Culture=neutral, PublicKeyToken=109ff779a1b4cbc7, processorArchitecture=AMD64" />
     <Reference Include="Seagull.Services.PrintScheduler.Contracts, Version=11.3.8.1, Culture=neutral, PublicKeyToken=109ff779a1b4cbc7, processorArchitecture=AMD64" />
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
-      <HintPath>..\packages\SixLabors.Fonts.1.0.0-beta19\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
+      <HintPath>..\packages\SixLabors.Fonts.1.0.1\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="SixLabors.ImageSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
-      <HintPath>..\packages\SixLabors.ImageSharp.2.1.9\lib\net472\SixLabors.ImageSharp.dll</HintPath>
+      <HintPath>..\packages\SixLabors.ImageSharp.2.1.10\lib\net472\SixLabors.ImageSharp.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
@@ -220,6 +224,9 @@
       <HintPath>..\packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -262,8 +269,8 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.NameResolution, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.NameResolution.4.3.0\lib\net46\System.Net.NameResolution.dll</HintPath>
@@ -303,6 +310,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
@@ -322,6 +330,9 @@
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Xml, Version=8.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Xml.8.0.2\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
@@ -352,6 +363,9 @@
     <Reference Include="WebSocket4Net, Version=0.15.2.11, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocket4Net.0.15.2\lib\net45\WebSocket4Net.dll</HintPath>
     </Reference>
+    <Reference Include="ZString, Version=2.6.0.0, Culture=neutral, PublicKeyToken=df4c250b14d82627, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZString.2.6.0\lib\netstandard2.0\ZString.dll</HintPath>
+    </Reference>
     <Reference Include="zxing, Version=0.16.9.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
       <HintPath>..\packages\ZXing.Net.0.16.9\lib\net47\zxing.dll</HintPath>
     </Reference>
@@ -368,6 +382,12 @@
     <Compile Include="Database\IdbHelper.cs" />
     <Compile Include="Database\ILDHelper.cs" />
     <Compile Include="Database\LDOpt.cs" />
+    <Compile Include="FormBillSplit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBillSplit.Designer.cs">
+      <DependentUpon>FormBillSplit.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormLeftUsed.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -453,11 +473,13 @@
     <Compile Include="IO\excel\IExcelReader.cs" />
     <Compile Include="IO\excel\IExcelWriter.cs" />
     <Compile Include="General\InteractivityData.cs" />
+    <Compile Include="UI\graphics\EjinPic.cs" />
     <Compile Include="UI\graphics\Graphics.cs" />
     <Compile Include="Communication\http\http.cs" />
     <Compile Include="IO\json\json.cs" />
     <Compile Include="labelPrint\labelPrint.cs" />
     <Compile Include="labelPrint\labelPrintBartender.cs" />
+    <Compile Include="UI\graphics\Graphics_Ejin.cs" />
     <Compile Include="UI\log\logfile.cs" />
     <Compile Include="IO\excel\NpoiExcelReader.cs" />
     <Compile Include="IO\excel\NpoiExcelWriter.cs" />
@@ -489,6 +511,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form5.resx">
       <DependentUpon>Form5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBillSplit.resx">
+      <DependentUpon>FormBillSplit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormLeftUsed.resx">
       <DependentUpon>FormLeftUsed.cs</DependentUpon>

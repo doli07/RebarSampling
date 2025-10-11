@@ -18,13 +18,16 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using NPOI.SS.Formula.Functions;
 using System.Web.SessionState;
 using RebarSampling.Database;
+using NPOI.OpenXmlFormats.Wordprocessing;
+using System.Runtime.InteropServices;
+using System.IO;
 
 namespace RebarSampling
 {
     /// <summary>
     /// 画图类，用于绘制钢筋
     /// </summary>
-    public class graphics
+    public partial class graphics
     {
         /// <summary>
         /// 画一根钢筋原材，全直的
@@ -77,7 +80,7 @@ namespace RebarSampling
                     p2 = new Point(_start, startY - 5);
                     g.DrawLine(_pen, p1, p2);//画竖向的小黑线，分隔线
 
-                    text = item.Length;
+                    text = item.Length+"("+item.SerialNum+")";
                     fontX = (_start + _end) / 2;
                     fontY = startY - 20;
                     g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
@@ -87,20 +90,36 @@ namespace RebarSampling
                     List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(item.CornerMessage, item.Diameter);
                     if (_MultiData != null && _MultiData.Count != 0)//可以画弯曲套丝的就画，画不了的就算了
                     {
-                        if (_MultiData.First().ilength == 0 && _MultiData.First().type == 2)//端头套丝，20241113修改增加长度判断，例如“6000，套”是单头套，非双头套
+                        if (_MultiData.First().ilength == 0 && _MultiData.First().type == 2 )//端头正丝，20241113修改增加长度判断，例如“6000，套”是单头套，非双头套
                         {
                             _pen = new Pen(new SolidBrush(Color.Black), 6);
                             p1 = new Point(_start, startY);
                             p2 = new Point(_start + 10, startY);
-                            g.DrawLine(_pen, p1, p2);//画黑色加粗线，标识套丝
+                            g.DrawLine(_pen, p1, p2);//画黑色加粗线，标识正丝
                         }
-                        if (_MultiData.Last().type == 2)//端尾套丝
+                        else if(_MultiData.First().ilength == 0 && _MultiData.First().type == 3)//端头反丝
+                        {
+                            _pen = new Pen(new SolidBrush(Color.Brown), 6);
+                            p1 = new Point(_start, startY);
+                            p2 = new Point(_start + 10, startY);
+                            g.DrawLine(_pen, p1, p2);//画黄色加粗线，标识反丝
+                        }
+
+                        if (_MultiData.Last().type == 2)//端尾正丝
                         {
                             _pen = new Pen(new SolidBrush(Color.Black), 6);
                             p1 = new Point(_end - 10, startY);
                             p2 = new Point(_end, startY);
                             g.DrawLine(_pen, p1, p2);//画黑色加粗线，标识套丝
                         }
+                        else if ( _MultiData.Last().type == 3)//端尾反丝
+                        {
+                            _pen = new Pen(new SolidBrush(Color.Brown), 6);
+                            p1 = new Point(_end - 10, startY);
+                            p2 = new Point(_end, startY);
+                            g.DrawLine(_pen, p1, p2);//画黑色加粗线，标识套丝
+                        }
+
                         int _bendlength = 0;
                         foreach (var ttt in _MultiData)
                         {
@@ -209,20 +228,47 @@ namespace RebarSampling
 
         }
 
-        public static Bitmap PaintRebarPic(RebarData _rebar)
+        /// <summary>
+        /// 根据E筋的图形信息画钢筋简图
+        /// </summary>
+        /// <param name="_rebar"></param>
+        /// <param name="_realheight"></param>
+        /// <returns></returns>
+        public static Bitmap PaintRebarPic(RebarData _rebar, out int _realheight)
         {
             try
             {
-                List<Rebar> _list = Algorithm.ListExpand(new List<RebarData> { _rebar });
+                Rebar _single = new Rebar();
+                if (_rebar.TotalPieceNum == 0)//数量为0的钢筋，一般是多段拆解、缩尺拆解后的
+                {
+                    _single = new Rebar();
+                    _single.Copy(_rebar);
+                }
+                else
+                {
+                    List<Rebar> _list = Algorithm.ListExpand(new List<RebarData> { _rebar });
+                    _single = new Rebar();
+                    _single.Copy(_list[0]);
+                }
 
-                return PaintRebarPic(_list[0]);
+                //return PaintRebarPic(_list[0]);
+                return PaintRebarPicUsePicMsg(_single, out _realheight);
+
                 //return (_list.Count > 0) ? PaintRebarPic(_list[0]) : null;//存在_list数量=0的情况，一般是料单有错误
             }
-            catch (Exception ex) { MessageBox.Show("PaintRebarPic error :" + ex.Message); return null; }
+            catch (Exception ex)
+            {
+                //MessageBox.Show("PaintRebarPic error :" + ex.Message); 
+                GeneralClass.interactivityData?.printlog(1, "PaintRebarPic error :" + ex.Message);
+                _realheight = 40;
+                return null;
+            }
 
         }
+
+
         /// <summary>
-        /// 画钢筋的简图，真正的形状（带弯曲的）,此处根据钢筋简图编号做分拣，实际用各自的图形
+        /// 根据边角结构画钢筋的简图，真正的形状（带弯曲的）,此处根据钢筋简图编号做分拣，实际用各自的图形
         /// </summary>
         /// <param name="_rebar"></param>
         /// <returns></returns>
@@ -870,7 +916,7 @@ namespace RebarSampling
 
             Font _font = new Font("微软雅黑", 10, FontStyle.Regular);
             Brush _brush = new SolidBrush(Color.Black);
-            Pen _pen = new Pen(new SolidBrush(Color.Black), 3);//粗细3
+            Pen _pen = new Pen(new SolidBrush(Color.Black), 2);//粗细3
 
             try
             {
@@ -962,10 +1008,10 @@ namespace RebarSampling
 
             try
             {
-                if(_gjtype==1)//全箍
+                if (_gjtype == 1)//全箍
                 {
                     //画圆角矩形框
-                    _pen = new Pen(new SolidBrush(Color.Black), 3);//粗细3
+                    _pen = new Pen(new SolidBrush(Color.Black), 2);//粗细3
                     g.DrawArc(_pen, _startX + 0, _startY + 0, 8, 8, 180, 90);
                     g.DrawLine(_pen, _startX + 4, _startY + 0, _startX + width - 5, _startY + 0);
                     g.DrawArc(_pen, _startX + width - 9, _startY + 0, 8, 8, 270, 90);
@@ -996,7 +1042,7 @@ namespace RebarSampling
                 else//半箍
                 {
                     //画圆角半矩形框
-                    _pen = new Pen(new SolidBrush(Color.Black), 3);//粗细3
+                    _pen = new Pen(new SolidBrush(Color.Black), 2);//粗细3
                     g.DrawArc(_pen, _startX + 0, _startY + 0, 8, 8, 180, 90);
                     g.DrawLine(_pen, _startX + 4, _startY + 0, _startX + width - 5, _startY + 0);
                     //g.DrawArc(_pen, _startX + width - 9, _startY + 0, 8, 8, 270, 90);
@@ -1013,7 +1059,7 @@ namespace RebarSampling
                     g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
 
                     text = _rebar.GJsize.Item1.ToString();//箍筋高度
-                    fontX = _startX -30;
+                    fontX = _startX - 30;
                     fontY = _startY + height / 2 - 10;
                     g.DrawString(text, _font, _brush, fontX, fontY);//写线段长度，文本标注
 
@@ -1190,8 +1236,23 @@ namespace RebarSampling
         {
             return (int)(length / 25.4 * 100);
         }
+        /// <summary>
+        /// bitmap转化为base64字符串
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static string BitmapToBase64String(Bitmap bitmap)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // 将 Bitmap 保存到内存流（指定图片格式，如 PNG、JPEG）
+                bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png); // 推荐 PNG 避免失真
+                byte[] imageBytes = ms.ToArray(); // 从流中获取字节数组
 
-
+                // 将字节数组转为 Base64 字符串
+                return Convert.ToBase64String(imageBytes);
+            }
+        }
         /// <summary>
         /// 打印构件标签，并且根据棒材线材的选择情况，分别打印
         /// </summary>
@@ -1201,9 +1262,10 @@ namespace RebarSampling
         /// <param name="_gjlgPicked">是否选择箍筋拉勾</param>
         /// <param name="_No">项目编号、区域编号和部位编号组合成的元组</param>
         /// <returns></returns>
-        public static Bitmap PaintElementLabel(ElementData _element, Tuple<string, string, string> _No, bool _bangPicked = true, bool _xianPicked = true, bool _gjlgPicked = true)
+        public static Bitmap PaintElementLabel(EnumLabelType _type, ElementData _element, Tuple<string, string, string> _No, bool _bangPicked = true, bool _xianPicked = true, bool _gjlgPicked = true)
         {
             Bitmap bitmap = new Bitmap(mm2inch(GeneralClass.LabelPrintSizeWidth), mm2inch(GeneralClass.LabelPrintSizeHeight * 100));//新建一个bitmap，用于绘图
+            //bitmap.SetResolution(300, 300);//设置300dpi的分辨率
 
             int _totalHeight = 0;//图片实际总高度，用于重绘图片
 
@@ -1211,31 +1273,51 @@ namespace RebarSampling
             Graphics g = System.Drawing.Graphics.FromImage(bitmap);//从bitmap中建一个画图对象
             g.Clear(Color.White);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;// 设置高质量插值法              
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;// 设置高质量平滑度  
+            //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;// 设置高质量平滑度  
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;// 设置高质量平滑度  
+            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;//设置像素偏移
 
             Pen _pen = new Pen(new SolidBrush(Color.Black), 3);
             Point _start = new Point(10, 10);//起始点，可以调整整个页面的偏置
             Point _end = new Point(10, 10);//结束点，可以调整每行的偏置
 
-            PaintString(ref g, "中建壹品*汉韵公馆", _start.X, _start.Y, 15, FontStyle.Bold);//项目名称
+            PaintString(ref g, GeneralClass.CfgData.ProjectName, _start.X, _start.Y, 15, FontStyle.Bold);//项目名称
             _end.Y += _start.Y + 16;
-            //20250303关闭，领导要求去掉矩形框和料仓编号
-            //g.DrawRectangle(_pen, new Rectangle(_start.X, _start.Y + 30, 180, 40));//画矩形
-            //PaintString(ref g, "料仓编号：", _start.X + 10, _start.Y + 32);//
-            //PaintString(ref g, _element.warehouseNo + "-" + _element.wareNo, _start.X + 80, _start.Y + 32);//料仓编号
-            //PaintString(ref g, _element.batchSeri, _start.X + 2, _start.Y + 50);//批次流水号
+
 
             g.DrawLine(_pen, new Point(_start.X, _end.Y + 2), new Point(_start.X + 180, _end.Y + 2));//画黑线
             _end.Y += 2;
+
+            if (_type == EnumLabelType.LB_LABEL)//仅梁板线需要打印料仓编号及批次流水号
+            {
+                //20250303关闭，领导要求去掉矩形框和料仓编号
+                //g.DrawRectangle(_pen, new Rectangle(_start.X, _start.Y + 30, 180, 40));//画矩形
+                //PaintString(ref g, "料仓编号：", _start.X + 10, _start.Y + 32);//
+                PaintString(ref g, _element.warehouseNo + "-" + _element.wareNo, _start.X, _end.Y + 2);//料仓编号
+                _end.Y += _start.Y + 8;
+                PaintString(ref g, _element.batchSeri, _start.X, _end.Y);//批次流水号
+                _end.Y += _start.Y + 8;
+            }
 
 
             //PaintString(ref g, _element.projectName, _start.X, _start.Y + 80, 12, FontStyle.Regular);//项目名称
             //PaintString(ref g, _element.assemblyName, _start.X, _start.Y + 110, 12, FontStyle.Regular);//构件部位
             //PaintString(ref g, _element.elementName, _start.X, _start.Y + 150, 16, FontStyle.Bold);//构件名称，20号字体，加粗
+            int _height = 0;
+            PaintString(ref g, _element.projectName.Replace("汉韵公馆", ""), _start.X, _end.Y + 2, ref _height, 12,  FontStyle.Regular, true);//项目名称，注意去掉真正的项目名称
+            _end.Y += _height;
+            PaintString(ref g, _element.mainAssemblyName, _start.X, _end.Y, ref _height, 12,  FontStyle.Regular, true);//项目名称，注意去掉真正的项目名称
+            _end.Y += _height;
+            PaintString(ref g, _element.childAssemblyName, _start.X, _end.Y, ref _height, 12,  FontStyle.Regular, true);//子构件部位名称
+            _end.Y += _height;
+            PaintString(ref g, _element.elementName, _start.X, _end.Y, 16, FontStyle.Bold);//构件名称，20号字体，加粗
+            _end.Y += 28;
 
-            PaintString(ref g, _element.projectName.Replace("汉韵公馆", "") + _element.assemblyName, _start.X, _end.Y + 2, 12, FontStyle.Regular);//项目名称，注意去掉真正的项目名称
-            PaintString(ref g, _element.elementName, _start.X, _end.Y + 32, 16, FontStyle.Bold);//构件名称，20号字体，加粗
-            _end.Y += 72;
+            if (_type == EnumLabelType.REBAR_LABEL)//rebar零件标，需要打印标注序号
+            {
+                PaintString(ref g, "(序号：" + _element.rebarlist[0].SerialNum + ")", _start.X, _end.Y, 16, FontStyle.Bold);//构件名称，20号字体，加粗
+                _end.Y += 28;
+            }
 
             _pen = new Pen(new SolidBrush(Color.Black), 2);
             _pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;//画虚线、点线
@@ -1244,8 +1326,9 @@ namespace RebarSampling
             //int _Threshold = (GeneralClass.m_typeC12) ? 12 : ((GeneralClass.m_typeC14) ? 14 : 16);//先看12是否为棒材，再看14是否为棒材
 
 
-            int _height = 108;
-            int _count = 0;
+            //int _height = 108;
+            int _singleheight = 0;//单个rebardata的高度
+            //int _count = 0;
             for (int i = 0; i < _element.rebarlist.Count; i++)
             {
                 //如果没有选棒材，当前又是棒材；或者没有选线材，当前又是线材；或者是没有选择箍筋拉勾马凳，当前又是箍筋拉勾马凳，只有这三种情况，跳过至下一个循环
@@ -1254,40 +1337,36 @@ namespace RebarSampling
                     (!_gjlgPicked && (_element.rebarlist[i].RebarShapeType == EnumRebarShapeType.SHAPE_GJ ||
                                             _element.rebarlist[i].RebarShapeType == EnumRebarShapeType.SHAPE_LG ||
                                             _element.rebarlist[i].RebarShapeType == EnumRebarShapeType.SHAPE_MD))
-                    ) continue;
+                ) continue;
 
-                //g.DrawLine(_pen, new Point(_start.X, _start.Y + 210 + _height * _count), new Point(_start.X + 180, _start.Y + 210 + _height * _count));//画黑线
-                //PaintRebarString(ref g, _element.rebarlist[i].Level, _start.X + 0, _start.Y + 214 + _height * _count, 16, FontStyle.Regular);//钢筋直径符号
-                //PaintString(ref g, _element.rebarlist[i].Diameter.ToString(), _start.X + 15, _start.Y + 212 + _height * _count, 14, FontStyle.Regular);//直径
-                //PaintString(ref g, _element.rebarlist[i].iLength.ToString(), _start.X + 60, _start.Y + 212 + _height * _count, 14, FontStyle.Regular);//长度
-                //PaintString(ref g, _element.rebarlist[i].TotalPieceNum.ToString() + "根", _start.X + 130, _start.Y + 212 + _height * _count, 14, FontStyle.Regular);//数量
+                _singleheight = 0;//先重置singleheight
 
-                //Bitmap pic = PaintRebarPic(_element.rebarlist[i]);//直接画钢筋简图
-                //PaintImage(ref g, pic, new Point(_start.X, _start.Y + 240 + _height * _count), 180, 40);
-                //PaintString(ref g, _element.rebarlist[i].Description.ToString(), _start.X + 10, _start.Y + 280 + _height * _count, 9, FontStyle.Regular);//备注
+                g.DrawLine(_pen, new Point(_start.X, _end.Y), new Point(_start.X + 180, _end.Y));//画黑线
+                _singleheight += 2;     //黑线高度2
 
-                g.DrawLine(_pen, new Point(_start.X, _end.Y + _height * _count), new Point(_start.X + 180, _end.Y + _height * _count));//画黑线
+                PaintRebarString(ref g, _element.rebarlist[i].Level, _start.X + 0, _end.Y + 2 + _singleheight, 17, FontStyle.Regular);//钢筋直径符号
+                PaintString(ref g, _element.rebarlist[i].Diameter.ToString(), _start.X + 15, _end.Y + _singleheight, 13, FontStyle.Regular);//直径
+                PaintString(ref g, _element.rebarlist[i].iLength.ToString(), _start.X + 60, _end.Y + _singleheight, 13, FontStyle.Regular);//长度
+                PaintString(ref g, _element.rebarlist[i].TotalPieceNum.ToString() + "根", _start.X + 130, _end.Y + _singleheight, 13, FontStyle.Regular);//数量
+                _singleheight += 28;     //第一行字高度28
 
-                PaintRebarString(ref g, _element.rebarlist[i].Level, _start.X + 0, _end.Y + 4 + _height * _count, 17, FontStyle.Regular);//钢筋直径符号
-                PaintString(ref g, _element.rebarlist[i].Diameter.ToString(), _start.X + 15, _end.Y + 2 + _height * _count, 13, FontStyle.Regular);//直径
-                PaintString(ref g, _element.rebarlist[i].iLength.ToString(), _start.X + 60, _end.Y + 2 + _height * _count, 13, FontStyle.Regular);//长度
-                PaintString(ref g, _element.rebarlist[i].TotalPieceNum.ToString() + "根", _start.X + 130, _end.Y + 2 + _height * _count, 13, FontStyle.Regular);//数量
 
-                Bitmap pic = PaintRebarPic(_element.rebarlist[i]);//直接画钢筋简图
-                PaintImage(ref g, pic, new Point(_start.X, _end.Y + 30 + _height * _count), 180, 40);
+                int _realheight = 0;
+                Bitmap pic = PaintRebarPic(_element.rebarlist[i], out _realheight);//直接画钢筋简图
+                PaintImage(ref g, pic, new Point(_start.X, _end.Y + _singleheight), 180, _realheight);
+                _singleheight += _realheight;//钢筋简图的高度
 
-                PaintString(ref g, _element.rebarlist[i].Description.ToString(), _start.X + 10, _end.Y + 70 + _height * _count, 12, FontStyle.Bold, true);//备注
+                PaintString(ref g, _element.rebarlist[i].Description.ToString(), _start.X + 10, _end.Y + _singleheight, ref _height, 12,  FontStyle.Regular, true);//备注
+                _singleheight += _height;//备注的高度
 
-                _count++;//自增计数
+                _end.Y += _singleheight;//
             }
-            _end.Y += _height * _count;//
-
 
             int lineheight = 30;
             //g.DrawLine(_pen, new Point(_start.X, _start.Y + 315 + _height * (_count - 1)),
             //    new Point(_start.X + 180, _start.Y + 315 + _height * (_count - 1)));//画黑线
             g.DrawLine(_pen, new Point(_start.X, _end.Y + 2), new Point(_start.X + 180, _end.Y + 2));//画黑线
-            _end.Y += 3;
+            _end.Y += 5;
 
             //PaintString(ref g, "加工单元:", _start.X, _start.Y + 315 + _height * (_count - 1), 12, FontStyle.Regular);//加工单元
             //g.DrawLine(_pen, new Point(_start.X + 70, _start.Y + 315 + lineheight - 2 + _height * (_count - 1)),
@@ -1302,11 +1381,26 @@ namespace RebarSampling
             //            new Point(_start.X + 180, _start.Y + 315 + lineheight * 3 - 2 + _height * (_count - 1)));//画黑线
 
 
-            string _elementSeriNo = _No.Item1 + "_" + _No.Item2 + "_" + _No.Item3 + "_" + String.Join("", _element.elementName.Split('\n'));
-            Bitmap _qrCode = CreateQRCode(_elementSeriNo, 100, 100);//打印构件的流水号，形成二维码
-            //PaintImage(ref g, _qrCode, new Point(_start.X + 10, _start.Y + 315 + lineheight * 3 - 2 + _height * (_count - 1)), 160, 160);
-            PaintImage(ref g, _qrCode, new Point(_start.X + 10, _end.Y), 160, 160);
-            _end.Y += 160;
+            //string _elementSeriNo = _No.Item1 + "_" + _No.Item2 + "_" + _No.Item3 + "_" + String.Join("", _element.elementName.Split('\n'));
+            //string _elementSeriNo = _No.Item1 + "_" + _No.Item2 + "_" + _No.Item3 + "_" + _element.elementTotalNum+"/"+(_element.elementIndex+1);//20250402修改为构件编号，而不是之前的构件名称用来做构件总体编码
+
+            if (_type == EnumLabelType.ELEMENT_LABEL)//只有构件标才需要打二维码
+            {
+                string _elementSeriNo = CreateElementSeriNo(_No, _element);//20250402修改为构件编号，而不是之前的构件名称用来做构件总体编码
+                Bitmap _qrCode = CreateQRCode(_elementSeriNo, 100, 100);//打印构件的流水号，形成二维码
+                                                                        //PaintImage(ref g, _qrCode, new Point(_start.X + 10, _start.Y + 315 + lineheight * 3 - 2 + _height * (_count - 1)), 160, 160);
+                PaintImage(ref g, _qrCode, new Point(_start.X + 10, _end.Y), 160, 160);
+                _end.Y += 160;
+
+            }
+            else if(_type==EnumLabelType.REBAR_LABEL)//零件标需要打条形码
+            {
+                string _rebarSeriNo = CreateRebarSeriNo(_No, _element.rebarlist[0]);//20250402修改为构件编号，而不是之前的构件名称用来做构件总体编码
+                Bitmap _39Code = CreateQRCode(_rebarSeriNo, 100, 100);//打印零件的流水号，形成二维码
+                PaintImage(ref g, _39Code, new Point(_start.X + 10, _end.Y), 160, 160);
+                _end.Y += 160;
+
+            }
 
             //绘制先进院logo
             Bitmap _sourceImage = global::RebarSampling.Properties.Resources.logo;//获取先进院logo
@@ -1332,48 +1426,26 @@ namespace RebarSampling
             return _newbitmap;
 
 
-            #region old                        
-            //Bitmap bitmap = new Bitmap(mm2inch(GeneralClass.LabelPrintSizeWidth), mm2inch(GeneralClass.LabelPrintSizeHeight));//新建一个bitmap，用于绘图
-
-            //Graphics g = System.Drawing.Graphics.FromImage(bitmap);//从bitmap中建一个画图对象
-            //g.Clear(Color.White);
-            //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;// 设置高质量插值法              
-            //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;// 设置高质量平滑度  
-
-            //int fontsize = 0;
-            ////Font _font;
-            //Brush _brush;
-
-            //Pen _pen;
-            //Point _start = new Point(15, 10);
-
-            //fontsize = 15;
-            //PaintString(ref g, _element.projectName, _start.X, _start.Y/*, fontsize, FontStyle.Bold*/);//项目名称
-
-            ////画矩形
-            //_brush = new SolidBrush(Color.Green);
-            //_pen = new Pen(new SolidBrush(Color.Green), 3);
-            //g.DrawRectangle(_pen, new Rectangle(_start.X, _start.Y + 20, 170, 60));//画矩形
-
-            //PaintString(ref g, "构件部位：", _start.X, _start.Y + 90);//
-            //PaintString(ref g, _element.assemblyName, _start.X + 30, _start.Y + 110);//构件部位
-
-            //PaintString(ref g, "构件名称：", _start.X, _start.Y + 130);//
-            //PaintString(ref g, _element.elementName, _start.X + 30, _start.Y + 150);//构件名称
-            //PaintString(ref g, "料仓编号：", _start.X, _start.Y + 190);//
-            //PaintString(ref g, _element.warehouseNo + "-" + _element.wareNo, _start.X + 30, _start.Y + 210);//料仓编号
-
-            //PaintString(ref g, "钢筋形状：", _start.X, _start.Y + 230);//
-
-            //Bitmap _qrCode = CreateQRCode(_element.batchSeri == string.Empty ? "0" : _element.batchSeri, 180, 180);//打印构件的流水号，形成二维码
-            //PaintImage(ref g, _qrCode, new Point(_start.X, _start.Y + 250), 180, 180);
-
-            ////绘制先进院logo
-            //Bitmap _sourceImage = global::RebarSampling.Properties.Resources.logo;//获取先进院logo
-            //PaintImage(ref g, _sourceImage, new Point(_start.X, _start.Y + 430), 180, 30);
-
-            //return bitmap;
-            #endregion
+        }
+        /// <summary>
+        /// 自动生成构件标签的二维码内容，也即构件标签流水号
+        /// </summary>
+        /// <param name="_No"></param>
+        /// <param name="_element"></param>
+        /// <returns></returns>
+        private static string CreateElementSeriNo(Tuple<string, string, string> _No, ElementData _element)
+        {
+            return _No.Item1 + "_" + _No.Item2 + "_" + _No.Item3 + "_" + _element.elementTotalNum + "/" + (_element.elementIndex + 1);
+        }
+        /// <summary>
+        /// 自动生成零件标签的条形码内容，也即零件标签流水号
+        /// </summary>
+        /// <param name="_No"></param>
+        /// <param name="_rebar"></param>
+        /// <returns></returns>
+        private static string CreateRebarSeriNo(Tuple<string, string, string> _No, RebarData _rebar)
+        {
+            return _No.Item1 + "_" + _No.Item2 + "_" + _No.Item3 + "_" + _rebar.SerialNum;
         }
         public static Bitmap PaintCode(Tuple<string, string, string, string> _strs)
         {
@@ -1416,84 +1488,95 @@ namespace RebarSampling
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;// 设置高质量插值法              
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;// 设置高质量平滑度  
 
-            int fontsize = 0;
+            int _totalHeight = 0;//图片实际总高度，用于重绘图片
+
+            int fontsize = 15;
             //Font _font;
             //Brush _brush;
 
             Pen _pen;
-            Point _start = new Point(10, 10);
-
-            fontsize = 15;
-            //PaintString(ref g, _element.projectName, _start.X, _start.Y/*, fontsize, FontStyle.Bold*/);//项目名称
-
-            //画矩形
-            //_brush = new SolidBrush(Color.Green);
             _pen = new Pen(new SolidBrush(Color.Green), 3);
-            //p1 = new Point(0, 30);
-            //p2 = new Point(350, 30);
-            //g.DrawLine(_pen, p1, p2);
-            PaintString(ref g, "中建壹品*汉韵公馆", _start.X, _start.Y, 14);//项目名称
 
-            g.DrawRectangle(_pen, new Rectangle(_start.X, _start.Y + 30, 160, 40));//画矩形
+            Point _start = new Point(10, 10);//起始点，可以调整整个页面的偏置
+            Point _end = new Point(10, 10);//结束点，可以调整每行的偏置
 
-            //PaintString(ref g, "构件部位：", _start.X, _start.Y + 90);//
-            //PaintString(ref g, _element.assemblyName, _start.X + 70, _start.Y + 90);//构件部位
-            //PaintString(ref g, "构件名称：", _start.X, _start.Y + 110);//
-            //PaintString(ref g, _element.elementName, _start.X + 70, _start.Y + 110);//构件名称
-            //PaintString(ref g, "料仓编号：", _start.X, _start.Y + 130);//
-            //PaintString(ref g, _element.warehouseNo + "-" + _element.wareNo, _start.X + 70, _start.Y + 130);//料仓编号
+            PaintString(ref g, _pi._rebarList[0].ProjectName, _start.X, _start.Y, 15, FontStyle.Bold);//项目名称
+            _end.Y += _start.Y + 16;
 
-            PaintString(ref g, _pi._rebarList[0].ProjectName, _start.X, _start.Y + 80, 12, FontStyle.Regular);//项目名称
-            PaintString(ref g, _pi._rebarList[0].MainAssemblyName, _start.X, _start.Y + 110, 12, FontStyle.Regular);//项目名称
+            g.DrawLine(_pen, new Point(_start.X, _end.Y + 2), new Point(_start.X + 180, _end.Y + 2));//画黑线
+            _end.Y += 2;
 
-            //PaintString(ref g, _pi._rebarList[0].MainAssemblyName, _start.X + 70, _start.Y + 90);//构件部位名称
-            //PaintString(ref g, _pi._rebarList[0].ElementName, _start.X + 10, _start.Y + 45,20,FontStyle.Bold);//构件名称，20号字体，加粗
+            int _height = 0;
+            PaintString(ref g, _pi._rebarList[0].MainAssemblyName, _start.X, _end.Y, ref _height, 12, FontStyle.Regular, true);//部位名称，
+            _end.Y += _height;
+            //PaintString(ref g, _pi._rebarList[0].ChildAssemblyName, _start.X, _end.Y, ref _height, 12, FontStyle.Regular, true);//子构件部位名称
+            //_end.Y += _height;
+            //PaintString(ref g, _pi._rebarList[0].ElementName, _start.X, _end.Y, 16, FontStyle.Bold);//构件名称，20号字体，加粗
+            //_end.Y += 28;
 
+            //if (_type == EnumLabelType.REBAR_LABEL)//rebar零件标，需要打印标注序号
+            //{
+            PaintString(ref g, "(序号：" + _pi._rebarList[0].SerialNum + ")", _start.X, _end.Y, 16, FontStyle.Bold);//标注序号，20号字体，加粗
+            _end.Y += 28;
+            //}
 
+            _pen = new Pen(new SolidBrush(Color.Black), 2);
+            _pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;//画虚线、点线
 
+            int _singleheight = 0;//单个rebardata的高度
+            g.DrawLine(_pen, new Point(_start.X, _end.Y), new Point(_start.X + 180, _end.Y));//画黑线
+            _singleheight += 2;     //黑线高度2
 
+            PaintRebarString(ref g, _pi._rebarList[0].Level, _start.X + 0, _end.Y + 2 + _singleheight, 17, FontStyle.Regular);//钢筋直径符号
+            PaintString(ref g, _pi._rebarList[0].Diameter.ToString(), _start.X + 15, _end.Y + _singleheight, 13, FontStyle.Regular);//直径
+            PaintString(ref g, _pi._rebarList[0].iLength.ToString(), _start.X + 60, _end.Y + _singleheight, 13, FontStyle.Regular);//长度
+            PaintString(ref g, _pi._rebarList[0].TotalPieceNum.ToString() + "根", _start.X + 130, _end.Y + _singleheight, 13, FontStyle.Regular);//数量
+            _singleheight += 28;     //第一行字高度28
 
-            PaintString(ref g, "直径：", _start.X, _start.Y + 140);//
-            //PaintRebarString(ref g, "C", _start.X + 70, _start.Y + 140, 18, FontStyle.Bold);//钢筋直径符号
-            PaintRebarString(ref g, _pi._rebarList[0].Level, _start.X + 70, _start.Y + 140, 18, FontStyle.Regular);//钢筋直径符号
-            PaintString(ref g, _pi._diameter.ToString(), _start.X + 85, _start.Y + 140, 16, FontStyle.Regular);//直径
-
-            PaintString(ref g, "长度：", _start.X, _start.Y + 170);//
-            PaintString(ref g, _pi.length.ToString(), _start.X + 70, _start.Y + 170, 16, FontStyle.Regular);//长度
-            PaintString(ref g, "数量：", _start.X, _start.Y + 200);//
-            PaintString(ref g, _pi.num.ToString() + "根", _start.X + 70, _start.Y + 200, 16, FontStyle.Regular);//数量
-            PaintString(ref g, "加工信息：", _start.X, _start.Y + 230);//
-            PaintString(ref g, _pi._cornerMsg, _start.X, _start.Y + 245, 10, FontStyle.Regular);//数量
-
-
-            PaintString(ref g, "钢筋形状：", _start.X, _start.Y + 295);//
-            //Bitmap pic = (Bitmap)GeneralClass.interactivityData?.getImageUsePicNum(_pi._picTypeNum);
-            Bitmap pic = PaintRebarPic(_pi._rebarList[0]);//直接画钢筋简图
-            PaintImage(ref g, pic, new Point(_start.X, _start.Y + 310), 180, 40);
-
-
-            //PaintString(ref g, "加工厂：", 10, 180);//项目名称
-            //PaintString(ref g, "庙岭加工基地", 80, 180);//杨春湖华侨城
-            //PaintString(ref g, "加工日期：", 10, 200);//项目名称
-            //PaintString(ref g, "2024-04-22", 80, 200);//杨春湖华侨城
-            //PaintString(ref g, "需求日期：", 10, 220);//项目名称
-            //PaintString(ref g, "2024-04-25", 80, 220);//杨春湖华侨城
+            int _realheight = 40;
+            //Bitmap pic = PaintRebarPic(_pi._rebarList[0], out _realheight);//直接画钢筋简图
+            Bitmap pic = PaintRebarPic(_pi._rebarList[0]);//老式的根据边角结构画钢筋简图
 
 
-            Bitmap _qrCode = CreateQRCode(_pi._batchseri == string.Empty ? "0" : _pi._batchseri, 120, 120);//打印构件的流水号，形成二维码
-            //g.DrawImage(_qrCode, new System.Drawing.Point(80, 240));
-            PaintImage(ref g, _qrCode, new Point(_start.X + 40, _start.Y + 350), 120, 120);
+            PaintImage(ref g, pic, new Point(_start.X, _end.Y + _singleheight), 180, _realheight);
+            _singleheight += _realheight;//钢筋简图的高度
+
+            //PaintString(ref g, _pi._rebarList[0].Description.ToString(), _start.X + 10, _end.Y + _singleheight, ref _height, 12, FontStyle.Regular, true);//备注
+            //_singleheight += _height;//备注的高度
+
+            _end.Y += _singleheight;//
+
+
+
+            int lineheight = 30;
+            g.DrawLine(_pen, new Point(_start.X, _end.Y + 2), new Point(_start.X + 180, _end.Y + 2));//画黑线
+            _end.Y += 5;
+
+            string _rebarSeriNo = CreateRebarSeriNo(new Tuple<string,string,string>("PJ0001","D001","B001"), _pi._rebarList[0]);//20250402修改为构件编号，而不是之前的构件名称用来做构件总体编码
+            Bitmap _39Code = CreateQRCode(_rebarSeriNo, 100, 100);//打印零件的流水号，形成二维码
+            PaintImage(ref g, _39Code, new Point(_start.X + 10, _end.Y), 160, 160);
+            _end.Y += 160;
 
             //绘制先进院logo
             Bitmap _sourceImage = global::RebarSampling.Properties.Resources.logo;//获取先进院logo
-            PaintImage(ref g, _sourceImage, new Point(_start.X, _start.Y + 470), 180, 30);
-            //int _width = 168;
-            //int _height = 24;
-            //double xRatio = (double)_width / _sourceImage.Width;// 计算缩略图的缩放比例  
-            //double yRatio = (double)_height / _sourceImage.Height;
-            //double ratio = Math.Min(xRatio, yRatio);
-            //g.DrawImage(_sourceImage, 10, 320, (int)(_sourceImage.Width * ratio), (int)(_sourceImage.Height * ratio));// 绘制缩略图  
+            //PaintImage(ref g, _sourceImage, new Point(_start.X, _start.Y + 475 + lineheight * 3 + _height * (_count - 1)), 180, 30);
+            PaintImage(ref g, _sourceImage, new Point(_start.X, _end.Y), 180, 30);
+            _end.Y += 30;
 
+            //_totalHeight = _start.Y + 475 + lineheight * 3 + _height * (_count - 1) + 30;
+            _totalHeight = _end.Y;
+
+            g.Dispose();//回收资源
+
+
+
+            //新建一个bitmap，根据图片实际大小重绘图片
+            Bitmap _newbitmap = new Bitmap(mm2inch(GeneralClass.LabelPrintSizeWidth), _totalHeight);
+
+            using (Graphics gg = System.Drawing.Graphics.FromImage(_newbitmap))//从_newbitmap中建一个画图对象
+            {
+                gg.DrawImage(bitmap, 0, 0);
+            }
             return bitmap;
         }
 
@@ -1525,7 +1608,7 @@ namespace RebarSampling
         /// <param name="_fontsize"></param>
         /// <param name="_style"></param>
         /// <param name="_multi">区分是否画多行，如果false，则只显示一行</param>
-        private static void PaintString(ref Graphics _g, string _text, int _startX, int _startY, int _fontsize = 10, FontStyle _style = FontStyle.Regular, bool _multi = false)
+        private static void PaintString(ref Graphics _g, string _text, int _startX, int _startY, ref int _Height, int _fontsize = 10,  FontStyle _style = FontStyle.Regular, bool _multi = true)
         {
             Brush _brush;
             Font _font;
@@ -1540,10 +1623,14 @@ namespace RebarSampling
                 descRect.Size = new Size(180, ((int)_g.MeasureString(_text, _font, 180, StringFormat.GenericTypographic).Height));
 
                 _g.DrawString(_text, _font, _brush, descRect);
+
+                _Height = Convert.ToInt32(descRect.Size.Height);
             }
             else
             {
                 _g.DrawString(_text, _font, _brush, new Point(_startX, _startY));
+
+                _Height = 0;
             }
 
 
@@ -1563,6 +1650,16 @@ namespace RebarSampling
             //sf.Alignment = StringAlignment.Center;//水平居中
             //sf.LineAlignment = StringAlignment.Center;//垂直居中
 
+        }
+        private static void PaintString(ref Graphics _g, string _text, int _startX, int _startY, int _fontsize = 10, FontStyle _style = FontStyle.Regular)
+        {
+            Brush _brush;
+            Font _font;
+
+            _font = new Font("微软雅黑", _fontsize, _style);
+            _brush = new SolidBrush(Color.Black);
+
+            _g.DrawString(_text, _font, _brush, new Point(_startX, _startY));
         }
         /// <summary>
         /// 画钢筋直径符号专用字体，使用GJFH字体库（SJQY）
@@ -1610,6 +1707,29 @@ namespace RebarSampling
                 return writer.Write(asset);
             }
             catch (Exception e) { MessageBox.Show("CreateQRCode error:" + e.Message); return null; }
+
+        }
+        public static Bitmap Create39Code(string asset, int _width, int _height)
+        {
+            try
+            {
+                EncodingOptions options = new QrCodeEncodingOptions
+                {
+                    DisableECI = true,
+                    CharacterSet = "UTF-8", //编码
+                    Width = _width,             //宽度
+                    Height = _height             //高度
+                };
+                BarcodeWriter writer = new BarcodeWriter();
+                writer.Format = BarcodeFormat.CODE_39;//QR码
+                                                      //writer.Format = BarcodeFormat.DATA_MATRIX;//DATA_MATRIX码
+                                                      //writer.Format = BarcodeFormat.CODE_39;//39码
+                                                      //writer.Format = BarcodeFormat.CODE_128;//128码
+
+                writer.Options = options;
+                return writer.Write(asset);
+            }
+            catch (Exception e) { MessageBox.Show("Create39Code error:" + e.Message); return null; }
 
         }
 

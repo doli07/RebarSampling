@@ -474,13 +474,21 @@ namespace RebarSampling
         /// </summary>
         PROJECT_NAME = 0,
         /// <summary>
-        /// 主构件名称
+        /// 主构件部位名称
         /// </summary>
         MAIN_ASSEMBLY_NAME,   //
+        /// <summary>
+        /// 子构件部位名称
+        /// </summary>
+        CHILD_ASSEMBLY_NAME,
         /// <summary>
         /// 子构件名称
         /// </summary>
         ELEMENT_NAME,           //
+        /// <summary>
+        /// 料表编号
+        /// </summary>
+        TABLE_NO,
         /// <summary>
         /// 料表名称
         /// </summary>
@@ -513,6 +521,10 @@ namespace RebarSampling
         /// 边角结构
         /// </summary>
         CORNER_MESSAGE,         //
+        /// <summary>
+        /// 边角结构信息备份
+        /// </summary>
+        CORNER_MESSAGE_BK,
         /// <summary>
         /// 下料长度
         /// </summary>
@@ -612,7 +624,22 @@ namespace RebarSampling
         /// 批量锯切一捆的临时编号
         /// </summary>
         TEMP_NO,
-
+        /// <summary>
+        /// 是否在产线加工
+        /// </summary>
+        IFMAKE_IN_LINE,
+        /// <summary>
+        /// 是否勾选进入加工单
+        /// </summary>
+        IFPICK_IN_BILL,
+        /// <summary>
+        /// 是否下发pcs
+        /// </summary>
+        IFSEND_TO_PCS,
+        /// <summary>
+        /// 是否加工完成
+        /// </summary>
+        IFMAKE_DONE,
 
         maxRebarColNum
     }
@@ -882,19 +909,23 @@ namespace RebarSampling
     {
         NONE = -1,
         /// <summary>
-        /// 1~15(8仓)
+        /// 1~15(12包，1仓一包)
         /// </summary>
-        WARESET_8,
+        WARESET_12,
         /// <summary>
-        /// 16~50(4仓)
+        /// 16~50(6包，2仓一包)
         /// </summary>
-        WARESET_4,
+        WARESET_6,
         /// <summary>
-        /// 51~100(2仓)
+        /// 51~100(3包，4仓一包)
+        /// </summary>
+        WARESET_3,
+        /// <summary>
+        /// 100~(2包，6仓一包)
         /// </summary>
         WARESET_2,
         /// <summary>
-        /// 100~(1仓)
+        /// 100~(1包，12仓一包)
         /// </summary>
         WARESET_1,
 
@@ -1018,6 +1049,14 @@ namespace RebarSampling
         maxFactoryType
     }
 
+    public enum EnumLanguageType
+    {
+        NONE=-1,
+        Chinese,
+        English,
+
+        maxLanguageType
+    }
     /// <summary>
     /// 料单类型
     /// </summary>
@@ -1137,6 +1176,14 @@ namespace RebarSampling
         /// 梁板线标签
         /// </summary>
         LB_LABEL,
+        /// <summary>
+        /// 构件标
+        /// </summary>
+        ELEMENT_LABEL,
+        /// <summary>
+        /// 零件标，即一行钢筋一个标
+        /// </summary>
+        REBAR_LABEL,
 
         maxLabelType
     }

@@ -85,11 +85,28 @@ namespace RebarSampling
                 dbHelper.CreateTable(tableName);
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PROJECT_NAME], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME], dbHelper.GetDataType(DbType.String));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.ELEMENT_NAME], dbHelper.GetDataType(DbType.String));
             }
             catch (Exception ex) { throw ex; }
         }
+        /// <summary>
+        /// 创建料单管理表
+        /// </summary>
+        /// <param name="tableName"></param>
+        public void CreateBillManageTable(string tableName)
+        {
+            try
+            {
+                dbHelper.CreateTable(tableName);
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TABLE_NAME], dbHelper.GetDataType(DbType.String));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME], dbHelper.GetDataType(DbType.String));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME], dbHelper.GetDataType(DbType.String));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.ELEMENT_NAME], dbHelper.GetDataType(DbType.String));
+            }
+            catch (Exception ex) { throw ex; }
 
+        }
         /// <summary>
         /// 创建梁板线的构件批的表，列名依次为：生产批号、料仓号、仓位号、仓位设置、临时编号、项目名称、主构件名称、子构件名称
         /// </summary>
@@ -108,6 +125,7 @@ namespace RebarSampling
 
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PROJECT_NAME], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME], dbHelper.GetDataType(DbType.String));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.ELEMENT_NAME], dbHelper.GetDataType(DbType.String));
             }
             catch (Exception ex) { throw ex; }
@@ -202,6 +220,8 @@ namespace RebarSampling
                 dbHelper.CreateTable(tableName);
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PROJECT_NAME], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME], dbHelper.GetDataType(DbType.String));
+                //dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME], dbHelper.GetDataType(DbType.String));
+
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFPICK], dbHelper.GetDataType(DbType.Boolean));
             }
             catch (Exception ex) { throw ex; }
@@ -219,7 +239,9 @@ namespace RebarSampling
                 dbHelper.CreateTable(tableName);
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PROJECT_NAME], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME], dbHelper.GetDataType(DbType.String));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.ELEMENT_NAME], dbHelper.GetDataType(DbType.String));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TABLE_NO], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TABLE_NAME], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TABLE_SHEET_NAME], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PIC_NO], dbHelper.GetDataType(DbType.String));
@@ -228,13 +250,15 @@ namespace RebarSampling
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.REBAR_PIC], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PIC_MESSAGE], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CORNER_MESSAGE], dbHelper.GetDataType(DbType.String));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CORNER_MESSAGE_BK], dbHelper.GetDataType(DbType.String));
+
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.LENGTH], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.ISMULTI], dbHelper.GetDataType(DbType.Boolean));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PIECE_NUM_UNIT_NUM], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TOTAL_PIECE_NUM], dbHelper.GetDataType(DbType.Int32));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TOTAL_WEIGHT], dbHelper.GetDataType(DbType.Double));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.DESCRIPTION], dbHelper.GetDataType(DbType.String));
-                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.SERIALNUM], dbHelper.GetDataType(DbType.Int32));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.SERIALNUM], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.ISORIGINAL], dbHelper.GetDataType(DbType.Boolean));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFTAO], dbHelper.GetDataType(DbType.Boolean));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFBEND], dbHelper.GetDataType(DbType.Boolean));
@@ -243,22 +267,30 @@ namespace RebarSampling
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.BAR_TYPE], dbHelper.GetDataType(DbType.String));
                 dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.FABRICATION_TYPE], dbHelper.GetDataType(DbType.String));
 
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFMAKE_IN_LINE], dbHelper.GetDataType(DbType.Boolean));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFPICK_IN_BILL], dbHelper.GetDataType(DbType.Boolean));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFSEND_TO_PCS], dbHelper.GetDataType(DbType.Boolean));
+                dbHelper.AddColumn(tableName, GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFMAKE_DONE], dbHelper.GetDataType(DbType.Boolean));
+
 
                 //        dbHelper.AddColumn(tableName, GeneralClass.RebarColumnName[i], rebarData.ElementName.GetType().Name);
             }
             catch (Exception ex) { throw ex; }
 
         }
-        public string InsertRowElementData(string tableName, string projectName, string assemblyName, string elementName)
+        public string InsertRowElementData(string tableName, string projectName, string assemblyName, string childAssemblyName, string elementName)
         {
             try
             {
                 //示例：string sqlstr = "insert into " + tableName + "(" + columnName + ")" + "values(" + itemInfo + ")";
 
+
                 string sqlstr = "insert into " + tableName + "(";
 
                 sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PROJECT_NAME] + ",";
                 sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME] + ",";
+                sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME] + ",";
+
                 sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.ELEMENT_NAME] + ",";
 
                 sqlstr = sqlstr.Substring(0, sqlstr.Length - 1);//去掉尾部的逗号
@@ -266,6 +298,8 @@ namespace RebarSampling
 
                 sqlstr += "'" + projectName + "'" + ",";
                 sqlstr += "'" + assemblyName + "'" + ",";
+                sqlstr += "'" + childAssemblyName + "'" + ",";
+
                 sqlstr += "'" + elementName + "'";
 
                 //sqlstr = sqlstr.Substring(0, sqlstr.Length - 1);//去掉尾部的逗号
@@ -322,7 +356,7 @@ namespace RebarSampling
             }
             catch (Exception e) { throw e; }
         }
-        public string InsertRowPiCut(string tableName,string _level, int _diameter, int _length, int _num, string _cornerMsg, string _pictypeNum,string _projectName,string _assemblyName,string _elementName)
+        public string InsertRowPiCut(string tableName, string _level, int _diameter, int _length, int _num, string _cornerMsg, string _pictypeNum, string _projectName, string _assemblyName, string _elementName)
         {
             try
             {
@@ -358,10 +392,10 @@ namespace RebarSampling
                 //sqlstr += _ifbend.ToString() + ",";
                 //sqlstr += _iftao.ToString() + ",";
                 //sqlstr += "'" + _taosiSet + "'" + ",";
-                sqlstr += "'" + _pictypeNum + "'"+",";
+                sqlstr += "'" + _pictypeNum + "'" + ",";
                 sqlstr += "'" + _projectName + "'" + ",";
                 sqlstr += "'" + _assemblyName + "'" + ",";
-                sqlstr += "'" + _elementName + "'"+",";
+                sqlstr += "'" + _elementName + "'" + ",";
 
                 sqlstr = sqlstr.Substring(0, sqlstr.Length - 1);//去掉尾部的逗号
                 sqlstr += ")";
@@ -441,6 +475,7 @@ namespace RebarSampling
                 sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TAOSI_SET] + ",";
                 sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PROJECT_NAME] + ",";
                 sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME] + ",";
+                sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME] + ",";
                 sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.ELEMENT_NAME] + ",";
 
                 sqlstr = sqlstr.Substring(0, sqlstr.Length - 1);//去掉尾部的逗号
@@ -454,6 +489,7 @@ namespace RebarSampling
                 sqlstr += "'" + _taosiSet + "'" + ",";
                 sqlstr += "'" + _element.projectName + "'" + ",";
                 sqlstr += "'" + _element.assemblyName + "'" + ",";
+                sqlstr += "'" + _element.childAssemblyName + "'" + ",";
                 sqlstr += "'" + _element.elementName + "'";
 
                 //sqlstr = sqlstr.Substring(0, sqlstr.Length - 1);//去掉尾部的逗号
@@ -463,7 +499,7 @@ namespace RebarSampling
             }
             catch (Exception e) { throw e; }
         }
-        public string InsertRowPickData(string tableName, string projectName, string assemblyName, bool ifpick)
+        public string InsertRowPickData(string tableName, string projectName, string assemblyName,/*string childAssemblyName,*/ bool ifpick)
         {
             try
             {
@@ -473,6 +509,8 @@ namespace RebarSampling
 
                 sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PROJECT_NAME] + ",";
                 sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME] + ",";
+                //sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME] + ",";
+
                 sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFPICK] + ",";
 
                 sqlstr = sqlstr.Substring(0, sqlstr.Length - 1);//去掉尾部的逗号
@@ -480,6 +518,8 @@ namespace RebarSampling
 
                 sqlstr += "'" + projectName + "'" + ",";
                 sqlstr += "'" + assemblyName + "'" + ",";
+                //sqlstr += "'" + childAssemblyName + "'" + ",";
+
                 sqlstr += ifpick.ToString();
 
                 //sqlstr = sqlstr.Substring(0, sqlstr.Length - 1);//去掉尾部的逗号
@@ -515,6 +555,11 @@ namespace RebarSampling
                             {
                                 sqlstr += GeneralClass.sRebarColumnName[i] + ",";
                             }
+                            sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFMAKE_IN_LINE] + ",";
+                            sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFPICK_IN_BILL] + ",";
+                            sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFSEND_TO_PCS] + ",";
+                            sqlstr += GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.IFMAKE_DONE] + ",";
+
                             sqlstr = sqlstr.Substring(0, sqlstr.Length - 1);//去掉尾部的逗号
                             sqlstr += ")" + "values(";
 
@@ -524,7 +569,9 @@ namespace RebarSampling
                             //}
                             sqlstr += "'" + rowdata.ProjectName + "'" + ",";
                             sqlstr += "'" + rowdata.MainAssemblyName + "'" + ",";
+                            sqlstr += "'" + rowdata.ChildAssemblyName + "'" + ",";
                             sqlstr += "'" + rowdata.ElementName + "'" + ",";
+                            sqlstr += "'" + rowdata.TableNo + "'" + ",";
                             sqlstr += "'" + rowdata.TableName + "'" + ",";
                             sqlstr += "'" + rowdata.TableSheetName + "'" + ",";
                             sqlstr += "'" + rowdata.PicTypeNum + "'" + ",";
@@ -533,20 +580,27 @@ namespace RebarSampling
                             sqlstr += "'" + rowdata.RebarPic + "'" + ",";
                             sqlstr += "'" + rowdata.PicMessage + "'" + ",";
                             sqlstr += "'" + rowdata.CornerMessage + "'" + ",";
+                            sqlstr += "'" + rowdata.CornerMessageBK + "'" + ",";
                             sqlstr += "'" + rowdata.Length + "'" + ",";
                             sqlstr += rowdata.IsMulti.ToString() + ",";
                             sqlstr += "'" + rowdata.PieceNumUnitNum + "'" + ",";
                             sqlstr += rowdata.TotalPieceNum.ToString() + ",";
                             sqlstr += rowdata.TotalWeight.ToString() + ",";
                             sqlstr += "'" + rowdata.Description + "'" + ",";
-                            sqlstr += rowdata.SerialNum.ToString() + ",";
+                            //sqlstr += rowdata.SerialNum.ToString() + ",";
+                            sqlstr += "'" + rowdata.SerialNum + "'" + ",";
                             sqlstr += rowdata.IsOriginal.ToString() + ",";
                             sqlstr += rowdata.IfTao.ToString() + ",";
                             sqlstr += rowdata.IfBend.ToString() + ",";
                             sqlstr += rowdata.IfCut.ToString() + ",";
-                            sqlstr += rowdata.IfBendTwice.ToString()+",";
+                            sqlstr += rowdata.IfBendTwice.ToString() + ",";
                             sqlstr += "'" + rowdata.BarType + "'" + ",";
-                            sqlstr += "'" + rowdata.FabricationType + "'" ;
+                            sqlstr += "'" + rowdata.FabricationType + "'" + ",";
+                            sqlstr += rowdata.IfMakeInLine.ToString() + ",";
+                            sqlstr += rowdata.IfPickInBill.ToString() + ",";
+                            sqlstr += rowdata.IfSendToPCS.ToString() + ",";
+                            sqlstr += rowdata.IfMakeDone.ToString();
+
 
 
 
@@ -556,7 +610,7 @@ namespace RebarSampling
                             return sqlstr;
 
                         }
-                        catch (Exception) { throw; }
+                        catch (Exception ) { throw ; }
                         finally { /*command.Dispose(); connection.Close();*/ }
                     }
                 }
@@ -568,7 +622,7 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_ifInit"></param>
         /// <param name="_list"></param>
-        public static void SaveAllPiCutToDB(bool _ifInit,List<List<Rebar>> _list)
+        public static void SaveAllPiCutToDB(bool _ifInit, List<List<Rebar>> _list)
         {
             if (_ifInit)
             {
@@ -584,11 +638,11 @@ namespace RebarSampling
                 int _num = item.Count;
                 string _cornermsg = item[0].CornerMessage;
                 string _picTypeNum = item[0].PicTypeNum;
-                string _projectName=item[0].ProjectName;
+                string _projectName = item[0].ProjectName;
                 string _assemblyName = item[0].MainAssemblyName;
                 string _elementName = item[0].ElementName;
-                sqls.Add(GeneralClass.DBOpt.InsertRowPiCut(GeneralClass.TableName_PiCutBatch, _level,_diameter, _length, _num, _cornermsg, _picTypeNum,
-                    _projectName,_assemblyName,_elementName));
+                sqls.Add(GeneralClass.DBOpt.InsertRowPiCut(GeneralClass.TableName_PiCutBatch, _level, _diameter, _length, _num, _cornermsg, _picTypeNum,
+                    _projectName, _assemblyName, _elementName));
             }
 
             GeneralClass.DBOpt.dbHelper.ExecuteSqlsTran(sqls);//批量存入
@@ -644,6 +698,21 @@ namespace RebarSampling
                 }
             }
 
+            GeneralClass.DBOpt.dbHelper.ExecuteSqlsTran(sqls);//批量存入
+        }
+        /// <summary>
+        /// 保存所有rebardata存入数据库
+        /// </summary>
+        /// <param name="_rebarlist"></param>
+        public static void SaveAllRebarToDB(List<RebarData> _rebarlist)
+        {
+            GeneralClass.DBOpt.InitRebarDB(GeneralClass.TableName_AllRebar);
+            List<string> sqls = new List<string>();
+
+            foreach (var item in _rebarlist)
+            {
+                sqls.Add(GeneralClass.DBOpt.InsertRowRebarData(GeneralClass.TableName_AllRebar, item));
+            }
             GeneralClass.DBOpt.dbHelper.ExecuteSqlsTran(sqls);//批量存入
         }
         /// <summary>
@@ -791,7 +860,24 @@ namespace RebarSampling
             }
             catch (Exception ex) { MessageBox.Show("InitElementDB error:" + ex.Message); }
         }
+        /// <summary>
+        /// 初始化料单管理表，如果不存在该表，则创建，如果有，不需要操作清空
+        /// </summary>
+        /// <param name="tablename"></param>
+        public void InitBillManageDB(string tablename)
+        {
+            try
+            {
+                if (!dbHelper.IsTableEXIST(tablename))    //如果table不存在，则创建新表
+                {
+                    CreateBillManageTable(tablename);
+                }
+                //dbHelper.DeleteTable(tablename);         //清空表
+                //dbHelper.DeleteTableSequence(tablename); //清空表的自增列序号
+            }
+            catch (Exception ex) { MessageBox.Show("InitElementDB error:" + ex.Message); }
 
+        }
         public void InitPiCutDB_QZ(string tablename)
         {
             try
@@ -874,12 +960,14 @@ namespace RebarSampling
             for (int i = 0; i < _dtlist.Count; i++)
             {
                 DataTable dt = _dtlist[i].Item3;
-                string projectName=_dtlist[i].Item1;//项目名称
+                string projectName = _dtlist[i].Item1;//项目名称
                 string assemblyName = _dtlist[i].Item2;//构件部位
                 sheetname = dt.TableName;
 
                 //检查是否有“序号”这一列
                 bool _haveSeri = (dt.Columns[1].ColumnName == "序号") ? true : false;
+
+                string childAssembly = "";//20250624 某些料单有子构件部位的标识，
 
                 for (int j = 0; j < dt.Rows.Count; j++)
                 {
@@ -887,7 +975,14 @@ namespace RebarSampling
                     if (dr == null) continue;
 
                     int startindex = _haveSeri ? 2 : 1;
+                    bool _haveTongji = dt.Columns[startindex + 10].ColumnName == "统计\n说明" ? true : false;
 
+
+                    if (dr["构件名称"].ToString() != "" && dr["边角结构"].ToString() == "")//20250624如果边角结构是空的，但构件名称不为空，说明此行为子构件部位说明行，后续构件均使用此子构件部位名称
+                    {
+                        childAssembly = dr["构件名称"].ToString();
+                        continue;
+                    }
                     //存入数据库
                     if (dr["编号"].ToString() == "" || dr["边角结构"].ToString() == "")//以是否有钢筋类型编号作为此行是否为有效数据的判定条件
                     {
@@ -898,8 +993,9 @@ namespace RebarSampling
 
                     rebarData.TableName = System.IO.Path.GetFileNameWithoutExtension(filename); //获取excel文件名作为根节点名称,不带后缀名;//将filename赋予钢筋的料表名称
                     rebarData.TableSheetName = sheetname;//将sheetname赋予钢筋的料表sheet名称
-                    rebarData.ProjectName = projectName; //
-                    rebarData.MainAssemblyName = assemblyName;//
+                    rebarData.ProjectName = projectName; //项目名称
+                    rebarData.MainAssemblyName = assemblyName;//主构件部位名称
+                    rebarData.ChildAssemblyName = childAssembly.Replace("%", "");//子构件部位名称，去掉某些特殊字符，例如%
 
                     rebarData.ElementName = dr[0].ToString();
                     rebarData.PicTypeNum = dr[startindex].ToString();
@@ -921,6 +1017,7 @@ namespace RebarSampling
 
                     rebarData.PicMessage = dr[startindex + 3].ToString();//图形信息
                     rebarData.CornerMessage = dr[startindex + 4].ToString();//边角结构信息
+                    rebarData.CornerMessageBK = dr[startindex + 4].ToString();//边角结构信息备份
 
                     string _length = dr[startindex + 5].ToString();//下料长度
                     if (_length != "")
@@ -946,7 +1043,8 @@ namespace RebarSampling
                     rebarData.Description = dr[startindex + 9].ToString();//备注说明
 
                     //int.TryParse(dr[startindex + 10].ToString(), out tt_i);
-                    //rebarData.SerialNum = tt_i;
+                    //rebarData.SerialNum = tt_i;     //料单中钢筋流水号
+                    rebarData.SerialNum = _haveTongji ? dr[startindex + 11].ToString() : dr[startindex + 10].ToString();     //料单中钢筋流水号
 
 
                     //ModifyRebarData(ref rebarData);
@@ -1310,17 +1408,17 @@ namespace RebarSampling
             List<RebarData> _rebarlist = new List<RebarData>();
 
             GeneralClass.AllRebarList = GeneralClass.DBOpt.GetAllRebarList(GeneralClass.TableName_AllRebar);//取得所有的钢筋数据list
-            //GeneralClass.interactivityData?.printlog(1, "2");
+                                                                                                            //GeneralClass.interactivityData?.printlog(1, "2");
 
             //根据项目名称、主构件名称获取所有的钢筋list
             //List<GroupbyProjectAssemblyList> _grouplist = QueryAllListByProjectAssembly(GeneralClass.AllRebarList);
-           var  _grouplist = GeneralClass.AllRebarList.GroupBy(x => new { x.TableName, x.TableSheetName }).Select(
-                y => new 
-                {
-                    _excelName = y.Key.TableName,
-                    _excelsheetName = y.Key.TableSheetName,
-                    _datalist = y.ToList()
-                }).ToList();
+            var _grouplist = GeneralClass.AllRebarList.GroupBy(x => new { x.TableName, x.TableSheetName }).Select(
+                 y => new
+                 {
+                     _excelName = y.Key.TableName,
+                     _excelsheetName = y.Key.TableSheetName,
+                     _datalist = y.ToList()
+                 }).ToList();
 
             //判断是否输入有效的_excelName和_excelsheetName
             if (_excelName == "" && _excelsheetName == "")
@@ -1364,9 +1462,12 @@ namespace RebarSampling
                 {
                     _element = new ElementData();
                     _element.projectName = _rebarlist[i].ProjectName;
-                    _element.assemblyName = _rebarlist[i].MainAssemblyName;
+                    _element.mainAssemblyName = _rebarlist[i].MainAssemblyName;
+                    _element.childAssemblyName = _rebarlist[i].ChildAssemblyName;
                     _element.elementName = (_rebarlist[i].ElementName != "") ? _rebarlist[i].ElementName : "default";//极少数情况，会出现首行没有构件名，用缺省名代替                                 
                     _element.rebarlist.Add(_rebarlist[i]);
+
+                    if (_rebarlist.Count==1) { _elementList.Add(_element);break; }//如果只有一行，则第一行就是一个单独构件，20250926
 
                     continue;
                 }
@@ -1376,7 +1477,9 @@ namespace RebarSampling
 
                 //GeneralClass.interactivityData?.printlog(1, "3.2");
 
-                if (i != 0 && _rebarlist[i].ElementName != "" && _rebarlist[i].ElementName != _rebarlist[i - 1].ElementName)//构件名不为空，且跟上一个元素的构件名不一样，则新建构件
+                if (i != 0 && _rebarlist[i].ElementName != "" &&
+                   (_rebarlist[i].ElementName != _rebarlist[i - 1].ElementName ||
+                    _rebarlist[i].ChildAssemblyName != _rebarlist[i - 1].ChildAssemblyName))//构件名不为空，且跟上一个rebardata的构件名或子构件部位名有一个不一样，则新建构件
                 {
                     ////if (_rebarlist[i - 1].ElementName.IndexOf('#') > -1 && _rebarlist[i].ElementName.IndexOf('#') == -1)//前一行含有“#”，本行不含“#”，则表示本行为注释
                     //if (_rebarlist[i].ElementName.IndexOf('#') == -1)//本行不含“#”，则表示本行为注释，20240517修改
@@ -1397,7 +1500,8 @@ namespace RebarSampling
                     }
                     _element = new ElementData();
                     _element.projectName = _rebarlist[i].ProjectName;
-                    _element.assemblyName = _rebarlist[i].MainAssemblyName;
+                    _element.mainAssemblyName = _rebarlist[i].MainAssemblyName;
+                    _element.childAssemblyName = _rebarlist[i].ChildAssemblyName;
                     _element.elementName = _rebarlist[i].ElementName;
                     _element.rebarlist.Add(_rebarlist[i]);
                     //}
@@ -1416,16 +1520,376 @@ namespace RebarSampling
                 }
             }
 
-            //GeneralClass.interactivityData?.printlog(1, "4");
+
+            ////20250624，处理一下构件队列，按照重量对构件，以及构件里面的零件进行拆分
+            //List<ElementData> rt_elementList = new List<ElementData>();
+            //foreach (var item in _elementList)
+            //{
+            //    rt_elementList.AddRange(SplitElement(item));
+            //}
+
+            ////给每个子构件一个index索引号
+            //foreach (var item in rt_elementList)
+            //{
+            //    item.elementIndex = rt_elementList.IndexOf(item);//构件index
+            //    item.elementTotalNum = rt_elementList.Count;//总构件数量
+            //    item.elementName = item.elementName.Replace("\r", "").Replace("\n", "");//20250311修改信息化系统的bug，去除掉构件名称中的"\r"或者"\n"之类的换行符
+            //}
+
+            //return rt_elementList;
 
             //给每个子构件一个index索引号
             foreach (var item in _elementList)
             {
-                item.elementIndex = _elementList.IndexOf(item);
+                item.elementIndex = _elementList.IndexOf(item);//构件index
+                item.elementTotalNum = _elementList.Count;//总构件数量
+                item.elementName = item.elementName.Replace("\r", "").Replace("\n", "");//20250311修改信息化系统的bug，去除掉构件名称中的"\r"或者"\n"之类的换行符
             }
-            //GeneralClass.interactivityData?.printlog(1, "5");
 
             return _elementList;
+        }
+
+        private int GetMaxNumByDiameter(EnumDiaBang _diameter)
+        {
+            int _maxNum = 0;
+            switch (_diameter)//先根据直径，确认按哪个数量来拆解
+            {
+                case EnumDiaBang.BANG_C16: { _maxNum = GeneralClass.CfgData.SplitNumThresholdWithBend_16; break; }
+                case EnumDiaBang.BANG_C18: { _maxNum = GeneralClass.CfgData.SplitNumThresholdWithBend_18; break; }
+                case EnumDiaBang.BANG_C20: { _maxNum = GeneralClass.CfgData.SplitNumThresholdWithBend_20; break; }
+                case EnumDiaBang.BANG_C22: { _maxNum = GeneralClass.CfgData.SplitNumThresholdWithBend_22; break; }
+                case EnumDiaBang.BANG_C25: { _maxNum = GeneralClass.CfgData.SplitNumThresholdWithBend_25; break; }
+                case EnumDiaBang.BANG_C28: { _maxNum = GeneralClass.CfgData.SplitNumThresholdWithBend_28; break; }
+                case EnumDiaBang.BANG_C32: { _maxNum = GeneralClass.CfgData.SplitNumThresholdWithBend_32; break; }
+                default: { _maxNum = 50; break; }
+            }
+
+            return _maxNum;
+        }
+        /// <summary>
+        /// 按数量分解零件，注意不同直径的分解数量不一样
+        /// </summary>
+        /// <param name="_rebardata"></param>
+        /// <returns></returns>
+        public List<RebarData> SplitRebarDataByNum(RebarData _rebardata)
+        {
+            try
+            {
+
+
+                List<RebarData> newRebarlist = new List<RebarData>();
+                RebarData newRebar = new RebarData();
+
+
+                int _maxNum = GetMaxNumByDiameter(GeneralClass.IntToEnumDiameter(_rebardata.Diameter));
+                //按数量，先确定拆成几个包
+                //int _count = (_rebardata.TotalPieceNum % _maxNum == 0) ? _rebardata.TotalPieceNum / _maxNum : (_rebardata.TotalPieceNum / _maxNum + 1);
+                int _count = _rebardata.TotalPieceNum / _maxNum;
+
+                double _singleweight = _rebardata.TotalWeight / _rebardata.TotalPieceNum;//单根重量
+
+                for (int i = 0; i < _count; i++)
+                {
+                    newRebar = new RebarData();
+                    newRebar.Copy(_rebardata);
+                    newRebar.TotalPieceNum = _maxNum;
+                    newRebar.TotalWeight = newRebar.TotalPieceNum * _singleweight;
+
+
+                    newRebar.SerialNum = _rebardata.SerialNum + "-" + (i + 1).ToString();
+                    newRebarlist.Add(newRebar);
+                }
+
+                if (_rebardata.TotalPieceNum % _maxNum != 0)//如果有余数，则最后一个rebardata加上余数
+                {
+                    newRebar = new RebarData();
+                    newRebar.Copy(_rebardata);
+                    newRebar.TotalPieceNum = _rebardata.TotalPieceNum % _maxNum;
+                    newRebar.TotalWeight = newRebar.TotalPieceNum * _singleweight;
+                    newRebar.SerialNum = _rebardata.SerialNum + "-" + (_count + 1).ToString();
+                    newRebarlist.Add(newRebar);
+                }
+
+                return newRebarlist;
+            }
+            catch (Exception ex) { MessageBox.Show("SplitRebarDataByNum error:" + ex.Message); return new List<RebarData>(); }
+
+        }
+        /// <summary>
+        /// 按重量将零件拆解，
+        /// </summary>
+        /// <param name="_maxWeight">重量拆解阈值</param>
+        /// <param name="_rebardata">待拆解的rebardata</param>
+        /// <returns></returns>
+        public List<RebarData> SplitRebarDataByWeight(double _maxWeight, RebarData _rebardata)
+        {
+            try
+            {
+
+                List<RebarData> newRebarlist = new List<RebarData>();
+                RebarData newRebar = new RebarData();
+
+                //按重量，先确定拆成几个包
+                int _count = ((int)_rebardata.TotalWeight % (int)_maxWeight == 0) ? (int)_rebardata.TotalWeight / (int)_maxWeight : ((int)_rebardata.TotalWeight / (int)_maxWeight + 1);
+                double _singleweight = _rebardata.TotalWeight / _rebardata.TotalPieceNum;//单根重量
+
+                for (int i = 0; i < _count; i++)
+                {
+                    newRebar = new RebarData();
+                    newRebar.Copy(_rebardata);
+                    newRebar.TotalPieceNum = _rebardata.TotalPieceNum / _count;
+                    newRebar.TotalWeight = newRebar.TotalPieceNum * _singleweight;
+
+                    if (i == _count - 1)//最后一个rebardata加上余数
+                    {
+                        newRebar.TotalPieceNum += _rebardata.TotalPieceNum % _count;
+                        newRebar.TotalWeight = newRebar.TotalPieceNum * _singleweight;
+                    }
+                    newRebar.SerialNum = _rebardata.SerialNum + "-" + (i + 1).ToString();
+                    newRebarlist.Add(newRebar);
+                }
+
+                return newRebarlist;
+            }
+            catch (Exception ex) { MessageBox.Show("SplitRebarDataByWeight error:" + ex.Message); return new List<RebarData>(); }
+
+        }
+        /// <summary>
+        /// 按照重量和数量综合拆分
+        /// </summary>
+        /// <param name="_maxWeight"></param>
+        /// <param name="_rebardata"></param>
+        /// <returns></returns>
+        public List<RebarData> SplitRebarDataByWeightAndNum(double _maxWeight, RebarData _rebardata)
+        {
+            try
+            {
+                List<RebarData> newRebarlist = new List<RebarData>();
+                RebarData newRebar = new RebarData();
+
+                int _count = 1;//思路：count逐渐增大，
+                while(true)
+                {
+                    double _weight = _rebardata.TotalWeight/_count;//
+                    int _num = _rebardata.TotalPieceNum/_count;
+
+                    if (_weight>_maxWeight||
+                        (_rebardata.IfBendOri &&
+                           GeneralClass.IntToEnumDiameter(_rebardata.Diameter) >= EnumDiaBang.BANG_C16 &&
+                            GeneralClass.IntToEnumDiameter(_rebardata.Diameter) <= EnumDiaBang.BANG_C32 &&
+                            _num > GetMaxNumByDiameter(GeneralClass.IntToEnumDiameter(_rebardata.Diameter))))//如果超重，或者超数量了，则增加count，继续拆分
+                    {
+                        _count++;
+                        continue;
+                    }
+                    else
+                    {
+                        if (_count==1)//如果不用拆解，则直接返回
+                        {
+                            newRebar = new RebarData();
+                            newRebar.Copy(_rebardata);
+                            newRebarlist.Add(_rebardata);
+                            break;
+                        }
+
+                        double _singleweight = _rebardata.TotalWeight / _rebardata.TotalPieceNum;//单根重量
+
+                        for (int i = 0; i < _count; i++)
+                        {
+                            newRebar = new RebarData();
+                            newRebar.Copy(_rebardata);
+                            newRebar.TotalPieceNum = _rebardata.TotalPieceNum / _count;
+                            newRebar.TotalWeight = newRebar.TotalPieceNum * _singleweight;
+
+                            if (i == _count - 1)//最后一个rebardata加上余数
+                            {
+                                newRebar.TotalPieceNum += _rebardata.TotalPieceNum % _count;
+                                newRebar.TotalWeight = newRebar.TotalPieceNum * _singleweight;
+                            }
+                            newRebar.SerialNum = _rebardata.SerialNum + "-" + (i + 1).ToString() + "/" + _count.ToString();//20250908增加【/count】
+                            newRebarlist.Add(newRebar);
+                        }
+                        break;
+                    }
+
+                }
+
+                return newRebarlist;
+
+
+            }
+            catch (Exception ex) { MessageBox.Show("SplitRebarDataByWeightAndNum error:" + ex.Message); return new List<RebarData>(); }
+        }
+
+        /// <summary>
+        /// 零件拆分策略：
+        ///         原则1：单一rebardata的重量如果超过了3吨，需要拆解成多个
+        /// </summary>
+        /// <param name="_rebarlist"></param>
+        /// <returns></returns>
+        public List<RebarData> SplitRebarData(List<RebarData> _rebarlist)
+        {
+            try
+            {
+                double _maxWeight = GeneralClass.CfgData.SplitWeightThreshold;//单包最大重量
+
+                List<RebarData> newRebarlist = new List<RebarData>();
+
+                foreach(var item in _rebarlist)
+                {
+                    newRebarlist.AddRange(SplitRebarDataByWeightAndNum(_maxWeight, item));
+                }
+                return newRebarlist;
+
+                #region old
+                //List<RebarData> newRebarlist_1 = new List<RebarData>();
+                //List<RebarData> newRebarlist_2 = new List<RebarData>();
+
+                //RebarData newRebar = new RebarData();
+
+                //if (GeneralClass.CfgData.SplitIfWeightFirst)//重量优先
+                //{
+                //    //先过一遍，按重量分解
+                //    foreach (var item in _rebarlist)
+                //    {
+                //        if (item.TotalWeight > _maxWeight)//如果单一rebardata超重，则打散
+                //        {
+                //            newRebarlist_1.AddRange(SplitRebarDataByWeight(_maxWeight, item));
+                //        }
+                //        else
+                //        {
+                //            newRebar = new RebarData();
+                //            newRebar.Copy(item);
+                //            newRebarlist_1.Add(newRebar);
+                //        }
+                //    }
+
+                //    //再过一遍rebarlist，如果有数量超标的，先分解，原则是满足：弯曲、直径16~32、数量大于阈值
+                //    foreach (var item in newRebarlist_1)
+                //    {
+                //        if (item.IfBendOri &&
+                //           GeneralClass.IntToEnumDiameter(item.Diameter) >= EnumDiaBang.BANG_C16 &&
+                //            GeneralClass.IntToEnumDiameter(item.Diameter) <= EnumDiaBang.BANG_C32 &&
+                //            item.TotalPieceNum > GetMaxNumByDiameter(GeneralClass.IntToEnumDiameter(item.Diameter)))//弯曲、直径16~32、数量大于阈值
+                //        {
+                //            newRebarlist_2.AddRange(SplitRebarDataByNum(item));
+                //        }
+                //        else //没有超过数量的，则保留
+                //        {
+                //            newRebar = new RebarData();
+                //            newRebar.Copy(item);
+                //            newRebarlist_2.Add(newRebar);
+                //        }
+                //    }
+                //}
+                //else//数量优先
+                //{
+                //    //先过一遍rebarlist，如果有数量超标的，先分解，原则是满足：弯曲、直径16~32、数量大于阈值
+                //    foreach (var item in _rebarlist)
+                //    {
+                //        if (item.IfBendOri &&
+                //           GeneralClass.IntToEnumDiameter(item.Diameter) >= EnumDiaBang.BANG_C16 &&
+                //            GeneralClass.IntToEnumDiameter(item.Diameter) <= EnumDiaBang.BANG_C32 &&
+                //            item.TotalPieceNum > GetMaxNumByDiameter(GeneralClass.IntToEnumDiameter(item.Diameter)))//弯曲、直径16~32、数量大于阈值
+                //        {
+                //            newRebarlist_1.AddRange(SplitRebarDataByNum(item));
+                //        }
+                //        else //没有超过数量的，则保留
+                //        {
+                //            newRebar = new RebarData();
+                //            newRebar.Copy(item);
+                //            newRebarlist_1.Add(newRebar);
+                //        }
+                //    }
+
+                //    //再过一遍，按重量分解
+                //    foreach (var item in newRebarlist_1)
+                //    {
+                //        if (item.TotalWeight > _maxWeight)//如果单一rebardata超重，则打散
+                //        {
+                //            newRebarlist_2.AddRange(SplitRebarDataByWeight(_maxWeight, item));
+                //        }
+                //        else
+                //        {
+                //            newRebar = new RebarData();
+                //            newRebar.Copy(item);
+                //            newRebarlist_2.Add(newRebar);
+                //        }
+                //    }
+                //}
+
+                //return newRebarlist_2;
+                #endregion
+
+
+
+
+            }
+            catch (Exception ex) { MessageBox.Show("SplitRebarData error:" + ex.Message); return new List<RebarData>(); }
+
+        }
+        /// <summary>
+        ///  构件拆分策略：
+        ///             原则1：单一rebardata的重量如果超过了3吨，需要单拎出来
+        ///             原则2：单一构件的rebardata太多，超过30个，则需要拆为多个构件，名称后加“-1/-2/-3”等
+        ///             原则3：单一rebardata的重量如果超过了3吨，需要拆为多个构件，名称后加“-1/-2/-3”等
+        /// </summary>
+        /// <param name="_element"></param>
+        /// <returns></returns>
+        public List<ElementData> SplitElement(ElementData _element)
+        {
+            double _maxWeight = 3000;//单包最大重量
+
+            List<ElementData> elementList = new List<ElementData>();
+            ElementData newElement = new ElementData();
+
+            List<RebarData> newRebarlist = new List<RebarData>();
+            RebarData newRebar = new RebarData();
+
+            //先过一遍rebarlist，如果有单一rebardata重量超过3吨，先将其打散
+            foreach (var item in _element.rebarlist)
+            {
+                if (item.TotalWeight > _maxWeight)//如果单一rebardata超重，则打散
+                {
+                    //按重量，先确定拆成几个包
+                    int _count = ((int)item.TotalWeight % (int)_maxWeight == 0) ? (int)item.TotalWeight / (int)_maxWeight : ((int)item.TotalWeight / (int)_maxWeight + 1);
+                    double _singleweight = item.TotalWeight / item.TotalPieceNum;//单根重量
+
+                    for (int i = 0; i < _count; i++)
+                    {
+                        newRebar = new RebarData();
+                        newRebar.Copy(item);
+                        newRebar.TotalPieceNum = item.TotalPieceNum / _count;
+                        newRebar.TotalWeight = newRebar.TotalPieceNum * _singleweight;
+
+                        if (i == _count - 1)//最后一个rebardata加上余数
+                        {
+                            newRebar.TotalPieceNum += item.TotalPieceNum % _count;
+                            newRebar.TotalWeight = newRebar.TotalPieceNum * _singleweight;
+                        }
+                        newRebar.SerialNum = item.SerialNum + "-" + (i + 1).ToString();
+                        newRebarlist.Add(newRebar);
+                    }
+
+                }
+                else //没有超重，则保留
+                {
+                    newRebar = new RebarData();
+                    newRebar.Copy(item);
+                    newRebarlist.Add(newRebar);
+                }
+            }
+
+            newElement.Copy(_element);
+            newElement.rebarlist.Clear();
+            foreach (var item in newRebarlist)
+            {
+                newElement.rebarlist.Add(item);
+            }
+
+            elementList.Add(newElement);
+
+            return elementList;
         }
         /// <summary>
         /// 从数据库中取出所有的钢筋数据
@@ -1452,9 +1916,11 @@ namespace RebarSampling
                         rebarData.IndexNo = int.Parse(row[0].ToString());//数据库索引
                         rebarData.ProjectName = row[(int)EnumAllRebarTableColName.PROJECT_NAME + 1].ToString();
                         rebarData.MainAssemblyName = row[(int)EnumAllRebarTableColName.MAIN_ASSEMBLY_NAME + 1].ToString();
+                        rebarData.ChildAssemblyName = row[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME + 1].ToString();
                         //rebarData.ElementName = row[(int)EnumAllRebarTableColName.ELEMENT_NAME + 1].ToString();
                         rebarData.ElementName = String.Join("", row[(int)EnumAllRebarTableColName.ELEMENT_NAME + 1].ToString().Split('\n'));
 
+                        rebarData.TableNo = row[(int)EnumAllRebarTableColName.TABLE_NO + 1].ToString();
                         rebarData.TableName = row[(int)EnumAllRebarTableColName.TABLE_NAME + 1].ToString();
                         //rebarData.TableName = String.Join("", row[(int)EnumAllRebarTableColName.TABLE_NAME + 1].ToString().Split('\n'));
                         rebarData.TableSheetName = row[(int)EnumAllRebarTableColName.TABLE_SHEET_NAME + 1].ToString();
@@ -1465,6 +1931,7 @@ namespace RebarSampling
                         rebarData.RebarPic = row[(int)EnumAllRebarTableColName.REBAR_PIC + 1].ToString();
                         rebarData.PicMessage = row[(int)EnumAllRebarTableColName.PIC_MESSAGE + 1].ToString();
                         rebarData.CornerMessage = row[(int)EnumAllRebarTableColName.CORNER_MESSAGE + 1].ToString();
+                        rebarData.CornerMessageBK = row[(int)EnumAllRebarTableColName.CORNER_MESSAGE_BK + 1].ToString();//备份一下cornerMessage
                         rebarData.Length = row[(int)EnumAllRebarTableColName.LENGTH + 1].ToString();
 
                         //20250205关闭，因修改ismulti属性
@@ -1482,7 +1949,9 @@ namespace RebarSampling
                         rebarData.TotalPieceNum = Convert.ToInt32(row[(int)EnumAllRebarTableColName.TOTAL_PIECE_NUM + 1].ToString());
                         rebarData.TotalWeight = Convert.ToDouble(row[(int)EnumAllRebarTableColName.TOTAL_WEIGHT + 1].ToString());
                         rebarData.Description = row[(int)EnumAllRebarTableColName.DESCRIPTION + 1].ToString();
-                        rebarData.SerialNum = Convert.ToInt32(row[(int)EnumAllRebarTableColName.SERIALNUM + 1].ToString());
+                        //rebarData.SerialNum = Convert.ToInt32(row[(int)EnumAllRebarTableColName.SERIALNUM + 1].ToString());
+                        rebarData.SerialNum = row[(int)EnumAllRebarTableColName.SERIALNUM + 1].ToString();
+
                         //rebarData.IsOriginal = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.ISORIGINAL + 1].ToString());
                         //rebarData.IfTao = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFTAO + 1].ToString());
                         //rebarData.IfBend = Convert.ToBoolean(row[(int)EnumAllRebarTableColName.IFBEND + 1].ToString());
@@ -1491,7 +1960,7 @@ namespace RebarSampling
                         rebarData.BarType = row[(int)EnumAllRebarTableColName.BAR_TYPE + 1].ToString();
                         rebarData.FabricationType = row[(int)EnumAllRebarTableColName.FABRICATION_TYPE + 1].ToString();
 
-                        if (rebarData.TotalPieceNum != 0)
+                        if (rebarData.TotalPieceNum != 0)//暂不去掉总根数为0的钢筋，20250719
                         {
                             allRebarList.Add(rebarData);
                         }

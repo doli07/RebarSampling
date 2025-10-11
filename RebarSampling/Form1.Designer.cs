@@ -51,6 +51,10 @@
             this.button11 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -71,7 +75,7 @@
             this.treeView1.FullRowSelect = true;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(310, 363);
+            this.treeView1.Size = new System.Drawing.Size(361, 289);
             this.treeView1.TabIndex = 5;
             this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -83,9 +87,9 @@
             this.columnHeader2});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 533);
+            this.listView1.Location = new System.Drawing.Point(0, 668);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(310, 169);
+            this.listView1.Size = new System.Drawing.Size(361, 197);
             this.listView1.TabIndex = 12;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -103,9 +107,9 @@
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Location = new System.Drawing.Point(0, 766);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 923);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1646, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1924, 22);
             this.statusStrip1.TabIndex = 13;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -119,9 +123,9 @@
             // button6
             // 
             this.button6.BackColor = System.Drawing.Color.DarkSalmon;
-            this.button6.Location = new System.Drawing.Point(3, 87);
+            this.button6.Location = new System.Drawing.Point(3, 153);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(285, 64);
+            this.button6.Size = new System.Drawing.Size(282, 57);
             this.button6.TabIndex = 14;
             this.button6.Text = "创建总表";
             this.button6.UseVisualStyleBackColor = false;
@@ -131,7 +135,7 @@
             // 
             this.checkedListBox1.ColumnWidth = 40;
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(14, 51);
+            this.checkedListBox1.Location = new System.Drawing.Point(12, 51);
             this.checkedListBox1.MultiColumn = true;
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(270, 30);
@@ -175,7 +179,7 @@
             this.panel1.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1646, 64);
+            this.panel1.Size = new System.Drawing.Size(1924, 58);
             this.panel1.TabIndex = 23;
             // 
             // button8
@@ -183,7 +187,7 @@
             this.button8.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
             this.button8.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button8.Location = new System.Drawing.Point(154, 5);
+            this.button8.Location = new System.Drawing.Point(154, 1);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(156, 56);
             this.button8.TabIndex = 28;
@@ -198,7 +202,7 @@
             this.button7.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button7.Image = ((System.Drawing.Image)(resources.GetObject("button7.Image")));
             this.button7.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button7.Location = new System.Drawing.Point(770, 5);
+            this.button7.Location = new System.Drawing.Point(770, 1);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(145, 56);
             this.button7.TabIndex = 27;
@@ -212,7 +216,7 @@
             // 
             this.button5.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
-            this.button5.Location = new System.Drawing.Point(921, 5);
+            this.button5.Location = new System.Drawing.Point(921, 1);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(145, 56);
             this.button5.TabIndex = 26;
@@ -227,7 +231,7 @@
             this.button3.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button3.Location = new System.Drawing.Point(1223, 5);
+            this.button3.Location = new System.Drawing.Point(1223, 1);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(145, 56);
             this.button3.TabIndex = 25;
@@ -243,7 +247,7 @@
             this.button13.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button13.Image = ((System.Drawing.Image)(resources.GetObject("button13.Image")));
             this.button13.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button13.Location = new System.Drawing.Point(1072, 5);
+            this.button13.Location = new System.Drawing.Point(1072, 1);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(145, 56);
             this.button13.TabIndex = 24;
@@ -257,7 +261,7 @@
             this.button2.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button2.Location = new System.Drawing.Point(619, 5);
+            this.button2.Location = new System.Drawing.Point(619, 1);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(145, 56);
             this.button2.TabIndex = 23;
@@ -272,7 +276,7 @@
             this.button1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button1.Location = new System.Drawing.Point(3, 5);
+            this.button1.Location = new System.Drawing.Point(3, 1);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(145, 56);
@@ -288,7 +292,7 @@
             this.button12.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
             this.button12.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button12.Location = new System.Drawing.Point(468, 5);
+            this.button12.Location = new System.Drawing.Point(468, 1);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(145, 56);
             this.button12.TabIndex = 22;
@@ -303,7 +307,7 @@
             this.button11.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.button11.Image = ((System.Drawing.Image)(resources.GetObject("button11.Image")));
             this.button11.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button11.Location = new System.Drawing.Point(317, 5);
+            this.button11.Location = new System.Drawing.Point(317, 1);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(145, 56);
             this.button11.TabIndex = 21;
@@ -322,21 +326,58 @@
             this.panel2.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(310, 702);
+            this.panel2.Size = new System.Drawing.Size(361, 865);
             this.panel2.TabIndex = 24;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.textBox3);
+            this.groupBox1.Controls.Add(this.textBox2);
+            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.button6);
             this.groupBox1.Controls.Add(this.checkBox2);
             this.groupBox1.Controls.Add(this.checkedListBox1);
             this.groupBox1.Controls.Add(this.checkBox3);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 363);
+            this.groupBox1.Location = new System.Drawing.Point(0, 289);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(310, 170);
+            this.groupBox1.Size = new System.Drawing.Size(361, 379);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(208, 116);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(96, 31);
+            this.textBox3.TabIndex = 24;
+            this.textBox3.Text = "B001";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(107, 116);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(96, 31);
+            this.textBox2.TabIndex = 23;
+            this.textBox2.Text = "D001";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(6, 116);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(96, 31);
+            this.textBox1.TabIndex = 22;
+            this.textBox1.Text = "PJ0001";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 88);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(100, 24);
+            this.label1.TabIndex = 21;
+            this.label1.Text = "料单编号：";
             // 
             // panel3
             // 
@@ -344,13 +385,13 @@
             this.panel3.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1332, 702);
+            this.panel3.Size = new System.Drawing.Size(1559, 865);
             this.panel3.TabIndex = 25;
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 64);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 58);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -361,17 +402,17 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panel4);
             this.splitContainer1.Panel2.Controls.Add(this.panel3);
-            this.splitContainer1.Size = new System.Drawing.Size(1646, 702);
-            this.splitContainer1.SplitterDistance = 310;
+            this.splitContainer1.Size = new System.Drawing.Size(1924, 865);
+            this.splitContainer1.SplitterDistance = 361;
             this.splitContainer1.TabIndex = 26;
             // 
             // panel4
             // 
             this.panel4.Controls.Add(this.button4);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(0, 676);
+            this.panel4.Location = new System.Drawing.Point(0, 839);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1332, 26);
+            this.panel4.Size = new System.Drawing.Size(1559, 26);
             this.panel4.TabIndex = 28;
             // 
             // button4
@@ -391,7 +432,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(1646, 788);
+            this.ClientSize = new System.Drawing.Size(1924, 945);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
@@ -444,6 +485,10 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label1;
     }
 }
 

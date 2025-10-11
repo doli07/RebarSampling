@@ -29,7 +29,7 @@ namespace RebarSampling
         public static List<RebarOri> Taoliao(List<RebarData> _list, out int _totallength)
         {
 
- 
+
             List<Rebar> _alllist = new List<Rebar>();
             _alllist = ListDescend(_list);//降序展开
 
@@ -59,24 +59,27 @@ namespace RebarSampling
             // _returnlist = Algorithm_BFD(_alllist);//BFD最佳适应算法
             //_returnlist = Algorithm_FFD_1(_alllist);//FFD首次适应算法，改进版
             //_returnlist.AddRange(Algorithm_FFD_1(_part1));//FFD首次适应算法，改进版
-            switch (GeneralClass.CfgData.TaoType)
+            if (_part1.Count != 0)//要先判断part1是否为空
             {
-                case EnumTaoType.ORITAO:
-                    _returnlist.AddRange(Algorithm_FFD_1(_part1));//FFD首次适应算法，改进版V1.0
-                    break;
-                case EnumTaoType.ORIPOOLTAO:
-                    _returnlist.AddRange(Algorithm_FFD_2(_part1, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V2.0
-                    //_returnlist.AddRange(Algorithm_FFD_3(_part1, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V3.0
-                    break;
-                case EnumTaoType.CUTTAO_2:
-                    //_returnlist.AddRange(Algorithm_FFD_4(_part1, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V4.0
-                    _returnlist.AddRange(Algorithm_FFD_5(_part1, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V5.0
-                    break;
-                case EnumTaoType.CUTTAO_3:
-                    _returnlist.AddRange(Algorithm_FFD_6(_part1, GeneralClass.m_MaterialPool));//二叉树算法，改进版V6.0
-                    break;
-                default:
-                    break;
+                switch (GeneralClass.CfgData.TaoType)
+                {
+                    case EnumTaoType.ORITAO:
+                        _returnlist.AddRange(Algorithm_FFD_1(_part1));//FFD首次适应算法，改进版V1.0
+                        break;
+                    case EnumTaoType.ORIPOOLTAO:
+                        _returnlist.AddRange(Algorithm_FFD_2(_part1, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V2.0
+                                                                                                   //_returnlist.AddRange(Algorithm_FFD_3(_part1, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V3.0
+                        break;
+                    case EnumTaoType.CUTTAO_2:
+                        //_returnlist.AddRange(Algorithm_FFD_4(_part1, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V4.0
+                        _returnlist.AddRange(Algorithm_FFD_5(_part1, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V5.0
+                        break;
+                    case EnumTaoType.CUTTAO_3:
+                        _returnlist.AddRange(Algorithm_FFD_6(_part1, GeneralClass.m_MaterialPool));//二叉树算法，改进版V6.0
+                        break;
+                    default:
+                        break;
+                }
             }
 
             if (GeneralClass.CfgData.IfShortRebar)
@@ -87,32 +90,35 @@ namespace RebarSampling
                 || t._length == GeneralClass.CfgData.MatPoolYuliao2).ToList();
 
                 //_returnlist.AddRange(Algorithm_FFD_1(_part2));//FFD首次适应算法，改进版
-                switch (GeneralClass.CfgData.TaoType)
+                if (_part2.Count != 0)
                 {
-                    case EnumTaoType.ORITAO:
-                        _returnlist.AddRange(Algorithm_FFD_1(_part2));//FFD首次适应算法，改进版V1.0
-                        break;
-                    case EnumTaoType.ORIPOOLTAO:
-                        _returnlist.AddRange(Algorithm_FFD_2(_part2, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V2.0
-                        //_returnlist.AddRange(Algorithm_FFD_3(_part2, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V3.0
-                        break;
-                    case EnumTaoType.CUTTAO_2:
-                        //_returnlist.AddRange(Algorithm_FFD_4(_part2, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V4.0
-                        _returnlist.AddRange(Algorithm_FFD_5(_part2, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V5.0
-                        break;
-                    case EnumTaoType.CUTTAO_3:
-                        _returnlist.AddRange(Algorithm_FFD_6(_part2, _materialPool/*GeneralClass.m_MaterialPool*/));//二叉树算法，改进版V6.0
-                        break;
+                    switch (GeneralClass.CfgData.TaoType)
+                    {
+                        case EnumTaoType.ORITAO:
+                            _returnlist.AddRange(Algorithm_FFD_1(_part2));//FFD首次适应算法，改进版V1.0
+                            break;
+                        case EnumTaoType.ORIPOOLTAO:
+                            _returnlist.AddRange(Algorithm_FFD_2(_part2, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V2.0
+                                                                                                       //_returnlist.AddRange(Algorithm_FFD_3(_part2, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V3.0
+                            break;
+                        case EnumTaoType.CUTTAO_2:
+                            //_returnlist.AddRange(Algorithm_FFD_4(_part2, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V4.0
+                            _returnlist.AddRange(Algorithm_FFD_5(_part2, GeneralClass.m_MaterialPool));//FFD首次适应算法，改进版V5.0
+                            break;
+                        case EnumTaoType.CUTTAO_3:
+                            _returnlist.AddRange(Algorithm_FFD_6(_part2, _materialPool/*GeneralClass.m_MaterialPool*/));//二叉树算法，改进版V6.0
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
             }
 
-            _returnlist=_returnlist.OrderBy(t=>t._lengthFirstLeft).ToList();
+            _returnlist = _returnlist.OrderBy(t => t._lengthFirstLeft).ToList();
 
             //按照工序优化的原则，对原材list重新排序，20241104添加此功能
-            if(GeneralClass.CfgData.IfSeriTao)
+            if (GeneralClass.CfgData.IfSeriTao)
             {
                 SerialTao(ref _returnlist);
             }
@@ -128,24 +134,24 @@ namespace RebarSampling
         private static void SerialTao(ref List<RebarOri> _list)
         {
             //第一步，将一根原材内部按照加工工序数量来排序，工序最多的在前面，最少的在后面
-            foreach(RebarOri o in _list)
-            {                
-                o._list=o._list. OrderByDescending(t=>t.caseCount).ToList();//按照加工工序数量多少，降序排列
+            foreach (RebarOri o in _list)
+            {
+                o._list = o._list.OrderByDescending(t => t.caseCount).ToList();//按照加工工序数量多少，降序排列
             }
 
             //第二步，将前后两个原材按照加工工序多少间隔开
-            _list=_list.OrderByDescending(t=>t._caseCount).ToList();//先降序排列
+            _list = _list.OrderByDescending(t => t._caseCount).ToList();//先降序排列
             int _zeroIndex = 0;
-            RebarOri temp =new RebarOri(_list.First()._level, _list.First()._diameter);
-            for(int i=0;i<_list.Count;i++)
+            RebarOri temp = new RebarOri(_list.First()._level, _list.First()._diameter);
+            for (int i = 0; i < _list.Count; i++)
             {
                 if (_list[i]._caseCount != 0) continue;//先找到caseCount==0的元素
 
                 _zeroIndex++;
-                if (_zeroIndex*2<_list.Count&& _list[_zeroIndex*2-1]._caseCount!=0)//把当前caseCount==0跟前面不为0且为偶数行的元素进行互换
+                if (_zeroIndex * 2 < _list.Count && _list[_zeroIndex * 2 - 1]._caseCount != 0)//把当前caseCount==0跟前面不为0且为偶数行的元素进行互换
                 {
-                    temp=_list[i];
-                    _list[i]=_list[_zeroIndex*2-1];
+                    temp = _list[i];
+                    _list[i] = _list[_zeroIndex * 2 - 1];
                     _list[_zeroIndex * 2 - 1] = temp;//交换
                 }
 
@@ -269,7 +275,9 @@ namespace RebarSampling
                 string sss = "";
                 foreach (var ttt in x)
                 {
-                    sss += ttt.CornerMessage;//拼接cornerMessage
+                    sss += ttt.CornerMessage + ttt.SerialNum;//拼接cornerMessage，20250812增加serialNum的筛选
+                    //sss += ttt.CornerMessage;//拼接cornerMessage，20250812增加serialNum的筛选
+
                 }
                 return sss;
             };
@@ -286,6 +294,8 @@ namespace RebarSampling
 
             return temp;
         }
+
+
         /// <summary>
         /// 首次适应算法FFD（first fit） 
         /// 算法思路：
@@ -297,7 +307,7 @@ namespace RebarSampling
         private static List<RebarOri> Algorithm_FFD(List<Rebar> _alllist)
         {
             List<RebarOri> _returnlist = new List<RebarOri>();
-            RebarOri _temp = new RebarOri(_alllist.First().Level,_alllist.First().Diameter);
+            RebarOri _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
 
             foreach (var item in _alllist)//取一根钢筋过来
             {
@@ -422,7 +432,7 @@ namespace RebarSampling
         private static bool IfContain(Rebar _rebar, List<MaterialOri> _material, out int _lengthInMaterial, int _threshold = 0)
         {
 
-            foreach (var item in _material.FindAll(t=>t._level==_rebar.Level&&t._diameter==GeneralClass.IntToEnumDiameter( _rebar.Diameter)))//20250104修改bug，增加级别和直径判断，以免出现12米、9米原材混淆的问题
+            foreach (var item in _material.FindAll(t => t._level == _rebar.Level && t._diameter == GeneralClass.IntToEnumDiameter(_rebar.Diameter)))//20250104修改bug，增加级别和直径判断，以免出现12米、9米原材混淆的问题
             {
                 //if (_rebar.Diameter != GeneralClass.EnumDiameterToInt(item._diameter))//直径不对，跳过
                 //{
@@ -492,7 +502,7 @@ namespace RebarSampling
             List<RebarOri> _returnlist = new List<RebarOri>();
             RebarOri _temp = new RebarOri(_alllist.First().Level, _alllist.First().Diameter);
 
-            _returnlist.AddRange(Tao(ref _alllist, GeneralClass.OriginalLength(_alllist[0].Level, _alllist[0].Diameter), 99999,true));//允许超过原材长度
+            _returnlist.AddRange(Tao(ref _alllist, GeneralClass.OriginalLength(_alllist[0].Level, _alllist[0].Diameter), 99999, true));//允许超过原材长度
 
             ////首次套料
             //foreach (var item in _alllist)//取一根钢筋过来
@@ -553,7 +563,7 @@ namespace RebarSampling
 
             //先排完全不用切的，跟原材库长度完全一致的，主要考虑到柱构件中的3米
             _material = _material.OrderBy(t => t._length).ToList();//先升序，排阈值0的
-            if(_alllist!=null&&_alllist.Count!=0)
+            if (_alllist != null && _alllist.Count != 0)
             {
                 _returnlist.AddRange(Tao_1(ref _alllist, _material, 0, 0));//0
             }
@@ -953,7 +963,7 @@ namespace RebarSampling
                     ////提取直径一致的原材按照长度降序排列
                     //_material = _material.Where(t => t._diameter == GeneralClass.IntToEnumDiameter(_alllist[0].Diameter)).ToList().OrderByDescending(k => k._length).ToList();
 
-                    _temp = new RebarOri(lengthBetween(_material, item.length)._length,item.Level,item.Diameter);//查询所在的原材区间，并新建一个对应长度的原材
+                    _temp = new RebarOri(lengthBetween(_material, item.length)._length, item.Level, item.Diameter);//查询所在的原材区间，并新建一个对应长度的原材
                     _temp._list.Add(item);
                     _returnlist.Add(_temp);
                 }
@@ -987,7 +997,7 @@ namespace RebarSampling
             if (_length > _ma.First()._length)
             {
                 GeneralClass.interactivityData?.printlog(1, "长度=" + _length.ToString() + ",数据异常!");
-                return new MaterialOri(_ma.First()._diameter, GeneralClass.OriginalLength(_ma.First()._level, _ma.First()._diameter), 999,_ma.First()._level);//给个原材吧
+                return new MaterialOri(_ma.First()._diameter, GeneralClass.OriginalLength(_ma.First()._level, _ma.First()._diameter), 999, _ma.First()._level);//给个原材吧
             }
             for (int i = 0; i < _ma.Count; i++)
             {
@@ -1645,7 +1655,7 @@ namespace RebarSampling
             }
 
             //如果分成两组的长度都没有超过原材长度，则分配成功
-            if (_list1.Sum(t => t.length) <= GeneralClass.OriginalLength(_list1.First().Level, _list1.First().Diameter) && 
+            if (_list1.Sum(t => t.length) <= GeneralClass.OriginalLength(_list1.First().Level, _list1.First().Diameter) &&
                 _list2.Sum(t => t.length) <= GeneralClass.OriginalLength(_list1.First().Level, _list1.First().Diameter))
             {
                 _ori1._list = _list1;//

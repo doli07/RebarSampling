@@ -47,7 +47,7 @@ namespace RebarSampling
         public static void print(System.Drawing.Image _image, EnumLabelType _labeltype)
         {
             //图片保存到文件路径中
-            if (_labeltype == EnumLabelType.LB_LABEL)
+            if (_labeltype == EnumLabelType.LB_LABEL||_labeltype==EnumLabelType.ELEMENT_LABEL)
             {
                 _image.Save(_lbfilepath, System.Drawing.Imaging.ImageFormat.Bmp);
                 //_image.Save(_lbfilepath, System.Drawing.Imaging.ImageFormat.Jpeg);

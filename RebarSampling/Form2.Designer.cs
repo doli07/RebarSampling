@@ -311,6 +311,7 @@
             this.dataGridView29 = new System.Windows.Forms.DataGridView();
             this.button13 = new System.Windows.Forms.Button();
             this.groupBox23 = new System.Windows.Forms.GroupBox();
+            this.checkBox75 = new System.Windows.Forms.CheckBox();
             this.checkBox51 = new System.Windows.Forms.CheckBox();
             this.checkBox52 = new System.Windows.Forms.CheckBox();
             this.checkBox53 = new System.Windows.Forms.CheckBox();
@@ -524,13 +525,13 @@
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(25, 22);
+            this.dataGridView1.Location = new System.Drawing.Point(8, 11);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 27;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1185, 584);
+            this.dataGridView1.Size = new System.Drawing.Size(1460, 606);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
             // 
@@ -1812,7 +1813,8 @@
             // 
             // dataGridView2
             // 
-            this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
+            this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView2.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView2.Location = new System.Drawing.Point(6, 6);
             this.dataGridView2.MultiSelect = false;
@@ -3240,6 +3242,7 @@
             // 
             // groupBox23
             // 
+            this.groupBox23.Controls.Add(this.checkBox75);
             this.groupBox23.Controls.Add(this.checkBox51);
             this.groupBox23.Controls.Add(this.checkBox52);
             this.groupBox23.Controls.Add(this.checkBox53);
@@ -3251,10 +3254,20 @@
             this.groupBox23.TabStop = false;
             this.groupBox23.Text = "数量区间(根)";
             // 
+            // checkBox75
+            // 
+            this.checkBox75.AutoSize = true;
+            this.checkBox75.Location = new System.Drawing.Point(21, 124);
+            this.checkBox75.Name = "checkBox75";
+            this.checkBox75.Size = new System.Drawing.Size(134, 28);
+            this.checkBox75.TabIndex = 4;
+            this.checkBox75.Text = "checkBox75";
+            this.checkBox75.UseVisualStyleBackColor = true;
+            // 
             // checkBox51
             // 
             this.checkBox51.AutoSize = true;
-            this.checkBox51.Location = new System.Drawing.Point(21, 133);
+            this.checkBox51.Location = new System.Drawing.Point(21, 99);
             this.checkBox51.Name = "checkBox51";
             this.checkBox51.Size = new System.Drawing.Size(78, 28);
             this.checkBox51.TabIndex = 3;
@@ -3264,7 +3277,7 @@
             // checkBox52
             // 
             this.checkBox52.AutoSize = true;
-            this.checkBox52.Location = new System.Drawing.Point(21, 97);
+            this.checkBox52.Location = new System.Drawing.Point(21, 75);
             this.checkBox52.Name = "checkBox52";
             this.checkBox52.Size = new System.Drawing.Size(100, 28);
             this.checkBox52.TabIndex = 2;
@@ -3274,7 +3287,7 @@
             // checkBox53
             // 
             this.checkBox53.AutoSize = true;
-            this.checkBox53.Location = new System.Drawing.Point(21, 61);
+            this.checkBox53.Location = new System.Drawing.Point(21, 50);
             this.checkBox53.Name = "checkBox53";
             this.checkBox53.Size = new System.Drawing.Size(89, 28);
             this.checkBox53.TabIndex = 1;
@@ -4535,5 +4548,6 @@
         private System.Windows.Forms.GroupBox groupBox26;
         private System.Windows.Forms.TabPage tabPage28;
         private System.Windows.Forms.CheckBox checkBox74;
+        private System.Windows.Forms.CheckBox checkBox75;
     }
 }

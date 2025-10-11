@@ -150,6 +150,7 @@ namespace RebarSampling
                     {
                         dt.Columns.Add(cell.StringCellValue, typeof(string));//以firstrow的名称作为datatable列名
                     }
+                    dt.Columns.Add("序号",typeof(string));//最后一列是流水号，但没有列名
 
                     int startIndex = 3;//从第三行开始
                     //读取数据行
@@ -225,7 +226,7 @@ namespace RebarSampling
 
                     if (NPOI.SS.UserModel.DateUtil.IsCellDateFormatted(tCell))
                     {
-                        tempValue = tCell.DateCellValue.ToString("yyyy-MM-dd");
+                        tempValue = tCell.DateCellValue?.ToString("yyyy-MM-dd");
                     }
                     else
                     {

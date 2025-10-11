@@ -3,6 +3,7 @@
 using NPOI.SS.Formula.Functions;
 using Org.BouncyCastle.Asn1.X509;
 using RebarSampling.General;
+using RebarSampling.GLD;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,6 +45,9 @@ namespace RebarSampling
             GeneralClass.interactivityData.getManualBatchList += GetManualBatchList;
 
             GeneralClass.interactivityData.askForPickStatus += AskForPickStatus;
+
+            GeneralClass.interactivityData.showAssembly += GetSheetToDGV;
+
         }
 
         private bool _ifAutoGroup = false;
@@ -71,6 +75,14 @@ namespace RebarSampling
         }
         private void InitTabcontrol()
         {
+            FormBillSplit _newformBillSplit = new FormBillSplit();
+            _newformBillSplit.FormBorderStyle = FormBorderStyle.None;//去除边框
+            _newformBillSplit.Dock = DockStyle.Fill;//填充满
+            _newformBillSplit.TopLevel = false;
+            tabControl5.TabPages[0].Controls.Add(_newformBillSplit);
+            _newformBillSplit.Show();
+
+
             FormManualGroupLB _newformLB = new FormManualGroupLB();
             _newformLB.FormBorderStyle = FormBorderStyle.None;//去除边框
             _newformLB.Dock = DockStyle.Fill;//填充满
@@ -82,21 +94,25 @@ namespace RebarSampling
             _newformQZ.FormBorderStyle = FormBorderStyle.None;//去除边框
             _newformQZ.Dock = DockStyle.Fill;//填充满
             _newformQZ.TopLevel = false;
-            tabControl5.TabPages[1].Controls.Add(_newformQZ);
+            tabControl5.TabPages[2].Controls.Add(_newformQZ);
             _newformQZ.Show();
+
+
 
 
         }
         private void InitCombobox()
         {
             comboBox1.SelectedIndex = 0;
+
+
         }
         private void InitSplitControl()
         {
-            //隐藏导航栏
-            this.splitContainer1.Panel1Collapsed = true;
-            //根据隐藏属性切换项目资源文件中的图片显示
-            button1.Image = this.splitContainer1.Panel1Collapsed ? Properties.Resources.icons8_double_down_26 : Properties.Resources.icons8_double_up_26;
+            ////隐藏导航栏
+            //this.splitContainer1.Panel1Collapsed = true;
+            ////根据隐藏属性切换项目资源文件中的图片显示
+            //button1.Image = this.splitContainer1.Panel1Collapsed ? Properties.Resources.icons8_double_down_26 : Properties.Resources.icons8_double_up_26;
 
         }
         private void InitTreeView()
@@ -160,6 +176,106 @@ namespace RebarSampling
             DataTable dt = new DataTable();
             dataGridView11.DataSource = dt;
         }
+
+        private void GetSheetToDGV(string _projectname, string _assemblyname)
+        {
+            //先获取钢筋总表
+            //List<RebarData> _allList_bk = GeneralClass.SQLiteOpt.GetAllRebarList(GeneralClass.AllRebarBKTableName);
+            List<RebarData> _allList = GeneralClass.DBOpt.GetAllRebarList(GeneralClass.TableName_AllRebar);
+
+            //查询所有被选中的钢筋
+            List<RebarData> _newlist = new List<RebarData>();
+            foreach (RebarData _data in _allList)
+            {
+
+                if (_data.TableName == _projectname && _data.TableSheetName == _assemblyname)//20240923修改，原项目名和主构件名修改为料表名和料表sheet名
+                {
+                    _newlist.Add(_data);
+                }
+            }
+
+            if (_newlist.Count != 0 && dataGridView1 != null)
+            {
+                Form2.FillDGVWithRebarList(_newlist, dataGridView13);
+            }
+
+
+
+        }
+
+        /// <summary>
+        /// form3独有的，相比form2的同名方法，增加了勾选、进度管控的列
+        /// </summary>
+        /// <param name="_list"></param>
+        /// <param name="_dgv"></param>
+        private void FillDGVWithRebarList(List<RebarData> _list, DataGridView _dgv)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.ELEMENT_NAME], typeof(string));
+            //dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PIC_NO], typeof(string));
+            //dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.LEVEL], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.DIAMETER], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.REBAR_PIC], typeof(Image));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CORNER_MESSAGE], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.LENGTH], typeof(string));
+            //dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PIECE_NUM_UNIT_NUM], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TOTAL_PIECE_NUM], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TOTAL_WEIGHT], typeof(string));
+            //dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.DESCRIPTION], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.SERIALNUM], typeof(string));
+
+            dt.Columns.Add("产线生产", typeof(bool));
+            dt.Columns.Add("选择", typeof(bool));
+            dt.Columns.Add("加工单下发", typeof(bool));
+            dt.Columns.Add("加工完成", typeof(bool));
+
+            foreach (var item in _list)
+            {
+                string sType = item.PicTypeNum;
+                if (sType == "") continue;  //类型为空，跳过加载图片
+                object _image = null;
+
+                if (GeneralClass.CfgData.MaterialBill == EnumMaterialBill.EJIN)//e筋料单
+                {
+                    int _realheight = 0;
+                    _image = graphics.PaintRebarPic(item, out _realheight);//直接画钢筋简图，20250403修改，关闭下面找钢筋图片库的代码，                    
+                }
+                else//广联达料单
+                {
+                    string newpath = GeneralClass.CfgData.GLDpath + @"\" + item.RebarPic;//广联达料单路径+图片路径即为完整路径
+                    _image = Gld.LoadGldImage(newpath);
+                }
+
+                dt.Rows.Add(
+                    item.ChildAssemblyName,
+                    item.ElementName,
+                   //item.PicTypeNum,
+                   //item.Level,
+                   item.Level + item.Diameter,
+                    _image,
+                    item.CornerMessage,
+                    item.Length,
+                    //item.PieceNumUnitNum,
+                    item.TotalPieceNum,
+                    item.TotalWeight,
+                    //item.Description,
+                    item.SerialNum,
+
+                    item.IfMakeInLine,
+                    item.IfPickInBill,
+                    item.IfSendToPCS,
+                    item.IfMakeDone
+                    );
+            }
+
+            _dgv.DataSource = dt;
+            //_dgv.Columns[2].DefaultCellStyle.Format = "P1";
+            _dgv.Columns[7].DefaultCellStyle.Format = "0.00";
+            //_dgv.Columns[4].DefaultCellStyle.Format = "P1";
+
+        }
+
 
         private void ShowElementAddData(List<ElementRebarFB> _fblist, DataGridView _dgv)
         {
@@ -367,21 +483,17 @@ namespace RebarSampling
                         /*长度套料后生成的钢筋原材list*/
                         List<RebarOri> _orilist = Algorithm.Taoliao(eee._list, out totalProductlength);//套料时顺便算一下成品总长度
 
+                        if (_orilist.Count != 0) { GeneralClass.interactivityData?.printlog(1, "套料后，原材使用量为0，结果异常！ "); }
+
                         int rrr = _orilist.Sum(t => t._totalLength);
                         if (rrr < totalProductlength) { GeneralClass.interactivityData?.printlog(1, "套料后，原材总长小于成品总长，翻样长度异常 "); }//原材总长小于成品总长，这是异常情况
 
                         double _yuliao, _feiliao = 0;
 
+
                         foreach (var aaa in _orilist)
                         {
-                            //wbMsg.shift = 1;
-                            //wbMsg.projectName = "光谷国际社区";
-                            //wbMsg.block = "A";
-                            //wbMsg.building = "06D";
-                            //wbMsg.floor = "01F";
-                            //wbMsg.level = "C";//钢筋级别
-                            //wbMsg.brand = "鄂钢";//厂商
-                            //wbMsg.specification = "HRB400";//规格型号
+
                             wbMsg.originLength = aaa._totalLength/*GeneralClass.OriginalLength*/;
                             wbMsg.taosiSetting = _taosiSet;
                             wbMsg.totalOriginal = _orilist.Count;//总的原材根数
@@ -551,29 +663,27 @@ namespace RebarSampling
 
             try
             {
-
-
                 InitDataGridView11();//先清空工单表
 
                 GeneralClass.interactivityData?.printlog(1, "开始长度套料排程");
                 GeneralClass.AddDefaultMaterial();//先添加默认的原材库
 
                 DataTable dt_wb = new DataTable();
-                dt_wb.Columns.Add("类型", typeof(string));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "类型" : "Type", typeof(string));
                 //dt_wb.Columns.Add("仓位", typeof(int));
-                dt_wb.Columns.Add("批次", typeof(int));
-                dt_wb.Columns.Add("直径", typeof(string));
-                dt_wb.Columns.Add("原材(根)", typeof(int));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "批次" : "Batch", typeof(int));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "直径" : "Diameter", typeof(string));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "原材(根)" : "Raw num(piece)", typeof(int));
 
-                dt_wb.Columns.Add("成品(根)", typeof(int));
-                dt_wb.Columns.Add("总重量(kg)", typeof(int));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "成品(根)" : "Product num(piece)", typeof(int));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "总重量(kg)" : "Weight(Kg)", typeof(int));
 
-                dt_wb.Columns.Add("一次利用率(%)", typeof(double));
-                dt_wb.Columns.Add("废料率(%)", typeof(double));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "一次利用率(%)" : "Used rate(%)", typeof(double));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "废料率(%)" : "Scrape rate(%)", typeof(double));
 
-                dt_wb.Columns.Add("原材长(m)", typeof(double));
-                dt_wb.Columns.Add("成品长(m)", typeof(double));
-                dt_wb.Columns.Add("废料(m)", typeof(double));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "原材长(m)" : "Raw length(m)", typeof(double));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "成品长(m)" : "Product length(m)", typeof(double));
+                dt_wb.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "废料(m)" : "Scrape(m)", typeof(double));
 
                 GeneralClass.jsonList_LB.Clear();
                 GeneralClass.json_CX = "";
@@ -596,13 +706,15 @@ namespace RebarSampling
 
                 WorkBillMsg wbMsg = new WorkBillMsg();
                 wbMsg.shift = 1;
-                wbMsg.projectName = "光谷国际社区";
+                wbMsg.projectName = "";//项目，光谷国际社区
                 wbMsg.block = "A";
                 wbMsg.building = "06D";
                 wbMsg.floor = "01F";
-                wbMsg.level = "C";//钢筋级别
-                wbMsg.brand = "鄂钢";//厂商
-                wbMsg.specification = "HRB400";//规格型号
+                wbMsg.level = "";//钢筋级别,C
+                wbMsg.brand = "";//厂商,鄂钢
+                wbMsg.specification = "";//规格型号,HRB400
+                wbMsg.tasklistNo = _allbatch[0].childBatchList[0]._list[0].TableNo;//料单编号
+                wbMsg.tasklistName = _allbatch[0].childBatchList[0]._list[0].TableName;//料单名称
                 CreatWorkBillLB_FromElementList(ref dt_wb, wbMsg, _allbatch);
 
                 GeneralClass.interactivityData?.printlog(1, "创建工单完成");
@@ -614,10 +726,19 @@ namespace RebarSampling
                 dataGridView11.Columns[6].DefaultCellStyle.Format = "P1";          //废料率
                 dataGridView11.Columns[7].DefaultCellStyle.Format = "P1";          //利用率
 
-                int totalpiece = Convert.ToInt32(dt_wb.Compute("sum([原材(根)])", ""));
-                double totalOriLength = Convert.ToDouble(dt_wb.Compute("sum([原材长(m)])", ""));
-                double totallength = Convert.ToDouble(dt_wb.Compute("sum([成品长(m)])", ""));
-                double _feiliao = Convert.ToDouble(dt_wb.Compute("sum([废料(m)])", ""));
+                string s_rawnum = GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "原材(根)" : "Raw num(piece)";
+                string s_rawlength = GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "原材长(m)" : "Raw length(m)";
+                string s_productlength = GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "成品长(m)" : "Product length(m)";
+                string s_scrape = GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "废料(m)" : "Scrape(m)";
+
+                //int totalpiece = Convert.ToInt32(dt_wb.Compute("sum([原材(根)])", ""));
+                //double totalOriLength = Convert.ToDouble(dt_wb.Compute("sum([原材长(m)])", ""));
+                //double totallength = Convert.ToDouble(dt_wb.Compute("sum([成品长(m)])", ""));
+                //double _feiliao = Convert.ToDouble(dt_wb.Compute("sum([废料(m)])", ""));
+                int totalpiece = dt_wb.AsEnumerable().Sum(row => row.Field<int>(s_rawnum));
+                double totalOriLength = dt_wb.AsEnumerable().Sum(row => row.Field<double>(s_rawlength));
+                double totallength = dt_wb.AsEnumerable().Sum(row => row.Field<double>(s_productlength));
+                double _feiliao = dt_wb.AsEnumerable().Sum(row => row.Field<double>(s_scrape));
 
                 int _chengpin = 0;
                 foreach (var item in m_rebarTaoliaoList)
@@ -746,6 +867,7 @@ namespace RebarSampling
             new List<ElementBatch>(),
             new List<ElementBatch>(),
             new List<ElementBatch>(),
+            new List<ElementBatch>(),
             new List<ElementBatch>()};//分组后的构件包，按照数量仓位分组
 
         /// <summary>
@@ -760,7 +882,8 @@ namespace RebarSampling
             new List<ElementBatch>(),
             new List<ElementBatch>(),
             new List<ElementBatch>(),
-            new List<ElementBatch>()};//分组后的构件包，按照数量仓位分组
+            new List<ElementBatch>(),
+        new List<ElementBatch>()};//分组后的构件包，按照数量仓位分组
 
         /// <summary>
         /// 三直径种类构件包分组后的工单，分三个维度：[]维度代表仓位区间，list(外)维度代表直径种类，List(内)维度代表所包含的构件包list
@@ -774,7 +897,7 @@ namespace RebarSampling
             new List<ElementBatch>(),
             new List<ElementBatch>(),
             new List<ElementBatch>(),
-            new List<ElementBatch>()};//分组后的构件包，按照数量仓位分组
+            new List<ElementBatch>(), new List < ElementBatch >()};//分组后的构件包，按照数量仓位分组
 
         /// <summary>
         /// 四直径种类构件包分组后的工单，分三个维度：[]维度代表仓位区间，list(外)维度代表直径种类，List(内)维度代表所包含的构件包list
@@ -788,7 +911,7 @@ namespace RebarSampling
             new List<ElementBatch>(),
             new List<ElementBatch>(),
             new List<ElementBatch>(),
-            new List<ElementBatch>()};//分组后的构件包，按照数量仓位分组
+            new List<ElementBatch>(), new List < ElementBatch >()};//分组后的构件包，按照数量仓位分组
 
         /// <summary>
         /// 5种直径及以上的构件包分组后的工单，分两个维度：[]维度代表仓位区间，list维度代表构件批的list
@@ -797,7 +920,7 @@ namespace RebarSampling
             new List<ElementBatch>(),
             new List<ElementBatch>(),
             new List<ElementBatch>(),
-            new List<ElementBatch>()};//分组后的构件包，按照数量仓位分组
+            new List<ElementBatch>(), new List < ElementBatch >()};//分组后的构件包，按照数量仓位分组
         //private static List<List<ElementDataFB>>[] _multiWorklist = new List<List<ElementDataFB>>[(int)EnumWareNumGroup.maxNum] {
         //    new List<List<ElementDataFB>>(),
         //    new List<List<ElementDataFB>>(),
@@ -811,7 +934,7 @@ namespace RebarSampling
             new List<ElementBatch>(),
             new List<ElementBatch>(),
             new List<ElementBatch>(),
-            new List<ElementBatch>()};//分组后的构件包，按照数量仓位分组
+            new List<ElementBatch>(), new List < ElementBatch >()};//分组后的构件包，按照数量仓位分组
         //private static List<List<ElementDataFB>>[] _fewWorklist = new List<List<ElementDataFB>>[(int)EnumWareNumGroup.maxNum] {
         //    new List<List<ElementDataFB>>(),
         //    new List<List<ElementDataFB>>(),
@@ -854,6 +977,8 @@ namespace RebarSampling
                       (_sts.Item5 ? (t.RebarShapeType == EnumRebarShapeType.SHAPE_MD) : false) ||
                       (_sts.Item6 ? (t.RebarShapeType == EnumRebarShapeType.SHAPE_DT) : false) ||
                        (_sts.Item7 ? (t.RebarShapeType == EnumRebarShapeType.SHAPE_ZJ) : false))
+                       &&
+                       (comboBox1.SelectedIndex == 0 ? true : t.Diameter == GeneralClass.EnumDiameterToInt((EnumDiaBang)(comboBox1.SelectedIndex - 1)))
             &&
                        (GeneralClass.CfgData.IfOrignalTao ? true : t.iLength != GeneralClass.OriginalLength(t.Level, t.Diameter))//20241010增加原材是否参与套料的功能
                 ).ToList();
@@ -1894,7 +2019,7 @@ namespace RebarSampling
                    _wareSet,
                    0,
 
-                    item.projectName, item.assemblyName, item.elementName);
+                    item.projectName, item.mainAssemblyName, item.elementName);
             }
 
             _dgv.DataSource = dt_z;
@@ -2004,7 +2129,7 @@ namespace RebarSampling
                     ((num[6] == 0) ? "" : num[6].ToString()) + ((numTao[6] == 0) ? "" : ("(" + numTao[6].ToString() + ")")) + ((numTaoF[6] == 0) ? "" : ("(" + numTaoF[6].ToString() + "*)")),
                     ((num[7] == 0) ? "" : num[7].ToString()) + ((numTao[7] == 0) ? "" : ("(" + numTao[7].ToString() + ")")) + ((numTaoF[7] == 0) ? "" : ("(" + numTaoF[7].ToString() + "*)")),
                     ((num[8] == 0) ? "" : num[8].ToString()) + ((numTao[8] == 0) ? "" : ("(" + numTao[8].ToString() + ")")) + ((numTaoF[8] == 0) ? "" : ("(" + numTaoF[8].ToString() + "*)")),
-                    item.projectName, item.assemblyName, item.elementName);
+                    item.projectName, item.mainAssemblyName, item.elementName);
             }
 
             //再加一个总计
@@ -2176,7 +2301,7 @@ namespace RebarSampling
         {
             DataTable dt = new DataTable();
             //dt.Columns.Add("序号", typeof(int));
-            dt.Columns.Add("钢筋原材分段", typeof(Image));
+            dt.Columns.Add(GeneralClass.CfgData.LanguageType == EnumLanguageType.Chinese ? "钢筋原材分段" : "Raw rebar nesting detail ", typeof(Image));
 
 
             foreach (var item in _list)
@@ -2522,10 +2647,128 @@ namespace RebarSampling
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //隐藏导航栏
-            this.splitContainer1.Panel1Collapsed = !this.splitContainer1.Panel1Collapsed;
-            //根据隐藏属性切换项目资源文件中的图片显示
-            button1.Image = this.splitContainer1.Panel1Collapsed ? Properties.Resources.icons8_double_down_26 : Properties.Resources.icons8_double_up_26;
+            ////隐藏导航栏
+            //this.splitContainer1.Panel1Collapsed = !this.splitContainer1.Panel1Collapsed;
+            ////根据隐藏属性切换项目资源文件中的图片显示
+            //button1.Image = this.splitContainer1.Panel1Collapsed ? Properties.Resources.icons8_double_down_26 : Properties.Resources.icons8_double_up_26;
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dataGridView13.DataSource = null;
+            List<RebarData> _pickedlist = Pick(GeneralClass.AllRebarList);
+            FillDGVWithRebarList(_pickedlist, dataGridView13);
+        }
+
+        private void checkBox7_CheckedChanged(object sender, EventArgs e)
+        {
+            dataGridView13.DataSource = null;
+            List<RebarData> _pickedlist = Pick(GeneralClass.AllRebarList);
+            FillDGVWithRebarList(_pickedlist, dataGridView13);
+        }
+
+        private void checkBox8_CheckedChanged(object sender, EventArgs e)
+        {
+            dataGridView13.DataSource = null;
+            List<RebarData> _pickedlist = Pick(GeneralClass.AllRebarList);
+            FillDGVWithRebarList(_pickedlist, dataGridView13);
+        }
+
+        private void checkBox9_CheckedChanged(object sender, EventArgs e)
+        {
+            dataGridView13.DataSource = null;
+            List<RebarData> _pickedlist = Pick(GeneralClass.AllRebarList);
+            FillDGVWithRebarList(_pickedlist, dataGridView13);
+        }
+
+        private void checkBox10_CheckedChanged(object sender, EventArgs e)
+        {
+            dataGridView13.DataSource = null;
+            List<RebarData> _pickedlist = Pick(GeneralClass.AllRebarList);
+            FillDGVWithRebarList(_pickedlist, dataGridView13);
+        }
+
+        private void checkBox11_CheckedChanged(object sender, EventArgs e)
+        {
+            dataGridView13.DataSource = null;
+            List<RebarData> _pickedlist = Pick(GeneralClass.AllRebarList);
+            FillDGVWithRebarList(_pickedlist, dataGridView13);
+        }
+
+        private void checkBox13_CheckedChanged(object sender, EventArgs e)
+        {
+            dataGridView13.DataSource = null;
+            List<RebarData> _pickedlist = Pick(GeneralClass.AllRebarList);
+            FillDGVWithRebarList(_pickedlist, dataGridView13);
+        }
+
+        private void checkBox12_CheckedChanged(object sender, EventArgs e)
+        {
+            dataGridView13.DataSource = null;
+            List<RebarData> _pickedlist = Pick(GeneralClass.AllRebarList);
+            FillDGVWithRebarList(_pickedlist, dataGridView13);
+        }
+        //保存至数据库
+        private void button9_Click(object sender, EventArgs e)
+        {
+
+        }
+        //料单总表根据进度栏状态改变当前行的颜色
+        private void dataGridView13_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dataGridView13.Rows[e.RowIndex].IsNewRow && e.ColumnIndex == 3)//消除默认的红叉叉
+            {
+                //e.Value = pictureBox1.Image;
+            }
+
+            // 对数量为0 的列，显示灰色
+            if (e.RowIndex >= 0 &&
+                e.RowIndex < (dataGridView13.Rows.Count - 1) &&
+                dataGridView13.Rows.Count > e.RowIndex &&
+                dataGridView13.Columns.Count >= 10)
+            {
+                DataGridViewRow row = dataGridView13.Rows[e.RowIndex];
+
+                // 获取【总根数】列的值
+                int _num = Convert.ToInt32(row.Cells[GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TOTAL_PIECE_NUM]].Value);
+
+                if (_num == 0)
+                {
+                    e.CellStyle.BackColor = System.Drawing.Color.Gray;//数量为0，显示灰色
+                }
+                else
+                {
+                    e.CellStyle.BackColor = System.Drawing.Color.White;//其他白色
+                }
+
+            }
+        }
+        /// <summary>
+        /// 翻转边角结构
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button7_Click(object sender, EventArgs e)
+        {
+            textBox5.Text = GeneralClass.LDOpt.ldhelper.ExchangeRebarMsg(m_cornerMsg);
+        }
+
+        private string m_cornerMsg = "";
+        private void dataGridView13_MouseDown(object sender, MouseEventArgs e)
+        {
+            // 获取鼠标在DataGridView中的位置（行和列索引）  
+            int rowIndex = dataGridView13.HitTest(e.X, e.Y).RowIndex;
+            int colIndex = dataGridView13.HitTest(e.X, e.Y).ColumnIndex;
+
+            if (rowIndex >= 0 && colIndex >= 0)
+            {
+                 m_cornerMsg = (string)(dataGridView13.Rows[rowIndex].Cells[5].Value);
+
+            }
+
+            //int _length = (int)(dt.Rows[rowIndex][2]);
+
 
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NPOI.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace RebarSampling.Database
     /// <summary>
     /// e筋料单解析类
     /// </summary>
-    public class EJINHelper:ILDHelper
+    public class EJINHelper : ILDHelper
     {
         /// <summary>
         /// 分解通长多段筋
@@ -86,24 +87,38 @@ namespace RebarSampling.Database
                 {
                     for (int j = 1; j < m_listgroup.Count; j++)//从1开始
                     {
+                        //EnumMultiHeadType ttt = m_listgroup[j - 1].Last().headType;
+
                         if (m_listgroup[j - 1].Last().headType == EnumMultiHeadType.TAO_P
-                            || m_listgroup[j - 1].Last().headType == EnumMultiHeadType.TAO_V)//前一个是正套或者变径套，则添加正丝端头进去
+                            || m_listgroup[j - 1].Last().headType == EnumMultiHeadType.TAO_V
+                            || m_listgroup[j - 1].Last().headType == EnumMultiHeadType.SI_P)//前一个是正套、正丝或者变径套，则添加正丝端头进去
                         {
+                            temp = new GeneralMultiData();//注意一定要new一下，否则后续会改掉其引用的内容
                             temp.length = "0";
                             temp.num = m_listgroup[j].First().num;
                             temp.cornerMsg = "0,丝";
-                            //temp.headType = EnumMultiHeadType.SI_P;
 
                             m_listgroup[j].Insert(0, temp);//插入到第一个
                         }
-                        if (m_listgroup[j - 1].Last().headType == EnumMultiHeadType.TAO_N)//反丝
+                        if (m_listgroup[j - 1].Last().headType == EnumMultiHeadType.TAO_N
+                            || m_listgroup[j - 1].Last().headType == EnumMultiHeadType.SI_N)//反套、反丝，则添加反丝端头进去
                         {
+                            temp = new GeneralMultiData();
                             temp.length = "0";
                             temp.num = m_listgroup[j].First().num;
-                            temp.cornerMsg = "0,反丝";
-                            //temp.headType = EnumMultiHeadType.SI_N;
+                            temp.cornerMsg = "0,反";
 
                             m_listgroup[j].Insert(0, temp);//插入到第一个
+
+                            //20250702增加逻辑，判断前后两段长度，长的用丝，短的用反丝
+                            if (m_listgroup[j - 1].Last().ilength < m_listgroup[j][1].ilength)
+                            {
+                                m_listgroup[j].First().cornerMsg = m_listgroup[j].First().cornerMsg.Replace('反', '丝');
+                            }
+                            else
+                            {
+                                m_listgroup[j - 1].Last().cornerMsg = m_listgroup[j - 1].Last().cornerMsg.Replace('反', '丝');
+                            }
                         }
                     }
                 }
@@ -147,8 +162,10 @@ namespace RebarSampling.Database
                     double tt;
                     double.TryParse(_MultiLength[k].length, out tt);//可能有缩尺
                     _tempdata.TotalWeight = _data.TotalWeight * tt * _MultiLength[k].num / (double)GetMultiTotalLength(_data.Length);//20240813，解决bug，注意要乘以数量
+                    _tempdata.TableNo = _data.TableNo;//料表编号
                     _tempdata.TableName = _data.TableName;//料表名
                     _tempdata.TableSheetName = _data.TableSheetName;//料表sheet名
+                    _tempdata.SerialNum = _data.SerialNum + "-" + (k + 1).ToString();//标注序号也要增加一个层级
 
                     //ModifyRebarData(ref _tempdata);//修改其他的项
                     ModifyRebarPicNum(ref _tempdata);//修改图形编号
@@ -176,7 +193,7 @@ namespace RebarSampling.Database
         /// <param name="_cornerMsg">边角信息</param>
         /// <param name="_diameter">直径，缺省=1，因某些长度信息与直径相关</param>
         /// <returns></returns>
-        public  List<GeneralMultiData> GetMultiData(string _cornerMsg, int _diameter = 1)
+        public List<GeneralMultiData> GetMultiData(string _cornerMsg, int _diameter = 1)
         {
             try
             {
@@ -380,7 +397,315 @@ namespace RebarSampling.Database
             catch (Exception ex) { MessageBox.Show("GetMultiTotalLength error:" + ex.Message); return 0; }
 
         }
+        /// <summary>
+        /// 主要是针对长度大于阈值的弯拐，自动改为负角度
+        /// </summary>
+        /// <param name="_msg"></param>
+        /// <returns></returns>
+        public string ModifyRebarMsg(string _msg)
+        {
+            try
+            {
+                string _newMsg = _msg;
 
+                List<GeneralMultiData> _MultiData = GeneralClass.LDOpt.ldhelper.GetMultiData(_msg);
+
+                int _middleLength = _MultiData.Max(t => t.ilength);//取最长的一段作为中段
+                int _midIndex = 0;
+                foreach (var item in _MultiData)
+                {
+                    if (item.ilength == _middleLength) { _midIndex = _MultiData.IndexOf(item); break; }//先找到中段长度和中段的index
+                }
+
+                //如果中段的前一段和本段均为弯曲，且角度相反，则不做处理
+                if (_midIndex > 0 && _MultiData[_midIndex - 1].type == 1 && _MultiData[_midIndex].type == 1
+                    && (_MultiData[_midIndex - 1].angle * _MultiData[_midIndex].angle < 0))
+                {
+                    return _newMsg;
+                }
+
+                //如果中段的前一段和本段均为弯曲，且角度一致，则同时判断两段的弯拐长度是否长于阈值
+                if (_midIndex > 0 && _MultiData[_midIndex - 1].type == 1 && _MultiData[_midIndex].type == 1
+                    && (_MultiData[_midIndex - 1].angle * _MultiData[_midIndex].angle > 0))
+                {
+                    if (_MultiData[_midIndex - 1].angle < 0 && _MultiData[_midIndex].angle < 0) { return _newMsg; }//角度小于0，那就不管了
+
+                    if (_MultiData[_midIndex - 1].ilength > GeneralClass.CfgData.OverLengthAutoN_Angle ||
+                        _MultiData[_midIndex + 1].ilength > GeneralClass.CfgData.OverLengthAutoN_Angle)//只要有一个弯拐长度大于阈值，两个角度都要反向
+                    {
+                        int tempAngle = -_MultiData[_midIndex - 1].angle;//角度反向
+                        _MultiData[_midIndex - 1].cornerMsg = _MultiData[_midIndex - 1].msg_first +","+ tempAngle.ToString();//重新拼凑边角信息
+
+                        tempAngle = -_MultiData[_midIndex].angle;//角度反向
+                        _MultiData[_midIndex].cornerMsg = _MultiData[_midIndex].msg_first +","+ tempAngle.ToString();//重新拼凑边角结构
+
+                        _newMsg = string.Join(";", _MultiData.Select(t => t.cornerMsg));//将所有multidata的边角结构信息串起来
+                        return _newMsg;
+                    }
+                    else { return _newMsg; }
+                }
+
+                if (_MultiData[_midIndex].type == 1)//中段后段弯曲
+                {
+                    if (_MultiData[_midIndex].angle < 0) { return _newMsg; }//角度小于0，那就不管了
+                    else
+                    {
+                        int tempAngle = -_MultiData[_midIndex].angle;//角度反向
+                        _MultiData[_midIndex].cornerMsg = _MultiData[_midIndex].msg_first +","+ tempAngle.ToString();//重新拼凑边角结构
+
+                        _newMsg = string.Join(";", _MultiData.Select(t => t.cornerMsg));//将所有multidata的边角结构信息串起来
+                        return _newMsg;
+                    }
+                }
+
+                if (_midIndex > 0&& _MultiData[_midIndex-1].type == 1)//中段前段弯曲
+                {
+                    if (_MultiData[_midIndex-1].angle < 0) { return _newMsg; }//角度小于0，那就不管了
+                    else
+                    {
+                        int tempAngle = -_MultiData[_midIndex-1].angle;//角度反向
+                        _MultiData[_midIndex-1].cornerMsg = _MultiData[_midIndex-1].msg_first +","+ tempAngle.ToString();//重新拼凑边角结构
+
+                        _newMsg = string.Join(";", _MultiData.Select(t => t.cornerMsg));//将所有multidata的边角结构信息串起来
+                        return _newMsg;
+                    }
+                }
+
+
+                //if (_midIndex > 0 && _MultiData[_midIndex - 1].type == 1 && _MultiData[_midIndex - 1].angle > 0
+                //    && _MultiData[_midIndex - 1].ilength > GeneralClass.CfgData.OverLengthAutoN_Angle
+                //    &&(_midIndex==(_MultiData.Count-1) ||(_midIndex <(_MultiData.Count-1) && _MultiData[_midIndex + 1].type == 1 && _MultiData[_midIndex+1].angle>0 )       )       )//中段的前一段是弯曲，且长度大于阈值，且角度为正
+                //{
+                //    //暂时不知道怎么开发，放一放，20250916
+                //}
+
+                //if (_midIndex < (_MultiData.Count - 1) && _MultiData[_midIndex + 1].type == 1 && _MultiData[_midIndex+1].angle>0
+                //    && _MultiData[_midIndex+1].ilength>GeneralClass.CfgData.OverLengthAutoN_Angle)//中段的后一段是弯曲，且长度大于阈值，且角度为正
+                //{
+                //}
+
+
+                return _newMsg;
+            }
+            catch (Exception ex) { MessageBox.Show("GetMultiTotalLength error:" + ex.Message); return string.Empty; }
+        }
+        private string ExchangeMsg(string _msg)
+        {
+            string _newMsg = _msg;//先复制
+
+            List<GeneralMultiData> _multidata = GetMultiData(_msg);
+            GeneralMultiData _temp = new GeneralMultiData();
+            List<GeneralMultiData> _templist = new List<GeneralMultiData>();
+
+            if (_multidata.Last().type == 2 || _multidata.Last().type == 3)
+            {
+                //先添加【0,丝】的端头
+                _temp = new GeneralMultiData();
+                _temp.cornerMsg = "0," + _multidata.Last().msg_second;//如果端尾为套丝类型，则翻转后，添加"0,丝"的端头
+                _templist.Add(_temp);
+            }
+
+            for (int i = _multidata.Count - 1; i > 0; i--)
+            {
+                _temp = new GeneralMultiData();
+                _temp.cornerMsg = _multidata[i].msg_first + "," + _multidata[i - 1].msg_second;//后一个的端头长度加上前一个的端头类型
+                _templist.Add(_temp);
+            }
+
+            if (_multidata.First().ilength != 0)//原端头长度不为0
+            {
+                _temp = new GeneralMultiData();
+                _temp.cornerMsg = _multidata.First().msg_first + ",0";//
+                _templist.Add(_temp);
+            }
+
+            _newMsg = string.Join(";", _templist.Select(t => t.cornerMsg));//将所有multidata的边角结构信息串起来
+            return _newMsg;
+
+        }
+        /// <summary>
+        /// 调整/翻转边角结构
+        /// 策略一：一正一反情况下，正反丝要做翻转，确保正丝在前，反丝在后
+        /// 策略二：一头套丝，一头不为套丝（无论正反丝）情况下，需确保不套丝在前，以保证尽可能少切头
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public string ExchangeRebarMsg(string _msg)
+        {
+            try
+            {
+                string _newMsg = _msg;//先复制
+
+                List<GeneralMultiData> _multidata = GetMultiData(_msg);
+                GeneralMultiData _temp = new GeneralMultiData();
+                List<GeneralMultiData> _templist = new List<GeneralMultiData>();
+
+                if (_multidata == null) { throw new ArgumentNullException(nameof(_multidata), "_mulitdata  is null"); }
+
+                /*      双头套丝，包括左正右反，左反右正，左正右正三种情况       */
+                if (_multidata.Count > 1 && _multidata.First().type > 1 && _multidata.Last().type > 1)//端头类型大于1，就是套丝的
+                {
+                    if ((_multidata.First().type == 2 && _multidata.Last().type == 3 && GeneralClass.CfgData.InverseCornerMsgForFan == -1) ||//左正右反，且反丝左侧倾向
+                        (_multidata.First().type == 3 && _multidata.Last().type == 2 && GeneralClass.CfgData.InverseCornerMsgForFan == 1))//左反右正，且反丝右侧倾向
+                    {
+                        return ExchangeMsg(_msg);
+                        ////先添加【0,丝】的端头
+                        //_temp = new GeneralMultiData();
+                        //_temp.cornerMsg = "0," + _multidata.Last().msg_second;//如果端尾为套丝类型，则翻转后，添加"0,丝"的端头
+                        //_templist.Add(_temp);
+
+                        //for (int i = _multidata.Count - 1; i > 0; i--)
+                        //{
+                        //    _temp = new GeneralMultiData();
+                        //    _temp.cornerMsg = _multidata[i].msg_first + "," + _multidata[i - 1].msg_second;//后一个的端头长度加上前一个的端头类型
+                        //    _templist.Add(_temp);
+                        //}
+
+                        //if (_multidata.First().ilength != 0)//原端头长度不为0
+                        //{
+                        //    _temp = new GeneralMultiData();
+                        //    _temp.cornerMsg = _multidata.First().msg_first + ",0";//
+                        //    _templist.Add(_temp);
+                        //}
+
+                        //_newMsg = string.Join(";", _templist.Select(t => t.cornerMsg));//将所有multidata的边角结构信息串起来
+                        //return _newMsg;
+                    }
+                    else //其他的两头套丝情况，不做改变，直接return
+                    {
+                        return _newMsg;
+                    }
+                }
+
+
+
+
+                /**现在处理单头套丝的情况，，单头反丝 ，**/
+                if (GeneralClass.CfgData.InverseCornerMsgForFan == -1)//反丝左侧倾向
+                {
+                    //翻转情况1：如果端尾反丝，端头不套丝；翻转情况2：只有一段，且端尾反丝
+                    //if ((_multidata.First().type != 2 && _multidata.First().type != 3 && _multidata.Last().type == 3) ||
+                    //    (_multidata.Count == 1 && _multidata.Last().type == 3))
+                    if (_multidata.Last().type == 3)
+                    {
+                        return ExchangeMsg(_msg);
+                        ////先添加【0,反】的端头
+                        //_temp = new GeneralMultiData();
+                        //_temp.cornerMsg = "0," + _multidata.Last().msg_second;//如果端尾为套丝类型，则翻转后，添加"0,反"的端头
+                        //_templist.Add(_temp);
+
+                        //for (int i = _multidata.Count - 1; i > 0; i--)
+                        //{
+                        //    _temp = new GeneralMultiData();
+                        //    _temp.cornerMsg = _multidata[i].msg_first + "," + _multidata[i - 1].msg_second;//后一个的端头长度加上前一个的端头类型
+                        //    _templist.Add(_temp);
+                        //}
+
+                        //if (_multidata.First().ilength != 0)//原端头长度不为0
+                        //{
+                        //    _temp = new GeneralMultiData();
+                        //    _temp.cornerMsg = _multidata.First().msg_first + ",0";//
+                        //    _templist.Add(_temp);
+                        //}
+
+                        //_newMsg = string.Join(";", _templist.Select(t => t.cornerMsg));//将所有multidata的边角结构信息串起来
+                        //return _newMsg;
+                    }
+
+                }
+                else if (GeneralClass.CfgData.InverseCornerMsgForFan == 1)//反丝右侧倾向
+                {
+                    //if (_multidata.First().ilength == 0 && _multidata.First().type == 3)//只要端头长度为0，且为反丝，就要换到端尾去
+                    if (_multidata.Count > 1 && _multidata.First().type == 3)//只要端头反丝，且不止一段，就要换到端尾去
+                    {
+                        return ExchangeMsg(_msg);
+                        //if (_multidata.Last().type == 2 || _multidata.Last().type == 3)//尾部也有可能是反丝，先不管这种特殊情况
+                        //{
+                        //    _temp = new GeneralMultiData();
+                        //    _temp.cornerMsg = "0," + _multidata.Last().msg_second;//如果端尾为套丝类型，则翻转后，添加"0,丝"的端头
+                        //    _templist.Add(_temp);
+                        //}
+                        //for (int i = _multidata.Count - 1; i > 0; i--)
+                        //{
+                        //    _temp = new GeneralMultiData();
+                        //    _temp.cornerMsg = _multidata[i].msg_first + "," + _multidata[i - 1].msg_second;//后一个的端头长度加上前一个的端头类型
+                        //    _templist.Add(_temp);
+                        //}
+                        //_newMsg = string.Join(";", _templist.Select(t => t.cornerMsg));//将所有multidata的边角结构信息串起来
+                        //return _newMsg;
+                    }
+                }
+                //其他情况不处理
+
+
+
+
+                /**单头正丝**/
+                if (GeneralClass.CfgData.InverseCornerMsgForTao == -1)//如果是左侧正丝倾向
+                {
+                    //翻转情况1：如果端尾套丝，端头不套丝；翻转情况2：只有一段，且端尾正丝
+                    //if ((_multidata.First().type != 2 && _multidata.First().type != 3 && _multidata.Last().type == 2) ||
+                    //    (_multidata.Count == 1 && _multidata.Last().type == 2))
+                    if (_multidata.Last().type == 2)
+                    {
+                        return ExchangeMsg(_msg);
+                        ////先添加【0,丝】的端头
+                        //_temp = new GeneralMultiData();
+                        //_temp.cornerMsg = "0," + _multidata.Last().msg_second;//如果端尾为套丝类型，则翻转后，添加"0,丝"的端头
+                        //_templist.Add(_temp);
+
+                        //for (int i = _multidata.Count - 1; i > 0; i--)
+                        //{
+                        //    _temp = new GeneralMultiData();
+                        //    _temp.cornerMsg = _multidata[i].msg_first + "," + _multidata[i - 1].msg_second;//后一个的端头长度加上前一个的端头类型
+                        //    _templist.Add(_temp);
+                        //}
+
+                        //if (_multidata.First().ilength != 0)//原端头长度不为0
+                        //{
+                        //    _temp = new GeneralMultiData();
+                        //    _temp.cornerMsg = _multidata.First().msg_first + ",0";//
+                        //    _templist.Add(_temp);
+                        //}
+
+                        //_newMsg = string.Join(";", _templist.Select(t => t.cornerMsg));//将所有multidata的边角结构信息串起来
+                        //return _newMsg;
+                    }
+
+                }
+                else if (GeneralClass.CfgData.InverseCornerMsgForTao == 1)//右侧正丝倾向
+                {
+                    //如果端头套丝，端尾不套丝，则翻转，
+                    //if (_multidata.First().ilength == 0 && (_multidata.First().type == 2 ||
+                    //    _multidata.First().type == 3) && _multidata.Last().type != 2 && _multidata.Last().type != 3)
+                    if (_multidata.First().type == 2 && _multidata.Count > 1)
+                    {
+                        return ExchangeMsg(_msg);
+                        //if (_multidata.Last().type != 0)//原始端头就不用添加【0，xx】了，其他的类型【搭、单、双、对、竖】
+                        //{
+                        //    _temp = new GeneralMultiData();
+                        //    _temp.cornerMsg = "0," + _multidata.Last().msg_second;//如果端尾为套丝类型，则翻转后，添加"0,丝"的端头
+                        //    _templist.Add(_temp);
+                        //}
+
+                        //for (int i = _multidata.Count - 1; i > 0; i--)
+                        //{
+                        //    _temp = new GeneralMultiData();
+                        //    _temp.cornerMsg = _multidata[i].msg_first + "," + _multidata[i - 1].msg_second;//后一个的端头长度加上前一个的端头类型
+                        //    _templist.Add(_temp);
+                        //}
+                        //_newMsg = string.Join(";", _templist.Select(t => t.cornerMsg));//将所有multidata的边角结构信息串起来
+                        //return _newMsg;
+                    }
+
+                }
+                //其他情况，就不用翻转，啥事不干
+
+
+                return _newMsg;
+            }
+            catch (Exception ex) { MessageBox.Show("ExchangeRebarMsg error:" + ex.Message); return string.Empty; }
+        }
         /// <summary>
         /// 修改钢筋的图形编号，主要是拆分多段钢筋时使用，修改图形编号
         /// </summary>
@@ -707,17 +1032,31 @@ namespace RebarSampling.Database
         {
             try
             {
-                if (_data.Length.IndexOf('~') <= -1)
-                {
-                    GeneralClass.interactivityData?.printlog(1, "缩尺数据格式不正确，请检查！");
-                    return null;
-                }
+                //if (_data.Length.IndexOf('~') <= -1)
+                //{
+                //    GeneralClass.interactivityData?.printlog(1, "缩尺数据格式不正确，请检查！");
+                //    return null;
+                //}
 
+                //例如：根数*件数=5*2，取5为根数，2为件数
+                //例如：根数*件数*组数=6*2*2，取6为一个缩尺里面的根数，后面的2*2=4为总根数
                 int _num = 0;//根数
-                int _piece = 0;//件数
-                string[] _numStr = _data.PieceNumUnitNum.Split('*');//例如：根数*件数=5*2，取5为根数，2为件数
-                _num = Convert.ToInt32(_numStr[0]);
-                _piece = (_numStr.Length > 1) ? Convert.ToInt32(_numStr[1]) : 1;
+                int _piece = 1;//件数
+                string[] _numStr = _data.PieceNumUnitNum.Split('*');
+                List<int> numlist = new List<int>();
+                for (int i = 0; i < _numStr.Length; i++)
+                {
+                    int temp = Convert.ToInt32(_numStr[i]);
+                    numlist.Add(temp);
+                    _piece *= temp;
+                }
+                //_num = Convert.ToInt32(_numStr[0]);
+                //_piece = (_numStr.Length > 1) ? Convert.ToInt32(_numStr[1]) : 1;
+                _num = numlist[0];
+                _piece = _piece / _num;
+
+
+
 
                 ////示例：△64mm，截取缩尺间距的数值
                 //int _ss = _data.Description.IndexOf('△');
@@ -728,20 +1067,22 @@ namespace RebarSampling.Database
                 RebarData _newdata = new RebarData();
 
                 ////注意：边角信息里面的缩尺数值跟下料长度中的缩尺数值是不一样的，要分开计算
-                List<int> _lengthlist = SuoChiDeal(_data.Length, _num);
+                List<int> _kunNum = new List<int>();
+                List<int> _lengthlist = SuoChiDealLength(_data.Length, _num, ref _kunNum);//_kunNum为几根一个缩尺
 
-                List<string> _cornerlist = SuoChiDealCornerMsg(_data.CornerMessage, _num);
+                List<string> _cornerlist = SuoChiDealCornerMsg(_data.CornerMessage, _num, _kunNum.Count);//
 
-                for (int i = 0; i < _num; i++)
+                for (int i = 0; i < _kunNum.Count; i++)
                 {
                     _newdata = new RebarData();
                     _newdata.Copy(_data);//先复制原本的rebardata
                     _newdata.Length = _lengthlist[i].ToString();
                     _newdata.CornerMessage = _cornerlist[i];
-                    _newdata.PieceNumUnitNum = _piece != 1 ? ("1*" + _piece) : "1";
-                    _newdata.TotalPieceNum = 1 * _piece;
+                    _newdata.PieceNumUnitNum = _piece != 1 ? (_kunNum[i] + "*" + _piece) : _kunNum[i].ToString();
+                    _newdata.TotalPieceNum = _kunNum[i] * _piece;
 
                     _newdata.TotalWeight = _data.TotalWeight * (double)_lengthlist[i] / (double)_lengthlist.Sum();
+                    _newdata.SerialNum = _data.SerialNum + "-" + (i + 1).ToString();    //标注序号要增加一个-1-2
 
                     ModifyRebarPicNum(ref _newdata);//修改图形编号，20240902修改bug
 
@@ -759,8 +1100,9 @@ namespace RebarSampling.Database
         /// </summary>
         /// <param name="_suochi">缩尺长度信息，例如：1420~870</param>
         /// <param name="_num">总共多少根缩尺筋，间距数量-1</param>
+        /// <param name="kunNum">多少根一缩尺</param>
         /// <returns>返回处理好的长度数值的list</returns>
-        public List<int> SuoChiDeal(string _suochi, int _num)
+        public List<int> SuoChiDealLength(string _suochi, int _num, ref List<int> kunNum)
         {
             try
             {
@@ -773,13 +1115,37 @@ namespace RebarSampling.Database
                 int _maxlength = Math.Max(_startlength, _endlength);
                 int _minlength = Math.Min(_startlength, _endlength);
 
-                for (int i = 0; i < _num; i++)//从最短的开始
+                double spacing = (double)(_maxlength - _minlength) / ((_num - 1) != 0 ? (_num - 1) : 1);//缩尺间距
+
+                //缩尺规则重新定义：
+                //缩尺间距小于等于5mm，10根一缩
+                //小于等于10mm，五根一缩
+                //小于等于20mm，3根一缩
+                //小于等于30mm，2根一缩
+                //大于30mm，1根一缩
+                int _kunNum = 0;
+                if (spacing <= 5 * 1.05) { _kunNum = GeneralClass.CfgData.SuoChiNum_1; }
+                else if (spacing > 5 && spacing <= 10 * 1.05) { _kunNum = GeneralClass.CfgData.SuoChiNum_2; }
+                //if (spacing <= 10) { _kunNum = 10; }
+                else if (spacing > 10 && spacing <= 20 * 1.05) { _kunNum = GeneralClass.CfgData.SuoChiNum_3; }
+                else if (spacing > 20 && spacing <= 30 * 1.05) { _kunNum = GeneralClass.CfgData.SuoChiNum_4; }
+                else { _kunNum = GeneralClass.CfgData.SuoChiNum_5; }
+
+                kunNum.Clear();
+                while (_num > 0)
                 {
-                    if (_num == 1)
-                    {
-                        GeneralClass.interactivityData?.printlog(1, "缩尺信息:" + _suochi + "，数量:" + _num + "，数据不正确，请检查！");
-                    }
-                    int temp = _minlength + i * (_maxlength - _minlength) / ((_num - 1) != 0 ? (_num - 1) : 1);
+                    if (_num > _kunNum) { kunNum.Add(_kunNum); _num -= _kunNum; }//总根数大于几根一缩尺
+                    else { kunNum.Add(_num); _num -= _num; }//总根数小于几根一缩尺
+                }
+
+                double newSpacing = (double)(_maxlength - _minlength) / ((kunNum.Count - 1) != 0 ? (kunNum.Count - 1) : 1);
+                for (int i = 0; i < kunNum.Count; i++)//从最短的开始
+                {
+                    //if (_num == 1)
+                    //{
+                    //    GeneralClass.interactivityData?.printlog(1, "缩尺信息:" + _suochi + "，数量:" + _num + "，数据不正确，请检查！");
+                    //}
+                    int temp = _minlength + (int)(i * newSpacing);
                     _retlist.Add(temp);
                 }
 
@@ -791,9 +1157,10 @@ namespace RebarSampling.Database
         /// 处理缩尺的边角信息，返回新的边角信息序列,从短到长排列
         /// </summary>
         /// <param name="_cornerMsg"></param>
-        /// <param name="_num"></param>
+        /// <param name="_totalnum">总根数</param>
+        /// <param name="_num">缩尺几组，组数</param>
         /// <returns></returns>
-        public List<string> SuoChiDealCornerMsg(string _cornerMsg, int _num)
+        public List<string> SuoChiDealCornerMsg(string _cornerMsg, int _totalnum, int _num)
         {
             try
             {
@@ -810,7 +1177,9 @@ namespace RebarSampling.Database
                         if (_multi.cornerMsg.IndexOf('~') > -1)
                         {
                             string _msg = _multi.cornerMsg.Split(',')[0];
-                            List<int> temp = SuoChiDeal(_msg, _num);
+                            List<int> _kunNum = new List<int>();//先留着，不用
+                                                                //List<int> temp = SuoChiDealLength(_msg, _num, ref _kunNum);
+                            List<int> temp = SuoChiDealLength(_msg, _totalnum, ref _kunNum);
 
                             string _newmulti = temp[i] + "," + _multi.cornerMsg.Split(',')[1] + ";";
                             _newCornerMsg += _newmulti;

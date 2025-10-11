@@ -175,6 +175,10 @@ namespace RebarSampling
         /// 2、弯曲线视觉扫码时，读取此信息进入数据库进行检索，调出对应的弯曲加工信息
         /// </summary>
         public string IndexCode { get; set; }
+        /// <summary>
+        /// 料单中钢筋唯一识别码
+        /// </summary>
+        public string UniqueCode { get; set; }
     }
 
     /// <summary>
@@ -196,6 +200,14 @@ namespace RebarSampling
         /// 当前的原材流水号
         /// </summary>
         public int curOriginal { get; set; }
+        /// <summary>
+        /// 任务单编号，即料单编号
+        /// </summary>
+        public string tasklistNo { get; set; }
+        /// <summary>
+        /// 任务单名称，即料单名称
+        /// </summary>
+        public string tasklistName { get; set; }
         /// <summary>
         /// 项目名称
         /// </summary>
@@ -374,6 +386,7 @@ namespace RebarSampling
             this.Brand = "";
             this.Specification = "";
             this.OriginalLength = 0;
+            this.TaosiSetting = "";
             this.SteelbarList = new List<WorkBill_LB_SingleRebar>();
         }
         /// <summary>
@@ -395,6 +408,14 @@ namespace RebarSampling
         ///日期_班次_批次总数_批次流水号_当前批钢筋原材总数_钢筋原材流水号
         /// </summary>
         public string SteelbarNo { get; set; }
+        /// <summary>
+        /// 任务单编号，即料单编号
+        /// </summary>
+        public string TasklistNo { get; set; }
+        /// <summary>
+        /// 任务单名称，即料单名称
+        /// </summary>
+        public string TasklistName {  get; set; }   
         /// <summary>
         /// 项目名称
         /// </summary>
@@ -447,6 +468,8 @@ namespace RebarSampling
         {
             this.Msgtype = 1;
             this.BillNo = "";
+            this.TasklistNo = "";
+            this.TasklistName = "";
             this.ProjectName = "";
             this.Block = "";
             this.Building = "";
@@ -475,6 +498,15 @@ namespace RebarSampling
         ///         C3——弯箍机；
         /// </summary>
         public string BillNo { get; set; }
+
+        /// <summary>
+        /// 任务单号，即料单编号
+        /// </summary>
+        public string TasklistNo {  get; set; }
+        /// <summary>
+        /// 任务单名称，即料单名称
+        /// </summary>
+        public string TasklistName { get; set; }
         /// <summary>
         /// 项目名称
         /// </summary>
@@ -507,6 +539,22 @@ namespace RebarSampling
         /// 原材长度，一般9米或12米两种
         /// </summary>
         public int OriginalLength { get; set; }
+        /// <summary>
+        /// 原材数量
+        /// </summary>
+        public int OriginalNum { get; set; }
+        /// <summary>
+        /// 钢筋数量
+        /// </summary>
+        public int SteelbarNum { get;  set; }
+        /// <summary>
+        /// 原材重量
+        /// </summary>
+        public double OriginalWeight {  get; set; }
+        /// <summary>
+        /// 钢筋重量
+        /// </summary>
+        public double SteelbarWeight { get; set; }
         /// <summary>
         /// 锯切后用途，1：梁板线；2：墙柱线
         /// </summary>
@@ -561,6 +609,22 @@ namespace RebarSampling
         /// </summary>
         public int Num {  get; set; }
         /// <summary>
+        /// 原材数量
+        /// </summary>
+        public int OriginalNum { get; set; }
+        /// <summary>
+        /// 钢筋数量
+        /// </summary>
+        public int SteelbarNum { get; set; }
+        /// <summary>
+        /// 原材重量
+        /// </summary>
+        public double OriginalWeight { get; set; }
+        /// <summary>
+        /// 钢筋重量
+        /// </summary>
+        public double SteelbarWeight { get; set; }
+        /// <summary>
         /// 18_18_18_18_20_20
         /// 代表1 ~6号套丝机分别设置为ø16直径、ø18直径、ø22直径、ø25直径；
         /// 注意：
@@ -595,6 +659,26 @@ namespace RebarSampling
         /// 原材长度
         /// </summary>
         public int OriginalLength { get; set; }
+        /// <summary>
+        /// 原材数量
+        /// </summary>
+        public int OriginalNum { get; set; }
+        /// <summary>
+        /// 钢筋数量
+        /// </summary>
+        public int SteelbarNum { get; set; }
+        /// <summary>
+        /// 原材重量
+        /// </summary>
+        public double OriginalWeight { get; set; }
+        /// <summary>
+        /// 钢筋重量
+        /// </summary>
+        public double SteelbarWeight { get; set; }
+        /// <summary>
+        /// 将钢筋简图转化为base64编码，传输给pcs
+        /// </summary>
+        public string PicString { get;set; }
         /// <summary>
         /// 当前锯切方案需要的钢筋原材数量
         /// </summary>
@@ -695,6 +779,11 @@ namespace RebarSampling
         public int Length { get; set; }
 
         /// <summary>
+        /// 钢筋重量
+        /// </summary>
+        public double SteelbarWeight { get; set; }
+
+        /// <summary>
         /// 套丝类型，0：不套丝；1：单头套丝；2：双头套丝
         /// </summary>
         public int TaosiType { get; set; }
@@ -702,6 +791,10 @@ namespace RebarSampling
         /// 弯曲类型，false：不弯曲；true：弯曲
         /// </summary>
         public bool BendType {  get; set; }
+        /// <summary>
+        /// 料单上对每个钢筋零件都有唯一识别码
+        /// </summary>
+        public string UniqueCode { get; set; }
 
         ///// <summary>
         ///// 数量

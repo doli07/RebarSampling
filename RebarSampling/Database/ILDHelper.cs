@@ -18,6 +18,9 @@ namespace RebarSampling.Database
 
         List<GeneralMultiData> GetMultiData(string _cornerMsg, int _diameter = 1);
 
+        string ExchangeRebarMsg(string _msg);
+
+        string ModifyRebarMsg(string _msg);
         //List<GeneralMultiData> GetMultiData(string _cornerMsg, int _diameter = 1);
     }
 }

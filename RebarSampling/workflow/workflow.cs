@@ -29,11 +29,29 @@ namespace RebarSampling
                 return _instance;
             }
         }
-
+        /// <summary>
+        /// pcs请求所有工单
+        /// </summary>
+        public bool _sendflag_all = false;
+        /// <summary>
+        /// 梁板料单请求信号
+        /// </summary>
         public bool _sendflag_LB = false;
+        /// <summary>
+        /// 磁吸上料请求信号
+        /// </summary>
         public bool _sendflag_CX = false;
+        /// <summary>
+        /// 批量切断请求信号
+        /// </summary>
         public bool _sendflag_PiCut = false;
+        /// <summary>
+        /// 墙柱线料单请求信号
+        /// </summary>
         public bool _sendflag_QZ = false;
+        /// <summary>
+        /// 弯曲料单请求信号
+        /// </summary>
         public bool _sendflag_BEND = false;
 
         private bool _threadflag = false;
@@ -42,7 +60,7 @@ namespace RebarSampling
         /// </summary>
         /// <param name="_jsonlist">工单json</param>
         /// <param name="timestep">间隔时间，ms</param>
-        public void SendWorkBill(Tuple<List<string>, string, string, string, List<string>> _json, int timestep)
+        public void SendWorkBill( int timestep)
         {
             Thread sendthread = new Thread(() =>
             {
@@ -89,11 +107,15 @@ namespace RebarSampling
                                 {
                                     _step = 6;
                                 }
+                                if (_sendflag_all)
+                                {
+                                    _step = 7;
+                                }
                             }
                             break;
                         case 2://发送梁板线json工单
                             {
-                                foreach (string item in _json.Item1)
+                                foreach (string item in GeneralClass.jsonList_LB)
                                 {
                                     GeneralClass.webServer.SendMsg(item);
                                     Thread.Sleep(timestep);
@@ -104,12 +126,7 @@ namespace RebarSampling
                             break;
                         case 3://发送磁吸上料json工单
                             {
-                                //foreach (string item in _json.Item2)
-                                //{
-                                //    GeneralClass.webServer.SendMsg(item);
-                                //    Thread.Sleep(timestep);
-                                //}
-                                GeneralClass.webServer.SendMsg(_json.Item2);
+                                GeneralClass.webServer.SendMsg(GeneralClass.json_CX);
 
                                 _step = 1;//回到step1，继续等待发送信号
                                 _sendflag_CX = false;//flag复位
@@ -117,35 +134,83 @@ namespace RebarSampling
                             break;
                         case 4://发送批量锯切json工单
                             {
-                                //foreach (string item in _json.Item3)
-                                //{
-                                GeneralClass.webServer.SendMsg(_json.Item3);
-                                //Thread.Sleep(timestep);
-                                //}
+                                GeneralClass.webServer.SendMsg(GeneralClass.jsonList_PiCut);
+                                GeneralClass.interactivityData?.printlog(1, "已发送批量锯切工单");
+
                                 _step = 1;//回到step1，继续等待发送信号
                                 _sendflag_PiCut = false;//flag复位
                             }
                             break;
                         case 5://发送墙柱线json工单
                             {
-                                //foreach (string item in _json.Item4)
-                                //{
-                                GeneralClass.webServer.SendMsg(_json.Item4);
-                                //Thread.Sleep(timestep);
-                                //}
+                                foreach(string item in GeneralClass.jsonList_QZ)
+                                {
+                                    GeneralClass.webServer.SendMsg(item);
+                                    GeneralClass.interactivityData?.printlog(1, "已发送墙柱线工单");
+                                }
+
                                 _step = 1;//回到step1，继续等待发送信号
                                 _sendflag_QZ = false;//flag复位
                             }
                             break;
-                        case 6://发送墙柱线json工单
+                        case 6://发送弯曲json工单
                             {
-                                foreach (var item in _json.Item5)
+                                foreach (var item in GeneralClass.jsonList_bend)
                                 {
                                     GeneralClass.webServer.SendMsg(item);
                                     Thread.Sleep(timestep);
                                 }
                                 _step = 1;//回到step1，继续等待发送信号
                                 _sendflag_BEND = false;//flag复位
+                            }
+                            break;
+                        case 7://发送所有的工单
+                            {
+                                if (GeneralClass.jsonList_LB.Count != 0)//梁板线料单
+                                {
+                                    foreach (string item in GeneralClass.jsonList_LB)
+                                    {
+                                        GeneralClass.webServer.SendMsg(item);
+                                        Thread.Sleep(timestep);
+                                    }
+                                }
+                                //if(!string.IsNullOrEmpty( _json.Item2))//磁吸上料料单
+                                //{
+                                //    GeneralClass.webServer.SendMsg(_json.Item2);
+                                //}
+                                //if (!string.IsNullOrEmpty(_json.Item3))//批量锯切料单
+                                //{
+                                //    GeneralClass.webServer.SendMsg(_json.Item3);
+                                //}
+
+
+
+
+                                //if (!string.IsNullOrEmpty(GeneralClass.jsonList_QZ))//墙柱线料单
+                                //{
+                                //    GeneralClass.webServer.SendMsg(GeneralClass.jsonList_QZ);
+                                //}
+                                if (GeneralClass.jsonList_QZ.Count != 0)//墙柱线料单
+                                {
+                                    foreach (string item in GeneralClass.jsonList_QZ)
+                                    {
+                                        GeneralClass.webServer.SendMsg(item);
+                                        Thread.Sleep(timestep);
+                                    }
+                                }
+
+
+
+                                //if(_json.Item5.Count != 0)
+                                //{
+                                //    foreach (var item in _json.Item5)
+                                //    {
+                                //        GeneralClass.webServer.SendMsg(item);
+                                //        Thread.Sleep(timestep);
+                                //    }
+                                //}
+                                _step = 1;//回到step1，继续等待发送信号
+                                _sendflag_all = false;//flag复位
                             }
                             break;
 
@@ -162,6 +227,169 @@ namespace RebarSampling
 
         }
 
+        //public void SendWorkBill(Tuple<List<string>, string, string, string, List<string>> _json, int timestep)
+        //{
+        //    Thread sendthread = new Thread(() =>
+        //    {
+        //        _threadflag = true;
+        //        int _step = 0;
+
+        //        while (_threadflag)
+        //        {
+
+        //            switch (_step)
+        //            {
+        //                case 0://先开启webserver
+        //                    {
+        //                        if (GeneralClass.webServer.Start(GeneralClass.CfgData.webserverIP, GeneralClass.CfgData.webserverPort) == 0)
+        //                        {
+        //                            _step++;
+        //                        }
+        //                        else
+        //                        {
+        //                            GeneralClass.webServer.Stop();
+        //                            Thread.Sleep(3000);
+        //                        }
+        //                    }
+        //                    break;
+        //                case 1://等待工单发送信号
+        //                    {
+        //                        if (_sendflag_LB)
+        //                        {
+        //                            _step = 2;
+        //                        }
+        //                        if (_sendflag_CX)
+        //                        {
+        //                            _step = 3;
+        //                        }
+        //                        if (_sendflag_PiCut)
+        //                        {
+        //                            _step = 4;
+        //                        }
+        //                        if (_sendflag_QZ)
+        //                        {
+        //                            _step = 5;
+        //                        }
+        //                        if (_sendflag_BEND)
+        //                        {
+        //                            _step = 6;
+        //                        }
+        //                        if (_sendflag_all)
+        //                        {
+        //                            _step = 7;
+        //                        }
+        //                    }
+        //                    break;
+        //                case 2://发送梁板线json工单
+        //                    {
+        //                        foreach (string item in _json.Item1)
+        //                        {
+        //                            GeneralClass.webServer.SendMsg(item);
+        //                            Thread.Sleep(timestep);
+        //                        }
+        //                        _step = 1;//回到step1，继续等待发送信号
+        //                        _sendflag_LB = false;//flag复位
+        //                    }
+        //                    break;
+        //                case 3://发送磁吸上料json工单
+        //                    {
+        //                        //foreach (string item in _json.Item2)
+        //                        //{
+        //                        //    GeneralClass.webServer.SendMsg(item);
+        //                        //    Thread.Sleep(timestep);
+        //                        //}
+        //                        GeneralClass.webServer.SendMsg(_json.Item2);
+
+        //                        _step = 1;//回到step1，继续等待发送信号
+        //                        _sendflag_CX = false;//flag复位
+        //                    }
+        //                    break;
+        //                case 4://发送批量锯切json工单
+        //                    {
+        //                        //foreach (string item in _json.Item3)
+        //                        //{
+        //                        GeneralClass.webServer.SendMsg(_json.Item3);
+        //                        GeneralClass.interactivityData?.printlog(1, "已发送批量锯切工单");
+        //                        //Thread.Sleep(timestep);
+        //                        //}
+        //                        _step = 1;//回到step1，继续等待发送信号
+        //                        _sendflag_PiCut = false;//flag复位
+        //                    }
+        //                    break;
+        //                case 5://发送墙柱线json工单
+        //                    {
+        //                        //foreach (string item in _json.Item4)
+        //                        //{
+        //                        GeneralClass.webServer.SendMsg(_json.Item4);
+        //                        GeneralClass.interactivityData?.printlog(1, "已发送墙柱线工单");
+
+        //                        //Thread.Sleep(timestep);
+        //                        //}
+        //                        _step = 1;//回到step1，继续等待发送信号
+        //                        _sendflag_QZ = false;//flag复位
+        //                    }
+        //                    break;
+        //                case 6://发送墙柱线json工单
+        //                    {
+        //                        foreach (var item in _json.Item5)
+        //                        {
+        //                            GeneralClass.webServer.SendMsg(item);
+        //                            Thread.Sleep(timestep);
+        //                        }
+        //                        _step = 1;//回到step1，继续等待发送信号
+        //                        _sendflag_BEND = false;//flag复位
+        //                    }
+        //                    break;
+        //                case 7://发送所有的工单
+        //                    {
+        //                        if(_json.Item1.Count!=0)//梁板线料单
+        //                        {
+        //                            foreach (string item in _json.Item1)
+        //                            {
+        //                                GeneralClass.webServer.SendMsg(item);
+        //                                Thread.Sleep(timestep);
+        //                            }
+        //                        }
+        //                        //if(!string.IsNullOrEmpty( _json.Item2))//磁吸上料料单
+        //                        //{
+        //                        //    GeneralClass.webServer.SendMsg(_json.Item2);
+        //                        //}
+        //                        //if (!string.IsNullOrEmpty(_json.Item3))//批量锯切料单
+        //                        //{
+        //                        //    GeneralClass.webServer.SendMsg(_json.Item3);
+        //                        //}
+        //                        if (!string.IsNullOrEmpty(_json.Item4))//墙柱线料单
+        //                        {
+        //                            GeneralClass.webServer.SendMsg(_json.Item4);
+        //                        }
+        //                        //if(_json.Item5.Count != 0)
+        //                        //{
+        //                        //    foreach (var item in _json.Item5)
+        //                        //    {
+        //                        //        GeneralClass.webServer.SendMsg(item);
+        //                        //        Thread.Sleep(timestep);
+        //                        //    }
+        //                        //}
+        //                        _step = 1;//回到step1，继续等待发送信号
+        //                        _sendflag_all = false;//flag复位
+        //                    }
+        //                    break;
+
+        //            }
+        //            Thread.Sleep(1);
+        //        }
+
+        //        GeneralClass.webServer.Stop();
+
+        //    }
+        //        );
+        //    sendthread.IsBackground = true;
+        //    sendthread.Start();
+
+        //}
+
+
+
         public void StopWorkBill()
         {
             _threadflag = false;
@@ -175,6 +403,11 @@ namespace RebarSampling
             if (msg != "")
             {
                 WorkBillRequest _json = NewtonJson.Deserializer<WorkBillRequest>(msg);// 将JSON字符串转换为对象
+                if (_json.Msgtype == 0)
+                {
+                    _sendflag_all = true;
+                    GeneralClass.interactivityData?.printlog(1, "收到全套工单请求信号");
+                }
                 if (_json.Msgtype == 1)
                 {
                     _sendflag_LB = true;

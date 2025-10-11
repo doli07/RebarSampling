@@ -92,25 +92,29 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tabControl5 = new System.Windows.Forms.TabControl();
+            this.tabPage16 = new System.Windows.Forms.TabPage();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.dataGridView13 = new System.Windows.Forms.DataGridView();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox13 = new System.Windows.Forms.CheckBox();
+            this.checkBox12 = new System.Windows.Forms.CheckBox();
+            this.checkBox7 = new System.Windows.Forms.CheckBox();
+            this.checkBox11 = new System.Windows.Forms.CheckBox();
+            this.checkBox8 = new System.Windows.Forms.CheckBox();
+            this.checkBox10 = new System.Windows.Forms.CheckBox();
+            this.checkBox9 = new System.Windows.Forms.CheckBox();
+            this.button9 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
             this.tabPage18 = new System.Windows.Forms.TabPage();
             this.tabPage17 = new System.Windows.Forms.TabPage();
             this.tabPage19 = new System.Windows.Forms.TabPage();
             this.tabPage20 = new System.Windows.Forms.TabPage();
             this.tabPage21 = new System.Windows.Forms.TabPage();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.checkBox7 = new System.Windows.Forms.CheckBox();
-            this.checkBox8 = new System.Windows.Forms.CheckBox();
-            this.checkBox9 = new System.Windows.Forms.CheckBox();
-            this.checkBox10 = new System.Windows.Forms.CheckBox();
-            this.checkBox11 = new System.Windows.Forms.CheckBox();
-            this.checkBox12 = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBox13 = new System.Windows.Forms.CheckBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
+            this.textBox5 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabControl3.SuspendLayout();
@@ -144,16 +148,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
             this.tabControl5.SuspendLayout();
+            this.tabPage16.SuspendLayout();
+            this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView13)).BeginInit();
+            this.panel4.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.tabPage18.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -175,7 +176,7 @@
             this.tabPage24.Name = "tabPage24";
             this.tabPage24.Size = new System.Drawing.Size(1442, 475);
             this.tabPage24.TabIndex = 6;
-            this.tabPage24.Text = "智能辅助分组";
+            this.tabPage24.Text = "手动分组";
             this.tabPage24.UseVisualStyleBackColor = true;
             // 
             // tabPage2
@@ -810,9 +811,11 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "所有直径",
+            "ø12",
             "ø14",
             "ø16",
             "ø18",
@@ -823,35 +826,207 @@
             "ø32",
             "ø36",
             "ø40"});
-            this.comboBox1.Location = new System.Drawing.Point(21, 678);
+            this.comboBox1.Location = new System.Drawing.Point(58, 126);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 23);
+            this.comboBox1.Size = new System.Drawing.Size(87, 23);
             this.comboBox1.TabIndex = 13;
-            this.comboBox1.Visible = false;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 660);
+            this.label5.Location = new System.Drawing.Point(6, 130);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(82, 15);
+            this.label5.Size = new System.Drawing.Size(52, 15);
             this.label5.TabIndex = 14;
-            this.label5.Text = "直径选择：";
-            this.label5.Visible = false;
+            this.label5.Text = "直径：";
             // 
             // tabControl5
             // 
+            this.tabControl5.Controls.Add(this.tabPage16);
             this.tabControl5.Controls.Add(this.tabPage18);
             this.tabControl5.Controls.Add(this.tabPage17);
             this.tabControl5.Controls.Add(this.tabPage19);
             this.tabControl5.Controls.Add(this.tabPage20);
             this.tabControl5.Controls.Add(this.tabPage21);
-            this.tabControl5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl5.Location = new System.Drawing.Point(0, 0);
+            this.tabControl5.Location = new System.Drawing.Point(6, 4);
             this.tabControl5.Name = "tabControl5";
             this.tabControl5.SelectedIndex = 0;
-            this.tabControl5.Size = new System.Drawing.Size(1485, 521);
+            this.tabControl5.Size = new System.Drawing.Size(1521, 521);
             this.tabControl5.TabIndex = 15;
+            // 
+            // tabPage16
+            // 
+            this.tabPage16.Controls.Add(this.panel5);
+            this.tabPage16.Controls.Add(this.panel4);
+            this.tabPage16.Location = new System.Drawing.Point(4, 25);
+            this.tabPage16.Name = "tabPage16";
+            this.tabPage16.Size = new System.Drawing.Size(1513, 492);
+            this.tabPage16.TabIndex = 5;
+            this.tabPage16.Text = "料单拆分";
+            this.tabPage16.UseVisualStyleBackColor = true;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.dataGridView13);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(1355, 492);
+            this.panel5.TabIndex = 2;
+            // 
+            // dataGridView13
+            // 
+            this.dataGridView13.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dataGridView13.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView13.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView13.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView13.Name = "dataGridView13";
+            this.dataGridView13.RowHeadersWidth = 51;
+            this.dataGridView13.RowTemplate.Height = 27;
+            this.dataGridView13.Size = new System.Drawing.Size(1355, 492);
+            this.dataGridView13.TabIndex = 0;
+            this.dataGridView13.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView13_CellFormatting);
+            this.dataGridView13.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView13_MouseDown);
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.textBox5);
+            this.panel4.Controls.Add(this.groupBox2);
+            this.panel4.Controls.Add(this.button9);
+            this.panel4.Controls.Add(this.button8);
+            this.panel4.Controls.Add(this.button7);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel4.Location = new System.Drawing.Point(1355, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(158, 492);
+            this.panel4.TabIndex = 1;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.checkBox13);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.checkBox12);
+            this.groupBox2.Controls.Add(this.checkBox7);
+            this.groupBox2.Controls.Add(this.checkBox11);
+            this.groupBox2.Controls.Add(this.comboBox1);
+            this.groupBox2.Controls.Add(this.checkBox8);
+            this.groupBox2.Controls.Add(this.checkBox10);
+            this.groupBox2.Controls.Add(this.checkBox9);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox2.Location = new System.Drawing.Point(0, 0);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(158, 161);
+            this.groupBox2.TabIndex = 7;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "筛选项";
+            // 
+            // checkBox13
+            // 
+            this.checkBox13.AutoSize = true;
+            this.checkBox13.Location = new System.Drawing.Point(89, 49);
+            this.checkBox13.Name = "checkBox13";
+            this.checkBox13.Size = new System.Drawing.Size(59, 19);
+            this.checkBox13.TabIndex = 7;
+            this.checkBox13.Text = "端头";
+            this.checkBox13.UseVisualStyleBackColor = true;
+            this.checkBox13.CheckedChanged += new System.EventHandler(this.checkBox13_CheckedChanged);
+            // 
+            // checkBox12
+            // 
+            this.checkBox12.AutoSize = true;
+            this.checkBox12.Location = new System.Drawing.Point(89, 75);
+            this.checkBox12.Name = "checkBox12";
+            this.checkBox12.Size = new System.Drawing.Size(59, 19);
+            this.checkBox12.TabIndex = 6;
+            this.checkBox12.Text = "主筋";
+            this.checkBox12.UseVisualStyleBackColor = true;
+            this.checkBox12.CheckedChanged += new System.EventHandler(this.checkBox12_CheckedChanged);
+            // 
+            // checkBox7
+            // 
+            this.checkBox7.AutoSize = true;
+            this.checkBox7.Location = new System.Drawing.Point(24, 24);
+            this.checkBox7.Name = "checkBox7";
+            this.checkBox7.Size = new System.Drawing.Size(59, 19);
+            this.checkBox7.TabIndex = 1;
+            this.checkBox7.Text = "棒材";
+            this.checkBox7.UseVisualStyleBackColor = true;
+            this.checkBox7.CheckedChanged += new System.EventHandler(this.checkBox7_CheckedChanged);
+            // 
+            // checkBox11
+            // 
+            this.checkBox11.AutoSize = true;
+            this.checkBox11.Location = new System.Drawing.Point(24, 101);
+            this.checkBox11.Name = "checkBox11";
+            this.checkBox11.Size = new System.Drawing.Size(59, 19);
+            this.checkBox11.TabIndex = 5;
+            this.checkBox11.Text = "马凳";
+            this.checkBox11.UseVisualStyleBackColor = true;
+            this.checkBox11.CheckedChanged += new System.EventHandler(this.checkBox11_CheckedChanged);
+            // 
+            // checkBox8
+            // 
+            this.checkBox8.AutoSize = true;
+            this.checkBox8.Location = new System.Drawing.Point(89, 24);
+            this.checkBox8.Name = "checkBox8";
+            this.checkBox8.Size = new System.Drawing.Size(59, 19);
+            this.checkBox8.TabIndex = 2;
+            this.checkBox8.Text = "线材";
+            this.checkBox8.UseVisualStyleBackColor = true;
+            this.checkBox8.CheckedChanged += new System.EventHandler(this.checkBox8_CheckedChanged);
+            // 
+            // checkBox10
+            // 
+            this.checkBox10.AutoSize = true;
+            this.checkBox10.Location = new System.Drawing.Point(24, 74);
+            this.checkBox10.Name = "checkBox10";
+            this.checkBox10.Size = new System.Drawing.Size(59, 19);
+            this.checkBox10.TabIndex = 4;
+            this.checkBox10.Text = "拉钩";
+            this.checkBox10.UseVisualStyleBackColor = true;
+            this.checkBox10.CheckedChanged += new System.EventHandler(this.checkBox10_CheckedChanged);
+            // 
+            // checkBox9
+            // 
+            this.checkBox9.AutoSize = true;
+            this.checkBox9.Location = new System.Drawing.Point(24, 49);
+            this.checkBox9.Name = "checkBox9";
+            this.checkBox9.Size = new System.Drawing.Size(59, 19);
+            this.checkBox9.TabIndex = 3;
+            this.checkBox9.Text = "箍筋";
+            this.checkBox9.UseVisualStyleBackColor = true;
+            this.checkBox9.CheckedChanged += new System.EventHandler(this.checkBox9_CheckedChanged);
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(13, 208);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(130, 42);
+            this.button9.TabIndex = 2;
+            this.button9.Text = "保存至数据库";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(13, 433);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(130, 42);
+            this.button8.TabIndex = 1;
+            this.button8.Text = "生成加工单";
+            this.button8.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(13, 256);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(130, 42);
+            this.button7.TabIndex = 0;
+            this.button7.Text = "翻转边角结构";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // tabPage18
             // 
@@ -859,9 +1034,9 @@
             this.tabPage18.Location = new System.Drawing.Point(4, 25);
             this.tabPage18.Name = "tabPage18";
             this.tabPage18.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage18.Size = new System.Drawing.Size(1477, 492);
+            this.tabPage18.Size = new System.Drawing.Size(1513, 492);
             this.tabPage18.TabIndex = 1;
-            this.tabPage18.Text = "梁板线";
+            this.tabPage18.Text = "构件(梁板)";
             this.tabPage18.UseVisualStyleBackColor = true;
             // 
             // tabPage17
@@ -869,36 +1044,36 @@
             this.tabPage17.Location = new System.Drawing.Point(4, 25);
             this.tabPage17.Name = "tabPage17";
             this.tabPage17.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage17.Size = new System.Drawing.Size(1477, 492);
+            this.tabPage17.Size = new System.Drawing.Size(1513, 492);
             this.tabPage17.TabIndex = 0;
-            this.tabPage17.Text = "墙柱线";
+            this.tabPage17.Text = "批量(墙柱)";
             this.tabPage17.UseVisualStyleBackColor = true;
             // 
             // tabPage19
             // 
             this.tabPage19.Location = new System.Drawing.Point(4, 25);
             this.tabPage19.Name = "tabPage19";
-            this.tabPage19.Size = new System.Drawing.Size(1477, 492);
+            this.tabPage19.Size = new System.Drawing.Size(1513, 492);
             this.tabPage19.TabIndex = 2;
-            this.tabPage19.Text = "弯箍机";
+            this.tabPage19.Text = "线材单元";
             this.tabPage19.UseVisualStyleBackColor = true;
             // 
             // tabPage20
             // 
             this.tabPage20.Location = new System.Drawing.Point(4, 25);
             this.tabPage20.Name = "tabPage20";
-            this.tabPage20.Size = new System.Drawing.Size(1477, 492);
+            this.tabPage20.Size = new System.Drawing.Size(1513, 492);
             this.tabPage20.TabIndex = 3;
-            this.tabPage20.Text = "弯曲机";
+            this.tabPage20.Text = "棒材单元";
             this.tabPage20.UseVisualStyleBackColor = true;
             // 
             // tabPage21
             // 
             this.tabPage21.Location = new System.Drawing.Point(4, 25);
             this.tabPage21.Name = "tabPage21";
-            this.tabPage21.Size = new System.Drawing.Size(1477, 492);
+            this.tabPage21.Size = new System.Drawing.Size(1513, 492);
             this.tabPage21.TabIndex = 4;
-            this.tabPage21.Text = "五机头";
+            this.tabPage21.Text = "人工单元";
             this.tabPage21.UseVisualStyleBackColor = true;
             // 
             // pictureBox1
@@ -911,159 +1086,33 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Visible = false;
             // 
-            // checkBox7
-            // 
-            this.checkBox7.AutoSize = true;
-            this.checkBox7.Location = new System.Drawing.Point(70, 22);
-            this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(59, 19);
-            this.checkBox7.TabIndex = 1;
-            this.checkBox7.Text = "棒材";
-            this.checkBox7.UseVisualStyleBackColor = true;
-            // 
-            // checkBox8
-            // 
-            this.checkBox8.AutoSize = true;
-            this.checkBox8.Location = new System.Drawing.Point(135, 22);
-            this.checkBox8.Name = "checkBox8";
-            this.checkBox8.Size = new System.Drawing.Size(59, 19);
-            this.checkBox8.TabIndex = 2;
-            this.checkBox8.Text = "线材";
-            this.checkBox8.UseVisualStyleBackColor = true;
-            // 
-            // checkBox9
-            // 
-            this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(327, 22);
-            this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(59, 19);
-            this.checkBox9.TabIndex = 3;
-            this.checkBox9.Text = "箍筋";
-            this.checkBox9.UseVisualStyleBackColor = true;
-            // 
-            // checkBox10
-            // 
-            this.checkBox10.AutoSize = true;
-            this.checkBox10.Location = new System.Drawing.Point(394, 22);
-            this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(59, 19);
-            this.checkBox10.TabIndex = 4;
-            this.checkBox10.Text = "拉钩";
-            this.checkBox10.UseVisualStyleBackColor = true;
-            // 
-            // checkBox11
-            // 
-            this.checkBox11.AutoSize = true;
-            this.checkBox11.Location = new System.Drawing.Point(461, 22);
-            this.checkBox11.Name = "checkBox11";
-            this.checkBox11.Size = new System.Drawing.Size(59, 19);
-            this.checkBox11.TabIndex = 5;
-            this.checkBox11.Text = "马凳";
-            this.checkBox11.UseVisualStyleBackColor = true;
-            // 
-            // checkBox12
-            // 
-            this.checkBox12.AutoSize = true;
-            this.checkBox12.Location = new System.Drawing.Point(595, 22);
-            this.checkBox12.Name = "checkBox12";
-            this.checkBox12.Size = new System.Drawing.Size(59, 19);
-            this.checkBox12.TabIndex = 6;
-            this.checkBox12.Text = "主筋";
-            this.checkBox12.UseVisualStyleBackColor = true;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.checkBox13);
-            this.groupBox2.Controls.Add(this.checkBox12);
-            this.groupBox2.Controls.Add(this.checkBox7);
-            this.groupBox2.Controls.Add(this.checkBox11);
-            this.groupBox2.Controls.Add(this.checkBox8);
-            this.groupBox2.Controls.Add(this.checkBox10);
-            this.groupBox2.Controls.Add(this.checkBox9);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(0, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1515, 46);
-            this.groupBox2.TabIndex = 7;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "筛选项";
-            // 
-            // checkBox13
-            // 
-            this.checkBox13.AutoSize = true;
-            this.checkBox13.Location = new System.Drawing.Point(528, 22);
-            this.checkBox13.Name = "checkBox13";
-            this.checkBox13.Size = new System.Drawing.Size(59, 19);
-            this.checkBox13.TabIndex = 7;
-            this.checkBox13.Text = "端头";
-            this.checkBox13.UseVisualStyleBackColor = true;
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Location = new System.Drawing.Point(5, 2);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel3);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.panel2);
-            this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Size = new System.Drawing.Size(1515, 571);
-            this.splitContainer1.SplitterDistance = 46;
-            this.splitContainer1.TabIndex = 16;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.groupBox2);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1515, 46);
-            this.panel3.TabIndex = 8;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.tabControl5);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(30, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1485, 521);
-            this.panel2.TabIndex = 17;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(30, 521);
-            this.panel1.TabIndex = 16;
-            // 
             // button1
             // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
             this.button1.Image = global::RebarSampling.Properties.Resources.icons8_double_down_26;
-            this.button1.Location = new System.Drawing.Point(0, 0);
+            this.button1.Location = new System.Drawing.Point(37, 601);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(30, 47);
             this.button1.TabIndex = 17;
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(13, 304);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(130, 25);
+            this.textBox5.TabIndex = 8;
             // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1578, 723);
-            this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.tabControl5);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.checkBox6);
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.dataGridView7);
             this.Controls.Add(this.checkBox4);
@@ -1111,17 +1160,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
             this.tabControl5.ResumeLayout(false);
-            this.tabPage18.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.tabPage16.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView13)).EndInit();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
+            this.tabPage18.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1205,11 +1252,15 @@
         private System.Windows.Forms.CheckBox checkBox8;
         private System.Windows.Forms.CheckBox checkBox7;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.CheckBox checkBox13;
+        private System.Windows.Forms.TabPage tabPage16;
+        private System.Windows.Forms.DataGridView dataGridView13;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.TextBox textBox5;
     }
 }

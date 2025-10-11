@@ -11,9 +11,17 @@ namespace RebarSampling
     public class ConfigData
     {
         /// <summary>
+        /// 项目名称
+        /// </summary>
+        public string ProjectName {  get; set; }
+        /// <summary>
         /// 工厂类型
         /// </summary>
         public EnumFactoryType Factorytype { get; set; }
+        /// <summary>
+        /// 语言设置
+        /// </summary>
+        public EnumLanguageType LanguageType { get; set; }
         /// <summary>
         /// Φ12直径钢筋归类于线材还是棒材，false为线材，true为棒材
         /// </summary>
@@ -34,6 +42,10 @@ namespace RebarSampling
         /// 广联达料单的默认路径
         /// </summary>
         public string GLDpath { get; set; }
+        /// <summary>
+        /// E筋料单的默认路径
+        /// </summary>
+        public string EJINpath { get; set; }
         /// <summary>
         /// 是否加载短钢筋数据（1.5米以下）
         /// </summary>
@@ -112,11 +124,21 @@ namespace RebarSampling
         /// </summary>
         public EnumDatabaseType DatabaseType { get; set; }
         /// <summary>
-        /// 料仓区间设置，仓位划分的数量区间，四种仓位，三个节点:25,50,100
+        /// 料仓区间设置，仓位划分的数量阈值区间，五种仓位，四个阈值节点:10,25,50,100
         /// </summary>
         public int WareAreaSet1 {  get; set; }
+        /// <summary>
+        /// 料仓区间设置，仓位划分的数量阈值区间，五种仓位，四个阈值节点:10,25,50,100
+        /// </summary>
         public int WareAreaSet2 { get;set; }
+        /// <summary>
+        /// 料仓区间设置，仓位划分的数量阈值区间，五种仓位，四个阈值节点:10,25,50,100
+        /// </summary>
         public int WareAreaSet3 { get;set; }
+        /// <summary>
+        /// 料仓区间设置，仓位划分的数量阈值区间，五种仓位，四个阈值节点:10,25,50,100
+        /// </summary>
+        public int WareAreaSet4 { get; set; }
         /// <summary>
         /// 智能料仓通道
         /// </summary>
@@ -130,6 +152,76 @@ namespace RebarSampling
         /// 套料时，是否优化套料排序，包括连续原材的排序、一根原材内的小段的排序
         /// </summary>
         public bool IfSeriTao {  get; set; }
+
+        /// <summary>
+        /// 弯曲参数，正角度最长弯拐长度
+        /// </summary>
+        public int P_AngleMaxLength { get; set; }
+        /// <summary>
+        /// 弯曲参数，负角度最长弯拐长度
+        /// </summary>
+        public int N_AngleMaxLength { get; set; }
+        /// <summary>
+        /// 弯曲参数，最短中段长度
+        /// </summary>
+        public int MinMiddleLength { get; set; }
+        /// <summary>
+        /// 弯拐长度超过某个长度，自动设负角度
+        /// </summary>
+        public int OverLengthAutoN_Angle {  get; set; }
+        /// <summary>
+        /// 角度小于某个值，自动不弯
+        /// </summary>
+        public int BelowAngleAutoNoBend {  get; set; }
+        /// <summary>
+        /// 缩尺设置，几根一缩，五个区间，1~5mm，5~10mm，10~20mm，20~30mm，30~mm
+        /// </summary>
+        public int SuoChiNum_1 {  get; set; }
+        /// <summary>
+        ///  缩尺设置，几根一缩，五个区间，1~5mm，5~10mm，10~20mm，20~30mm，30~mm
+        /// </summary>
+        public int SuoChiNum_2 { get; set; }
+        /// <summary>
+        ///  缩尺设置，几根一缩，五个区间，1~5mm，5~10mm，10~20mm，20~30mm，30~mm
+        /// </summary>
+        public int SuoChiNum_3 { get; set; }
+        /// <summary>
+        ///  缩尺设置，几根一缩，五个区间，1~5mm，5~10mm，10~20mm，20~30mm，30~mm
+        /// </summary>
+        public int SuoChiNum_4 { get; set; }
+        /// <summary>
+        ///  缩尺设置，几根一缩，五个区间，1~5mm，5~10mm，10~20mm，20~30mm，30~mm
+        /// </summary>
+        public int SuoChiNum_5 { get; set; }
+        /// <summary>
+        /// 每吊钢筋分解策略：按重量阈值(kg)分解
+        /// </summary>
+        public int SplitWeightThreshold { get; set; }
+        /// <summary>
+        /// 带弯拐的分解策略：按每吊的数量阈值（根）分解，注意对应不同直径的数量不一样
+        /// </summary>
+        public int SplitNumThresholdWithBend_16 { get; set; }
+        public int SplitNumThresholdWithBend_18 { get; set; }
+        public int SplitNumThresholdWithBend_20 { get; set; }
+        public int SplitNumThresholdWithBend_22 { get; set; }
+        public int SplitNumThresholdWithBend_25 { get; set; }
+        public int SplitNumThresholdWithBend_28 { get; set; }
+        public int SplitNumThresholdWithBend_32 { get; set; }
+        /// <summary>
+        /// 分解是否重量优先
+        /// </summary>
+        public bool SplitIfWeightFirst { get; set; }
+        /// <summary>
+        /// 单头正丝翻转边角结构的倾向选择，-1:翻转至左侧，1:翻转至右侧，0:不翻转
+        /// </summary>
+        public int InverseCornerMsgForTao { get; set; }
+        /// <summary>
+        /// 单头反丝翻转边角结构的倾向设置，-1:翻转至左侧，1：翻转至右侧，0：不翻转
+        /// </summary>
+        public int InverseCornerMsgForFan {  get; set; }
+
+        
+
     }
     public class Config
     {

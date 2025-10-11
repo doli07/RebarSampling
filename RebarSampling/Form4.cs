@@ -1,4 +1,5 @@
 ﻿//using Etable;
+using RebarSampling.GLD;
 using SuperSocket.SocketEngine.Configuration;
 using System;
 using System.Collections.Generic;
@@ -82,9 +83,19 @@ namespace RebarSampling
             this.comboBox6.Items.Add("40");
             this.comboBox6.SelectedIndex = 3;//默认直径12
 
-            this.textBox21.Text = "汉韵公馆1#楼";
+            this.comboBox7.Items.Clear();
+            this.comboBox7.Items.Add("0,套;5950,丝");
+            this.comboBox7.Items.Add("0,套;5950,0");
+            this.comboBox7.Items.Add("5950,丝");
+            this.comboBox7.Items.Add("0,套;11950,丝");
+            this.comboBox7.Items.Add("0,套;11950,0");
+            this.comboBox7.Items.Add("11950,丝");
+            this.comboBox7.SelectedIndex = 0;
+
+            this.textBox21.Text = GeneralClass.CfgData.ProjectName;
             this.textBox23.Text = "0";
             this.textBox24.Text = "1";
+            this.textBox26.Text = "10000";
             this.groupBox10.Enabled = false;//先屏蔽
 
         }
@@ -604,36 +615,45 @@ namespace RebarSampling
         /// <param name="timestep">间隔时间，ms</param>
         private void SendWorkBill(int timestep)
         {
-            workflow.Instance.SendWorkBill(Tuple.Create(
-                GeneralClass.jsonList_LB,
-                GeneralClass.json_CX,
-                GeneralClass.jsonList_PiCut,
-                GeneralClass.jsonList_QZ,
-                GeneralClass.jsonList_bend),
-                timestep);
+            //workflow.Instance.SendWorkBill(Tuple.Create(
+            //    GeneralClass.jsonList_LB,
+            //    GeneralClass.json_CX,
+            //    GeneralClass.jsonList_PiCut,
+            //    GeneralClass.jsonList_QZ,
+            //    GeneralClass.jsonList_bend),
+            //    timestep);
+
+            workflow.Instance.SendWorkBill(timestep);
         }
 
+        private bool _sending = false;
         private void button11_Click(object sender, EventArgs e)
         {
-            //if (GeneralClass.jsonList_LB.Count != 0)
-            //{
-
             int _timestep = Convert.ToInt32(textBox17.Text);
             //GeneralClass.interactivityData?.sendworkbill(GeneralClass.jsonList, _timestep);
 
-            SendWorkBill(_timestep);
+            //SendWorkBill(_timestep);
+            //workflow.Instance.SendWorkBill(Tuple.Create(
+            //            GeneralClass.jsonList_LB,
+            //            GeneralClass.json_CX,
+            //            GeneralClass.jsonList_PiCut,
+            //            GeneralClass.jsonList_QZ,
+            //            GeneralClass.jsonList_bend),
+            //            _timestep);
 
-            //Thread thread = new Thread(() =>
-            //{
-            //    foreach (string item in GeneralClass.jsonList)
-            //    {
-            //        GeneralClass.webServer.SendMsg(item);
-            //        Thread.Sleep(_timestep);
-            //    }
-            //});
-            //thread.IsBackground = true;
-            //thread.Start();
-            //}
+            workflow.Instance.SendWorkBill(_timestep);
+
+            _sending = true;
+            button11.Enabled = false;
+            button17.Enabled = true;
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            workflow.Instance.StopWorkBill();
+            _sending = false;
+            button11.Enabled = true;
+            button17.Enabled = false;
         }
         private void FillDGV_workbilljson_show(string _json)
         {
@@ -671,7 +691,41 @@ namespace RebarSampling
             }
             else if (radioButton4.Checked)
             {
-                FillDGV_workbilljson_show(GeneralClass.jsonList_QZ);//墙柱线工单
+                if (checkBox13.Checked)//如果从文件夹导入，则需要弹出文件对话框
+                {
+
+                    //打开excel文件
+                    OpenFileDialog openFileDialog = new OpenFileDialog();//打开文件夹对话框
+                    //openFileDialog.InitialDirectory = Application.StartupPath + @"\excelfile\";
+                    openFileDialog.InitialDirectory = GeneralClass.CfgData.EJINpath;
+                    //openFileDialog.Filter = "excel文件(*.xls)|*.xls|excel文件(*.xlsx)|*.xlsx|所有文件(*.*)|*.*";
+                    openFileDialog.Filter = "txt文件(*.txt)|*.txt";
+                    openFileDialog.Title = "打开加工单";
+                    openFileDialog.FilterIndex = 0;
+                    openFileDialog.Multiselect = true;
+                    openFileDialog.CheckFileExists = true;
+                    openFileDialog.CheckPathExists = true;
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        GeneralClass.jsonList_QZ.Clear();
+                        foreach (string filepath in openFileDialog.FileNames)
+                        {
+                            GeneralClass.jsonList_QZ.Add(NewtonJson.ReadJsonFromFile(filepath));
+                        }
+                        FillDGV_workbilljson_show(GeneralClass.jsonList_QZ);//墙柱线工单
+
+                        GeneralClass.CfgData.EJINpath = Path.GetDirectoryName(openFileDialog.FileNames[0]);//获取最新选择的路径
+                        string _json = NewtonJson.Serializer(GeneralClass.CfgData);//修改配置json
+                        Config.SaveConfig(_json);//保存配置文件
+
+                    }
+
+                }
+                else
+                {
+                    FillDGV_workbilljson_show(GeneralClass.jsonList_QZ);//墙柱线工单
+                }
             }
             else if (radioButton7.Checked)
             {
@@ -753,7 +807,8 @@ namespace RebarSampling
                         string _tempNo = dt.Rows[rowIndex][5].ToString();
                         string _project = dt.Rows[rowIndex][7].ToString();
                         string _assembly = dt.Rows[rowIndex][8].ToString();
-                        string _element = dt.Rows[rowIndex][9].ToString();
+                        string _childAssembly = dt.Rows[rowIndex][9].ToString();
+                        string _element = dt.Rows[rowIndex][10].ToString();
 
                         //根据构件信息从总表中去搜索
                         GeneralClass.AllElementList = GeneralClass.DBOpt.GetAllElementList(GeneralClass.TableName_AllRebar);
@@ -761,12 +816,15 @@ namespace RebarSampling
                         //pickedElement.warehouseNo = _warehouseNo;
                         //pickedElement.wareNo = _wareNo;
                         //pickedElement.batchSeri = _batchseri + "-" + _tempNo;
-                        pickedElement = GeneralClass.AllElementList.Where(t => t.projectName == _project && t.assemblyName == _assembly && t.elementName == _element).ToList()[0];
+                        pickedElement = GeneralClass.AllElementList.Where(t => t.projectName == _project &&
+                                                                                                        t.mainAssemblyName == _assembly &&
+                                                                                                        t.childAssemblyName == _childAssembly &&
+                                                                                                        t.elementName == _element).ToList()[0];
                         pickedElement.warehouseNo = _warehouseNo;
                         pickedElement.wareNo = _wareNo;
                         pickedElement.batchSeri = _batchseri + "-" + _tempNo;
 
-                        pictureBox1.Image = graphics.PaintElementLabel(pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text),
+                        pictureBox1.Image = graphics.PaintElementLabel(EnumLabelType.LB_LABEL, pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text),
                             checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//将构件批号和构件流水号组成完整的构件编号
                     }
 
@@ -775,77 +833,110 @@ namespace RebarSampling
                     {
                         string _project = dt.Rows[rowIndex][1].ToString();
                         string _assembly = dt.Rows[rowIndex][2].ToString();
-                        string _element = dt.Rows[rowIndex][3].ToString();
+                        string _childAssembly = dt.Rows[rowIndex][3].ToString();
+                        string _element = dt.Rows[rowIndex][4].ToString();
 
                         //根据构件信息从总表中去搜索
                         GeneralClass.AllElementList = GeneralClass.DBOpt.GetAllElementList(GeneralClass.TableName_AllRebar);
-                        pickedElement = GeneralClass.AllElementList.Where(t => t.projectName == _project && t.assemblyName == _assembly && t.elementName == _element).ToList()[0];
+                        pickedElement = GeneralClass.AllElementList.Where(t => t.projectName == _project &&
+                                                                                                        t.mainAssemblyName == _assembly &&
+                                                                                                        t.childAssemblyName == _childAssembly &&
+                                                                                                        t.elementName == _element).ToList()[0];
 
-                        pictureBox1.Image = graphics.PaintElementLabel(pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text),
+                        pictureBox1.Image = graphics.PaintElementLabel(EnumLabelType.ELEMENT_LABEL, pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text),
                             checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//将构件批号和构件流水号组成完整的构件编号
                     }
 
-                    //墙柱线
-                    if (radioButton5.Checked)
+                    //零件标
+                    if (radioButton11.Checked)
                     {
-                        string _batchseri = dt.Rows[rowIndex][1].ToString();
-                        int _tempNo = Convert.ToInt32(dt.Rows[rowIndex][2].ToString());
-                        int _diameter = Convert.ToInt32(dt.Rows[rowIndex][3].ToString());
-                        int _length = Convert.ToInt32(dt.Rows[rowIndex][4].ToString());
-                        int _num = Convert.ToInt32(dt.Rows[rowIndex][5].ToString());
-                        string _cornermsg = dt.Rows[rowIndex][6].ToString();
-                        bool _ifbend = dt.Rows[rowIndex][7].ToString() == "1" ? true : false;
-                        bool _iftao = dt.Rows[rowIndex][8].ToString() == "1" ? true : false;
-                        string _taosisetting = dt.Rows[rowIndex][9].ToString();
-                        string _picTypeNum = dt.Rows[rowIndex][10].ToString();
+                        //int seriNum = Convert.ToInt32(dt.Rows[rowIndex][0].ToString());//使用标注序号进行检索
+                        string seriNum = dt.Rows[rowIndex][0].ToString();//使用标注序号进行检索
 
-                        pickedRebarPi = new RebarPi();
-                        Rebar temp = new Rebar();//造一个假数据
-                        temp.Diameter = _diameter;
-                        temp.length = _length;
-                        temp.CornerMessage = _cornermsg;
-                        temp.PicTypeNum = _picTypeNum;
+                        GeneralClass.AllElementList = GeneralClass.DBOpt.GetAllElementList(GeneralClass.TableName_AllRebar);
 
-                        for (int i = 0; i < _num; i++)
+                        pickedElement = new ElementData();
+                        foreach (var item in GeneralClass.AllElementList)
                         {
-                            pickedRebarPi._rebarList.Add(temp);//复制多根rebar
+                            List<RebarData> list = new List<RebarData>();
+                            list = item.rebarlist.Where(t => t.SerialNum == seriNum).ToList();
+                            if (list.Count != 0)
+                            {
+                                pickedElement.Copy(item);
+                                pickedElement.rebarlist.Clear();
+                                pickedElement.rebarlist.AddRange(list);
+                                break;
+                            }
                         }
-                        pickedRebarPi._batchseri = _batchseri + "-" + _tempNo;
-                        pictureBox1.Image = graphics.PaintPiCutLabel(pickedRebarPi);
+
+                        pictureBox1.Image = graphics.PaintElementLabel(EnumLabelType.REBAR_LABEL, pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text),
+                                         checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//将构件批号和构件流水号组成完整的构件编号
+
                     }
 
-                    //批量锯切线
-                    if (radioButton8.Checked)
-                    {
-                        string _level = dt.Rows[rowIndex][1].ToString();
-                        int _diameter = Convert.ToInt32(dt.Rows[rowIndex][2].ToString());
-                        int _length = Convert.ToInt32(dt.Rows[rowIndex][3].ToString());
-                        int _num = Convert.ToInt32(dt.Rows[rowIndex][4].ToString());
-                        string _cornermsg = dt.Rows[rowIndex][5].ToString();
-                        string _picTypeNum = dt.Rows[rowIndex][6].ToString();
-                        string _projectName = dt.Rows[rowIndex][7].ToString();
-                        string _assemblyName = dt.Rows[rowIndex][8].ToString();
-                        string _elementName = dt.Rows[rowIndex][9].ToString();
+                    ////墙柱线
+                    //if (radioButton5.Checked)
+                    //{
+                    //    string _batchseri = dt.Rows[rowIndex][1].ToString();
+                    //    int _tempNo = Convert.ToInt32(dt.Rows[rowIndex][2].ToString());
+                    //    int _diameter = Convert.ToInt32(dt.Rows[rowIndex][3].ToString());
+                    //    int _length = Convert.ToInt32(dt.Rows[rowIndex][4].ToString());
+                    //    int _num = Convert.ToInt32(dt.Rows[rowIndex][5].ToString());
+                    //    string _cornermsg = dt.Rows[rowIndex][6].ToString();
+                    //    bool _ifbend = dt.Rows[rowIndex][7].ToString() == "1" ? true : false;
+                    //    bool _iftao = dt.Rows[rowIndex][8].ToString() == "1" ? true : false;
+                    //    string _taosisetting = dt.Rows[rowIndex][9].ToString();
+                    //    string _picTypeNum = dt.Rows[rowIndex][10].ToString();
 
-                        Rebar temp = new Rebar();//造一个假数据
-                        temp.Level = _level;
-                        temp.Diameter = _diameter;
-                        temp.length = _length;
-                        temp.CornerMessage = _cornermsg;
-                        temp.PicTypeNum = _picTypeNum;
-                        temp.ProjectName = _projectName;
-                        temp.MainAssemblyName = _assemblyName;
-                        temp.ElementName = _elementName;
+                    //    pickedRebarPi = new RebarPi();
+                    //    Rebar temp = new Rebar();//造一个假数据
+                    //    temp.Diameter = _diameter;
+                    //    temp.length = _length;
+                    //    temp.CornerMessage = _cornermsg;
+                    //    temp.PicTypeNum = _picTypeNum;
 
-                        pickedRebarPiCut = new RebarPi();
-                        for (int i = 0; i < _num; i++)
-                        {
-                            pickedRebarPiCut._rebarList.Add(temp);//复制多根rebar
-                        }
-                        pictureBox1.Image = graphics.PaintPiCutLabel(pickedRebarPiCut);
-                        //pictureBox1.Image = graphics.PaintRebarPic(temp);//直接画钢筋简图
+                    //    for (int i = 0; i < _num; i++)
+                    //    {
+                    //        pickedRebarPi._rebarList.Add(temp);//复制多根rebar
+                    //    }
+                    //    pickedRebarPi._batchseri = _batchseri + "-" + _tempNo;
+                    //    pictureBox1.Image = graphics.PaintPiCutLabel(pickedRebarPi);
+                    //}
 
-                    }
+
+
+                    ////批量锯切线
+                    //if (radioButton8.Checked)
+                    //{
+                    //    string _level = dt.Rows[rowIndex][1].ToString();
+                    //    int _diameter = Convert.ToInt32(dt.Rows[rowIndex][2].ToString());
+                    //    int _length = Convert.ToInt32(dt.Rows[rowIndex][3].ToString());
+                    //    int _num = Convert.ToInt32(dt.Rows[rowIndex][4].ToString());
+                    //    string _cornermsg = dt.Rows[rowIndex][5].ToString();
+                    //    string _picTypeNum = dt.Rows[rowIndex][6].ToString();
+                    //    string _projectName = dt.Rows[rowIndex][7].ToString();
+                    //    string _assemblyName = dt.Rows[rowIndex][8].ToString();
+                    //    string _elementName = dt.Rows[rowIndex][9].ToString();
+
+                    //    Rebar temp = new Rebar();//造一个假数据
+                    //    temp.Level = _level;
+                    //    temp.Diameter = _diameter;
+                    //    temp.length = _length;
+                    //    temp.CornerMessage = _cornermsg;
+                    //    temp.PicTypeNum = _picTypeNum;
+                    //    temp.ProjectName = _projectName;
+                    //    temp.MainAssemblyName = _assemblyName;
+                    //    temp.ElementName = _elementName;
+
+                    //    pickedRebarPiCut = new RebarPi();
+                    //    for (int i = 0; i < _num; i++)
+                    //    {
+                    //        pickedRebarPiCut._rebarList.Add(temp);//复制多根rebar
+                    //    }
+                    //    pictureBox1.Image = graphics.PaintPiCutLabel(pickedRebarPiCut);
+                    //    //pictureBox1.Image = graphics.PaintRebarPic(temp);//直接画钢筋简图
+
+                    //}
                 }
             }
             catch (Exception ex) { MessageBox.Show("dataGridView2_MouseDown error:" + ex.Message); }
@@ -884,13 +975,13 @@ namespace RebarSampling
                 }
                 pictureBox1.Image = graphics.PaintPiCutLabel(_rebarpi);
             }
-            if (radioButton6.Checked)
-            {
-                //ElementRebarFB _fb = new ElementRebarFB();
-                ElementData _fb = new ElementData();
-                pictureBox1.Image = graphics.PaintElementLabel(_fb, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text));
+            //if (radioButton6.Checked)
+            //{
+            //    //ElementRebarFB _fb = new ElementRebarFB();
+            //    ElementData _fb = new ElementData();
+            //    pictureBox1.Image = graphics.PaintElementLabel(_fb, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text));
 
-            }
+            //}
 
             //if (radioButton5.Checked)
             //{
@@ -913,49 +1004,72 @@ namespace RebarSampling
             //Image img = graphics.PaintElementLabel(pickedElement);
             //img.Save(@"D:\\test.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
 
-            if (radioButton5.Checked)
-            {
-                Image img = graphics.PaintPiCutLabel(pickedRebarPi);//墙柱
-                LabelPrint.print(img, EnumLabelType.QZ_LABEL);
-            }
-            if (radioButton8.Checked)
-            {
-                Image img = graphics.PaintPiCutLabel(pickedRebarPiCut);//批量锯切
-                LabelPrint.print(img, EnumLabelType.QZ_LABEL);
-            }
+            //if (radioButton5.Checked)
+            //{
+            //    Image img = graphics.PaintPiCutLabel(pickedRebarPi);//墙柱
+            //    LabelPrint.print(img, EnumLabelType.QZ_LABEL);
+            //}
+            //if (radioButton8.Checked)
+            //{
+            //    Image img = graphics.PaintPiCutLabel(pickedRebarPiCut);//批量锯切
+            //    LabelPrint.print(img, EnumLabelType.QZ_LABEL);
+            //}
 
             if (radioButton6.Checked)
             {
-                Image img = graphics.PaintElementLabel(pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text), checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//梁板
+                Image img = graphics.PaintElementLabel(EnumLabelType.LB_LABEL, pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text),
+                    checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//梁板
                 LabelPrint.print(img, EnumLabelType.LB_LABEL);
             }
 
             if (radioButton9.Checked)
             {
-                Image img = graphics.PaintElementLabel(pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text), checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//构件包
-                LabelPrint.print(img, EnumLabelType.LB_LABEL);
+                Image img = graphics.PaintElementLabel(EnumLabelType.ELEMENT_LABEL, pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text),
+                    checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//构件标
+                LabelPrint.print(img, EnumLabelType.ELEMENT_LABEL);
             }
 
-            if (radioButton10.Checked)
+            if (radioButton11.Checked)
+            {
+                Image img = graphics.PaintElementLabel(EnumLabelType.REBAR_LABEL, pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text),
+                    checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//零件标
+                LabelPrint.print(img, EnumLabelType.REBAR_LABEL);
+
+            }
+
+            if (radioButton10.Checked)//手动补标签
             {
                 if (tabControl3.SelectedIndex == 0)
                 {
                     Rebar temp = new Rebar();//造一个假数据
                     temp.Level = comboBox5.SelectedItem.ToString();
                     temp.Diameter = Convert.ToInt32(comboBox6.SelectedItem.ToString());
-                    temp.length = Convert.ToInt32(textBox23.Text);
-                    temp.CornerMessage = textBox25.Text;
+                    //temp.iLength = Convert.ToInt32(textBox23.Text);
+                    temp.Length = textBox23.Text;
+                    temp.CornerMessage = comboBox7.SelectedItem.ToString();
                     temp.PicTypeNum = textBox26.Text;
                     temp.ProjectName = textBox21.Text;
                     temp.MainAssemblyName = textBox22.Text;
                     //temp.ElementName = _elementName;
+
+                    //ElementData tempElement = new ElementData();
+                    //tempElement.rebarlist.Add(temp);
+                    //tempElement.projectName = temp.ProjectName;
+                    //tempElement.mainAssemblyName = temp.MainAssemblyName;
+                    //tempElement.childAssemblyName = temp.ChildAssemblyName;
+                    //tempElement.elementName = temp.ElementName;
+
+                    ////按照零件标来打
+                    //Image img = graphics.PaintElementLabel(EnumLabelType.REBAR_LABEL, tempElement,
+                    //    new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text));//零件标
+                    //LabelPrint.print(img, EnumLabelType.REBAR_LABEL);
+
 
                     RebarPi tempPi = new RebarPi();
                     for (int i = 0; i < Convert.ToInt32(textBox24.Text); i++)
                     {
                         tempPi._rebarList.Add(temp);//复制多根rebar
                     }
-                    //pictureBox1.Image = graphics.PaintPiCutLabel(tempPi);
                     Image img = graphics.PaintPiCutLabel(tempPi);
                     LabelPrint.print(img, EnumLabelType.QZ_LABEL);//打印
 
@@ -963,7 +1077,7 @@ namespace RebarSampling
                 else
                 {
                     Image img = graphics.PaintCode(new Tuple<string, string, string, string>(textBox30.Text, textBox31.Text, textBox32.Text, textBox33.Text));
-                    LabelPrint.print(img, EnumLabelType.QZ_LABEL);//打印
+                    LabelPrint.print(img, EnumLabelType.QZ_LABEL);//打印库位码，料斗码之类的
 
                 }
             }
@@ -1005,16 +1119,19 @@ namespace RebarSampling
                     //string _tempNo = dt.Rows[rowIndex][5].ToString();
                     string _projectName = dt.Rows[rowIndex][1].ToString();
                     string _assemblyName = dt.Rows[rowIndex][2].ToString();
-                    string _elementName = dt.Rows[rowIndex][3].ToString();
+                    string _childAssemblyName = dt.Rows[rowIndex][3].ToString();
+                    string _elementName = dt.Rows[rowIndex][4].ToString();
 
                     ElementData _element = new ElementData();
                     //根据构件信息从总表中去搜索
                     GeneralClass.AllElementList = GeneralClass.DBOpt.GetAllElementList(GeneralClass.TableName_AllRebar);
                     _element = GeneralClass.AllElementList.Where(t => t.projectName == _projectName &&
-                                t.assemblyName == _assemblyName && t.elementName == _elementName).ToList()[0];
+                                t.mainAssemblyName == _assemblyName &&
+                                t.childAssemblyName == _childAssemblyName &&
+                                t.elementName == _elementName).ToList()[0];
 
-                    Image img = graphics.PaintElementLabel(_element, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text), checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//构件包
-                    LabelPrint.print(img, EnumLabelType.LB_LABEL);
+                    Image img = graphics.PaintElementLabel(EnumLabelType.ELEMENT_LABEL, _element, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text), checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//构件包
+                    LabelPrint.print(img, EnumLabelType.ELEMENT_LABEL);
 
                 }
             }
@@ -1031,7 +1148,8 @@ namespace RebarSampling
                     string _tempNo = dt.Rows[rowIndex][5].ToString();
                     string _projectName = dt.Rows[rowIndex][7].ToString();
                     string _assemblyName = dt.Rows[rowIndex][8].ToString();
-                    string _elementName = dt.Rows[rowIndex][9].ToString();
+                    string _childAssemblyName = dt.Rows[rowIndex][9].ToString();
+                    string _elementName = dt.Rows[rowIndex][10].ToString();
 
                     //ElementRebarFB _element = new ElementRebarFB();
                     ElementData _element = new ElementData();
@@ -1043,54 +1161,98 @@ namespace RebarSampling
                     //_element.wareNo = _wareNo;
                     //_element.batchSeri = _batchseri + "-" + _tempNo;
                     _element = GeneralClass.AllElementList.Where(t => t.projectName == _projectName &&
-                                t.assemblyName == _assemblyName && t.elementName == _elementName).ToList()[0];
+                                t.mainAssemblyName == _assemblyName &&
+                                t.childAssemblyName == _childAssemblyName &&
+                                t.elementName == _elementName).ToList()[0];
                     _element.warehouseNo = _warehouseNo;
                     _element.wareNo = _wareNo;
                     _element.batchSeri = _batchseri + "-" + _tempNo;
 
-                    Image img = graphics.PaintElementLabel(_element, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text), checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//梁板
+                    Image img = graphics.PaintElementLabel(EnumLabelType.LB_LABEL, _element, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text), checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//梁板
                     LabelPrint.print(img, EnumLabelType.LB_LABEL);
 
                 }
             }
-            if (radioButton8.Checked)//批量锯切
+
+            if (radioButton11.Checked)//零件标
             {
-                DataTable dt = GeneralClass.DBOpt.dbHelper.GetDataTable(GeneralClass.TableName_PiCutBatch);//先取得批量锯切表的所有数据
+                DataTable dt = (DataTable)dataGridView2.DataSource;
 
-                foreach (DataRow row in dt.Rows)
+                for (int rowIndex = 0; rowIndex < dt.Rows.Count; rowIndex++)
                 {
-                    string _level = row[1].ToString();
-                    int _diameter = Convert.ToInt32(row[2].ToString());
-                    int _length = Convert.ToInt32(row[3].ToString());
-                    int _num = Convert.ToInt32(row[4].ToString());
-                    string _cornermsg = row[5].ToString();
-                    string _picTypeNum = row[6].ToString();
-                    string _projectName = row[7].ToString();
-                    string _assemblyName = row[8].ToString();
-                    string _elementName = row[9].ToString();
 
+                    //int seriNum = Convert.ToInt32(dt.Rows[rowIndex][0].ToString());//使用标注序号进行检索
+                    string seriNum = dt.Rows[rowIndex][0].ToString();//使用标注序号进行检索
 
-                    Rebar temp = new Rebar();//造一个假数据
-                    temp.Level = _level;
-                    temp.Diameter = _diameter;
-                    temp.length = _length;
-                    temp.CornerMessage = _cornermsg;
-                    temp.PicTypeNum = _picTypeNum;
-                    temp.ProjectName = _projectName;
-                    temp.MainAssemblyName = _assemblyName;
-                    temp.ElementName = _elementName;
+                    GeneralClass.AllElementList = GeneralClass.DBOpt.GetAllElementList(GeneralClass.TableName_AllRebar);
 
-                    RebarPi tempPi = new RebarPi();
-                    for (int i = 0; i < _num; i++)
+                    pickedElement = new ElementData();
+                    foreach (var item in GeneralClass.AllElementList)
                     {
-                        tempPi._rebarList.Add(temp);//复制多根rebar
+                        List<RebarData> list = new List<RebarData>();
+                        list = item.rebarlist.Where(t => t.SerialNum == seriNum).ToList();
+                        if (list.Count != 0)
+                        {
+                            pickedElement.Copy(item);
+                            pickedElement.rebarlist.Clear();
+                            pickedElement.rebarlist.AddRange(list);
+                            break;
+                        }
                     }
-                    Image img = graphics.PaintPiCutLabel(tempPi);
-                    LabelPrint.print(img, EnumLabelType.QZ_LABEL);//打印
+
+                    //pictureBox1.Image = graphics.PaintElementLabel(EnumLabelType.REBAR_LABEL, pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text),
+                    //                 checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//将构件批号和构件流水号组成完整的构件编号
+                    Image img = graphics.PaintElementLabel(EnumLabelType.REBAR_LABEL, pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text), checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//梁板
+                    LabelPrint.print(img, EnumLabelType.REBAR_LABEL);
+
+                    //            Image img = graphics.PaintElementLabel(EnumLabelType.REBAR_LABEL, pickedElement, new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text),
+                    //checkBox10.Checked, checkBox11.Checked, checkBox12.Checked);//零件标
+                    //            LabelPrint.print(img, EnumLabelType.REBAR_LABEL);
                 }
 
-
             }
+
+
+
+
+            //if (radioButton8.Checked)//批量锯切
+            //{
+            //    DataTable dt = GeneralClass.DBOpt.dbHelper.GetDataTable(GeneralClass.TableName_PiCutBatch);//先取得批量锯切表的所有数据
+
+            //    foreach (DataRow row in dt.Rows)
+            //    {
+            //        string _level = row[1].ToString();
+            //        int _diameter = Convert.ToInt32(row[2].ToString());
+            //        int _length = Convert.ToInt32(row[3].ToString());
+            //        int _num = Convert.ToInt32(row[4].ToString());
+            //        string _cornermsg = row[5].ToString();
+            //        string _picTypeNum = row[6].ToString();
+            //        string _projectName = row[7].ToString();
+            //        string _assemblyName = row[8].ToString();
+            //        string _elementName = row[9].ToString();
+
+
+            //        Rebar temp = new Rebar();//造一个假数据
+            //        temp.Level = _level;
+            //        temp.Diameter = _diameter;
+            //        temp.length = _length;
+            //        temp.CornerMessage = _cornermsg;
+            //        temp.PicTypeNum = _picTypeNum;
+            //        temp.ProjectName = _projectName;
+            //        temp.MainAssemblyName = _assemblyName;
+            //        temp.ElementName = _elementName;
+
+            //        RebarPi tempPi = new RebarPi();
+            //        for (int i = 0; i < _num; i++)
+            //        {
+            //            tempPi._rebarList.Add(temp);//复制多根rebar
+            //        }
+            //        Image img = graphics.PaintPiCutLabel(tempPi);
+            //        LabelPrint.print(img, EnumLabelType.QZ_LABEL);//打印
+            //    }
+
+
+            //}
 
 
 
@@ -1144,6 +1306,9 @@ namespace RebarSampling
         {
             if (radioButton9.Checked)
             {
+                //dataGridView2.Rows.Clear();//先清空行
+                //dataGridView2.Columns.Clear();//先清空列
+                dataGridView2.DataSource = null;
                 DataTable dt = GeneralClass.DBOpt?.dbHelper.GetDataTable(GeneralClass.TableName_Element);//所有构件包
                 dataGridView2.DataSource = dt;
             }
@@ -1161,10 +1326,89 @@ namespace RebarSampling
                 this.groupBox10.Enabled = false;
             }
         }
-        private void button17_Click(object sender, EventArgs e)
+
+        private void radioButton11_CheckedChanged(object sender, EventArgs e)
         {
-            workflow.Instance.StopWorkBill();
+            if (radioButton11.Checked)
+            {
+                //dataGridView2.Rows.Clear();//先清空行
+                //dataGridView2.Columns.Clear();//先清空列
+                dataGridView2.DataSource = null;
+                //DataTable dt = GeneralClass.DBOpt?.dbHelper.GetDataTable(GeneralClass.TableName_AllRebar);//所有REBAR
+                List<RebarData> _allList = GeneralClass.DBOpt.GetAllRebarList(GeneralClass.TableName_AllRebar);//所有钢筋rebar
+                Form2.FillDGVWithRebarList(_allList, dataGridView2);
+
+            }
         }
+
+        private void FillDGVWithRebarList(List<RebarData> _list, DataGridView _dgv)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CHILD_ASSEMBLY_NAME], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.ELEMENT_NAME], typeof(string));
+            //dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PIC_NO], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.LEVEL], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.DIAMETER], typeof(int));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.REBAR_PIC], typeof(Image));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.CORNER_MESSAGE], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.LENGTH], typeof(string));
+            //dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.PIECE_NUM_UNIT_NUM], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TOTAL_PIECE_NUM], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.TOTAL_WEIGHT], typeof(string));
+            dt.Columns.Add(GeneralClass.sRebarColumnName[(int)EnumAllRebarTableColName.DESCRIPTION], typeof(string));
+
+            foreach (var item in _list)
+            {
+                string sType = item.PicTypeNum;
+                if (sType == "") continue;  //类型为空，跳过加载图片
+                object _image = null;
+
+                if (GeneralClass.CfgData.MaterialBill == EnumMaterialBill.EJIN)//e筋料单
+                {
+                    int _realheight = 0;
+                    _image = graphics.PaintRebarPic(item, out _realheight);//直接画钢筋简图，20250403修改，关闭下面找钢筋图片库的代码，
+
+                    //if (GeneralClass.interactivityData.ifFindImage(sType, out _image))
+                    //{
+                    //    _image = graphics.PaintRebarPic(item);//直接画钢筋简图
+                    //}
+                    //else
+                    //{
+                    //    GeneralClass.interactivityData?.printlog(1, "钢筋图片库中找不到编号为:" + sType + "的图片，请手动添加");
+                    //    if (GeneralClass.m_showNoFindPic)
+                    //    {
+                    //        GeneralClass.interactivityData.ifFindImage("00000", out _image);//临时用00000.png代替
+                    //    }
+                    //}
+                }
+                else//广联达料单
+                {
+                    string newpath = GeneralClass.CfgData.GLDpath + @"\" + item.RebarPic;//广联达料单路径+图片路径即为完整路径
+                    _image = Gld.LoadGldImage(newpath);
+                }
+
+                dt.Rows.Add(item.ChildAssemblyName,
+                    item.ElementName,
+                    //item.PicTypeNum,
+                    item.Level,
+                    item.Diameter,
+                    _image,
+                    item.CornerMessage,
+                    item.Length,
+                    //item.PieceNumUnitNum,
+                    item.TotalPieceNum,
+                    item.TotalWeight,
+                    item.Description
+                    );
+            }
+
+            _dgv.DataSource = dt;
+            //_dgv.Columns[2].DefaultCellStyle.Format = "P1";
+            _dgv.Columns[8].DefaultCellStyle.Format = "0.00";
+            //_dgv.Columns[4].DefaultCellStyle.Format = "P1";
+
+        }
+
 
         private void button14_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1182,16 +1426,30 @@ namespace RebarSampling
             try
             {
 
-
                 Rebar temp = new Rebar();//造一个假数据
-                temp.Level = comboBox5.SelectedItem.ToString();
-                temp.Diameter = Convert.ToInt32(comboBox6.SelectedItem.ToString());
-                temp.length = Convert.ToInt32(textBox23.Text);
-                temp.CornerMessage = textBox25.Text;
-                temp.PicTypeNum = textBox26.Text;
-                temp.ProjectName = textBox21.Text;
-                temp.MainAssemblyName = textBox22.Text;
+                temp.Level = comboBox5.SelectedItem.ToString();//级别
+                temp.Diameter = Convert.ToInt32(comboBox6.SelectedItem.ToString());//直径
+                //temp.iLength = Convert.ToInt32(textBox23.Text);//长度
+                temp.Length = textBox23.Text;//长度
+                temp.CornerMessage = comboBox7.SelectedItem.ToString();//边角结构
+                temp.TotalPieceNum = Convert.ToInt32(textBox24.Text);//数量
+                temp.PicTypeNum = textBox26.Text;//图形编号
+                temp.ProjectName = textBox21.Text;//项目名称
+                temp.MainAssemblyName = textBox22.Text;//主构件名称
                 //temp.ElementName = _elementName;
+
+
+                //ElementData tempElement = new ElementData();
+                //tempElement.rebarlist.Add(temp);
+                //tempElement.projectName=temp.ProjectName;
+                //tempElement.mainAssemblyName=temp.MainAssemblyName;
+                //tempElement.childAssemblyName = temp.ChildAssemblyName;
+                //tempElement.elementName = temp.ElementName;
+
+                ////按照零件标来打
+                //pictureBox1.Image = graphics.PaintElementLabel(EnumLabelType.REBAR_LABEL, tempElement,
+                //    new Tuple<string, string, string>(textBox27.Text, textBox28.Text, textBox29.Text));//零件标
+
 
                 RebarPi tempPi = new RebarPi();
                 for (int i = 0; i < Convert.ToInt32(textBox24.Text); i++)
@@ -1230,10 +1488,104 @@ namespace RebarSampling
         /// <param name="e"></param>
         private void button20_Click(object sender, EventArgs e)
         {
-            var rt = MessageBox.Show("导出前，请确保项目编号、区域编号、部位编号与总表一致！", "提示", MessageBoxButtons.OKCancel,MessageBoxIcon.Asterisk);
+            var rt = MessageBox.Show("导出前，请确保项目编号、区域编号、部位编号与总表一致！", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
             if (rt == DialogResult.Cancel) { return; }
 
+            if (radioButton9.Checked)
+            {
+                ExportElementToWMS();
+            }
+            else if (radioButton11.Checked)
+            {
+                ExportRebarToWMS();
+                //ExportRebarToExcel();
+            }
 
+        }
+
+        private void ExportRebarToExcel()
+        {
+            DataTable dt = (DataTable)dataGridView2.DataSource;
+
+            string _billname = "1";
+
+            //_billname = rebar.ProjectName + " " + rebar.MainAssemblyName;//料单名称
+
+
+            string filePath = Application.StartupPath + @"\output\" + _billname + ".xlsx";
+
+            GeneralClass.ExcelWriteOpt?.SaveSheet(filePath, dt);
+
+            GeneralClass.interactivityData?.printlog(1, "已导出料单文件到路径：" + Application.StartupPath + @"\output\" + _billname + ".xlsx");
+            MessageBox.Show("已导出料单文件到路径：" + Application.StartupPath + @"\output\" + _billname + ".xlsx");
+
+        }
+
+        private void ExportRebarToWMS()
+        {
+            //DataTable dt = GeneralClass.DBOpt?.dbHelper.GetDataTable(GeneralClass.TableName_Element);//所有构件包
+
+            DataTable _newdt = new DataTable();
+
+            _newdt.Columns.Add("项目编号", typeof(string));
+            _newdt.Columns.Add("项目名称", typeof(string));
+            _newdt.Columns.Add("栋号编号", typeof(string));
+            _newdt.Columns.Add("栋号名称", typeof(string));
+            _newdt.Columns.Add("部件编号", typeof(string));
+            _newdt.Columns.Add("部件名称", typeof(string));
+            _newdt.Columns.Add("料表编号", typeof(string));
+            _newdt.Columns.Add("料表名称", typeof(string));
+            _newdt.Columns.Add("规格型号", typeof(string));
+            _newdt.Columns.Add("重量(吨)", typeof(double));
+            _newdt.Columns.Add("构件编号", typeof(string));
+            _newdt.Columns.Add("构件名称", typeof(string));
+            _newdt.Columns.Add("备注", typeof(string));
+
+            GeneralClass.AllElementList = GeneralClass.DBOpt.GetAllElementList(GeneralClass.TableName_AllRebar);//取构件的list，计算各个构件的重量
+            GeneralClass.AllRebarList = GeneralClass.DBOpt.GetAllRebarList(GeneralClass.TableName_AllRebar);
+
+            string _billname = "";
+            foreach (var rebar in GeneralClass.AllRebarList)
+            {
+                string _elementName = "";
+                foreach (var _element in GeneralClass.AllElementList)
+                {
+                    if (_element.rebarlist.Where(t => t.SerialNum == rebar.SerialNum).ToList().Count != 0)
+                    {
+                        _elementName = _element.elementName;
+                        break;
+                    }
+                }
+
+                _newdt.Rows.Add(
+                    textBox27.Text,
+                    GeneralClass.CfgData.ProjectName,
+                    textBox28.Text,
+                    rebar.ProjectName,
+                    textBox29.Text,
+                    rebar.MainAssemblyName,
+                    textBox27.Text + "_" + textBox28.Text + "_" + textBox29.Text,
+                    rebar.ProjectName + " " + rebar.MainAssemblyName,
+                    rebar.Level + rebar.Diameter,
+                    rebar.TotalWeight / 1000,
+                    textBox27.Text + "_" + textBox28.Text + "_" + textBox29.Text + "_" + rebar.SerialNum,
+                    rebar.ChildAssemblyName + _elementName + rebar.SerialNum/*rebar.ElementName*/,
+                    ""
+                    );
+
+                _billname = rebar.ProjectName + " " + rebar.MainAssemblyName;//料单名称
+            }
+
+            string filePath = Application.StartupPath + @"\output\" + _billname + ".xlsx";
+
+            GeneralClass.ExcelWriteOpt?.SaveSheet(filePath, _newdt);
+
+            GeneralClass.interactivityData?.printlog(1, "已导出料单文件到路径：" + Application.StartupPath + @"\output\" + _billname + ".xlsx");
+            MessageBox.Show("已导出料单文件到路径：" + Application.StartupPath + @"\output\" + _billname + ".xlsx");
+
+        }
+        private void ExportElementToWMS()
+        {
             DataTable dt = GeneralClass.DBOpt?.dbHelper.GetDataTable(GeneralClass.TableName_Element);//所有构件包
 
             DataTable _newdt = new DataTable();
@@ -1250,36 +1602,42 @@ namespace RebarSampling
             _newdt.Columns.Add("构件编号", typeof(string));
             _newdt.Columns.Add("构件名称", typeof(string));
             _newdt.Columns.Add("备注", typeof(string));
-                        
+
             GeneralClass.AllElementList = GeneralClass.DBOpt.GetAllElementList(GeneralClass.TableName_AllRebar);//取构件的list，计算各个构件的重量
 
             string _billname = "";
             foreach (DataRow row in dt.Rows)
             {
+                ElementData _element = GeneralClass.AllElementList.Find(t => t.projectName == row[1].ToString()
+                                                                                                        && t.mainAssemblyName == row[2].ToString()
+                                                                                                        && t.childAssemblyName == row[3].ToString()
+                                                                                                        && t.elementName == row[4].ToString());
                 _newdt.Rows.Add(
                     textBox27.Text,
-                    "中建壹品.汉韵公馆",
+                    GeneralClass.CfgData.ProjectName,
                     textBox28.Text,
                     row[1].ToString(),
                     textBox29.Text,
                     row[2].ToString(),
-                    textBox27.Text+"_"+textBox28.Text+"_"+textBox29.Text,
-                    row[1].ToString()+" " + row[2].ToString(),
-                    GeneralClass.AllElementList.Find(t=>t.projectName== row[1].ToString()&&t.assemblyName == row[2].ToString()&&t.elementName== row[3].ToString()).totalweight/1000,
-                    textBox27.Text + "_" + textBox28.Text + "_" + textBox29.Text +"_"+ row[3].ToString(),
-                    row[3].ToString(),
+                    textBox27.Text + "_" + textBox28.Text + "_" + textBox29.Text,
+                    row[1].ToString() + " " + row[2].ToString(),
+                    _element.totalweight / 1000,
+                    textBox27.Text + "_" + textBox28.Text + "_" + textBox29.Text + "_" + _element.elementTotalNum + "/" + (_element.elementIndex + 1) /*row[3].ToString()*/,
+                    row[3].ToString() + "-" + row[4].ToString(),
                     ""
                     );
 
                 _billname = row[1].ToString() + " " + row[2].ToString();//料单名称
             }
 
-            string filePath = Application.StartupPath + @"\output\"+ _billname+".xlsx";
+            string filePath = Application.StartupPath + @"\output\" + _billname + ".xlsx";
 
-            GeneralClass.ExcelWriteOpt?.SaveSheet(filePath,_newdt);
+            GeneralClass.ExcelWriteOpt?.SaveSheet(filePath, _newdt);
 
             GeneralClass.interactivityData?.printlog(1, "已导出料单文件到路径：" + Application.StartupPath + @"\output\" + _billname + ".xlsx");
             MessageBox.Show("已导出料单文件到路径：" + Application.StartupPath + @"\output\" + _billname + ".xlsx");
         }
+
+
     }
 }

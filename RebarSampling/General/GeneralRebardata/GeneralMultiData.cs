@@ -40,16 +40,16 @@ namespace RebarSampling
         {
             get
             {
-                //if(this.length.IndexOf('~')>-1)         //特殊：缩尺
-                //{
-                //    string[] ss = this.length.Split('~');
-                //    return (Convert.ToInt32(ss[0]) + Convert.ToInt32(ss[1]))/2;
-                //}
+                if (this.length.IndexOf('~') > -1)         //特殊：缩尺
+                {
+                    string[] ss = this.length.Split('~');
+                    return (Convert.ToInt32(ss[0]) + Convert.ToInt32(ss[1])) / 2;
+                }
 
                 if (this.length.IndexOf('d') > -1)//"10d,90"
                 {
                     string[] ss = this.length.Split('d');
-                    return Convert.ToInt32(ss[0]) * this.diameter;//10d即为10倍直径
+                    return (int)(Convert.ToDouble(ss[0]) * this.diameter);//10d即为10倍直径，也有例外：11.9d，因此需要先转成double，乘以直径后，再转为int
                 }
                 //圆弧端头示例：
                 //      1200R1200T0.44,2;4200,3;1200R1200T0.44,0
@@ -173,7 +173,7 @@ namespace RebarSampling
             }
         }
         /// <summary>
-        /// 较为粗略的类型分类，0:原始端头，1:弯曲，2:套丝，3：其他
+        /// 较为粗略的类型分类，0:原始端头，1:弯曲，2:正丝，3：反丝，4：其他
         /// </summary>
         public int type
         {
@@ -189,16 +189,21 @@ namespace RebarSampling
                     return 1;
                 }
                 else if (this.headType == EnumMultiHeadType.TAO_P ||
-                    this.headType == EnumMultiHeadType.TAO_V ||
-                    this.headType == EnumMultiHeadType.TAO_N ||
-                    this.headType == EnumMultiHeadType.SI_P ||
-                    this.headType == EnumMultiHeadType.SI_N)
+                    this.headType == EnumMultiHeadType.TAO_V ||                    
+                    this.headType == EnumMultiHeadType.SI_P 
+                    )
                 {
                     return 2;
                 }
-                else
+                else if(this.headType== EnumMultiHeadType.TAO_N||
+                    this.headType == EnumMultiHeadType.SI_N
+                    )
                 {
                     return 3;
+                }
+                else
+                {
+                    return 4;
                 }
             }
         }

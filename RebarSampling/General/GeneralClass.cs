@@ -27,7 +27,7 @@ namespace RebarSampling
         /// <summary>
         /// 操作写excel文件
         /// </summary>
-        public static ExcelWriter ExcelWriteOpt= new ExcelWriter();
+        public static ExcelWriter ExcelWriteOpt = new ExcelWriter();
         /// <summary>
         /// 操作解析E筋格式文件
         /// 通过E筋公司提供的ETable.dll实现
@@ -79,7 +79,7 @@ namespace RebarSampling
         /// <summary>
         /// 墙柱线的json格式数据
         /// </summary>
-        public static string jsonList_QZ;
+        public static List<string> jsonList_QZ=new List<string>();
         /// <summary>
         /// 批量锯切的json格式数据
         /// </summary>
@@ -394,7 +394,9 @@ namespace RebarSampling
         {
             if (_wareset != EnumWareNumSet.NONE)
             {
-                return Convert.ToInt32(_wareset.ToString().Last().ToString());
+                //return Convert.ToInt32(_wareset.ToString().Last().ToString());
+                return Convert.ToInt32(_wareset.ToString().Split('_').Last());//例如：WARESET_12截图“_”后面的数字作为仓数
+
             }
             else
             {
@@ -425,22 +427,26 @@ namespace RebarSampling
                 switch (m_factoryType)
                 {
                     case EnumFactoryType.LowConfig:
-                        warenum[(int)EnumWareNumSet.WARESET_8] = 8 * 2;
-                        warenum[(int)EnumWareNumSet.WARESET_4] = 4 * 2;
+                        warenum[(int)EnumWareNumSet.WARESET_12] = 12 * 2;
+                        warenum[(int)EnumWareNumSet.WARESET_6] = 6 * 2;
+                        warenum[(int)EnumWareNumSet.WARESET_3] = 3 * 2;
                         warenum[(int)EnumWareNumSet.WARESET_2] = 2 * 2;
                         warenum[(int)EnumWareNumSet.WARESET_1] = 1 * 2;
                         break;
                     case EnumFactoryType.HighConfig:
-                        warenum[(int)EnumWareNumSet.WARESET_8] = 8 * GeneralClass.CfgData.WareHouseChannels;
-                        warenum[(int)EnumWareNumSet.WARESET_4] = 4 * GeneralClass.CfgData.WareHouseChannels;
+                        warenum[(int)EnumWareNumSet.WARESET_12] = 12 * GeneralClass.CfgData.WareHouseChannels;
+                        warenum[(int)EnumWareNumSet.WARESET_6] = 6 * GeneralClass.CfgData.WareHouseChannels;
+                        warenum[(int)EnumWareNumSet.WARESET_3] = 3 * GeneralClass.CfgData.WareHouseChannels;
                         warenum[(int)EnumWareNumSet.WARESET_2] = 2 * GeneralClass.CfgData.WareHouseChannels;
                         warenum[(int)EnumWareNumSet.WARESET_1] = 1 * GeneralClass.CfgData.WareHouseChannels;
                         break;
                     case EnumFactoryType.Experiment:
-                        warenum[(int)EnumWareNumSet.WARESET_8] = 8 * 1;
-                        warenum[(int)EnumWareNumSet.WARESET_4] = 4 * 1;
+                        warenum[(int)EnumWareNumSet.WARESET_12] = 12 * 1;
+                        warenum[(int)EnumWareNumSet.WARESET_6] = 6 * 1;
+                        warenum[(int)EnumWareNumSet.WARESET_3] = 3 * 1;
                         warenum[(int)EnumWareNumSet.WARESET_2] = 2 * 1;
                         warenum[(int)EnumWareNumSet.WARESET_1] = 1 * 1;
+
                         break;
                 }
                 return warenum;
@@ -461,13 +467,13 @@ namespace RebarSampling
         /// </summary>
         public static readonly bool m_checkPitchType = false;
         /// <summary>
-        /// 仓位划分的数量区间，四种仓位，三个节点:25,50,100
+        /// 仓位划分的数量区间，五种仓位，四个节点:10,25,50,100
         /// </summary>
-        public static int[] wareArea
+        public static int[] wareThreshold
         {
             get
             {
-                return new int[3] { CfgData.WareAreaSet1, CfgData.WareAreaSet2, CfgData.WareAreaSet3 };
+                return new int[4] { CfgData.WareAreaSet1, CfgData.WareAreaSet2, CfgData.WareAreaSet3, CfgData.WareAreaSet4 };
             }
         }
         //public static int[] wareArea = new int[3] { 10, 50, 100 };
@@ -528,7 +534,9 @@ namespace RebarSampling
         {
             "项目名称",
             "主构件名称",
+            "子构件部位名称",
            "子构件名称",
+           "料表编号",
            "料表名称",
            "料表页名",
             "图形编号",
@@ -537,6 +545,7 @@ namespace RebarSampling
             "钢筋简图",
             "图形信息",
             "边角结构",
+            "边角结构备份",
             "下料长度",
             "是否多段",
             "根数件数",
@@ -563,7 +572,15 @@ namespace RebarSampling
 
             "生产批号",
             "数量",
-            "临时编号"
+            "临时编号",
+
+            "是否产线生产",
+            "是否勾选",
+            "是否下发加工",
+            "是否加工完成"
+
+
+
 
         };
 

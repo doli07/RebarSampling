@@ -875,7 +875,9 @@ namespace RebarSampling
                     string _assembly = row[8].ToString();
                     string _element = row[9].ToString();
 
-                    ElementRebarFB temp = GeneralClass.AllElementList.Find(t => t.projectName == _project && t.assemblyName == _assembly && t.elementName == _element).elementDataFB;
+                    ElementRebarFB temp = GeneralClass.AllElementList.Find(t => t.projectName == _project &&
+                                                                                                    t.mainAssemblyName == _assembly &&
+                                                                                                    t.elementName == _element).elementDataFB;
                     temp.warehouseNo = _warehouseNo;
                     temp.wareNo = _wareNo;
                     temp.batchSeri = _batchseri;
